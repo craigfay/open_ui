@@ -32,12 +32,10 @@ fn main() {
 
         in vec2 position;
 
-        uniform float t;
+        uniform mat4 matrix;
 
         void main() {
-            vec2 pos = position;
-            pos.x += t;
-            gl_Position = vec4(pos, 0.0, 1.0);
+            gl_Position = matrix * vec4(position, 0.0, 1.0);
         }
     "#;
 
@@ -80,10 +78,19 @@ fn main() {
             t = -0.5;
         }
 
+        let uniforms = uniform! {
+            matrix: [
+                [ t.cos(), t.sin(), 0.0, 0.0],
+                [-t.sin(), t.cos(), 0.0, 0.0],
+                [0.0, 0.0, 1.0, 0.0],
+                [0.0, 0.0, 0.0, 1.0f32],
+            ]
+        };
+
         let mut target = display.draw();
         target.clear_color(0.0, 0.0, 1.0, 1.0);
 
-        target.draw(&vertex_buffer, &indices, &program, &uniform! { t: t },
+        target.draw(&vertex_buffer, &indices, &program, &uniforms,
             &Default::default()).unwrap();
 
         target.finish().unwrap();
