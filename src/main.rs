@@ -10,17 +10,36 @@ fn main() {
     let cb = glutin::ContextBuilder::new();
     let display = glium::Display::new(wb, cb, &event_loop).unwrap();
 
+    let mut bytes: Vec<u8> = vec![];
+
+    for i in 0..16 {
+        bytes.push(0);
+        bytes.push(255);
+        bytes.push(0);
+        bytes.push(255);
+    }
+
+    let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
+        &bytes,
+        (4, 4)
+    );
+
+    let texture = glium::texture::Texture2d::new(&display, image).unwrap();
+
+
     #[derive(Copy, Clone)]
     struct Vertex {
         position: [f32; 2],
+        tex_coords: [f32; 2],
     }
 
-    implement_vertex!(Vertex, position);
+    implement_vertex!(Vertex, position, tex_coords);
 
-    let vertex1 = Vertex { position: [-0.5, -0.5] };
-    let vertex2 = Vertex { position: [ 0.0,  0.5] };
-    let vertex3 = Vertex { position: [ 0.5, -0.25] };
-    let shape = vec![vertex1, vertex2, vertex3];
+    let vertex1 = Vertex { position: [ 0.0,  0.0 ], tex_coords: [0.0, 0.0] };
+    let vertex2 = Vertex { position: [ 0.5,  0.0 ], tex_coords: [1.0, 0.0] };
+    let vertex3 = Vertex { position: [ 0.5,  0.5 ], tex_coords: [1.0, 1.0] };
+    let vertex4 = Vertex { position: [ 0.0,  0.5 ], tex_coords: [0.0, 1.0] };
+    let shape = vec![vertex1, vertex2, vertex3, vertex4];
 
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
     let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
@@ -31,12 +50,13 @@ fn main() {
         #version 140
 
         in vec2 position;
-        out vec2 attr;
+        in vec2 tex_coords;
+        out vec2 v_tex_coords;
 
         uniform mat4 matrix;
 
         void main() {
-            attr = position;
+            v_tex_coords = tex_coords;
             gl_Position = matrix * vec4(position, 0.0, 1.0);
         }
     "#;
@@ -44,13 +64,17 @@ fn main() {
     let fragment_shader_src = r#"
         #version 140
 
-        in vec2 attr;
+        in vec2 v_tex_coords;
         out vec4 color;
-
+    
+        uniform sampler2D tex;
+    
         void main() {
-            color = vec4(attr, 0.0, 0.5);
+            color = texture(tex, v_tex_coords);
         }
     "#;
+
+
 
     let program = glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None).unwrap();
 
@@ -83,11 +107,12 @@ fn main() {
 
         let uniforms = uniform! {
             matrix: [
-                [ t.cos(), t.sin(), 0.0, 0.0],
-                [-t.sin(), t.cos(), 0.0, 0.0],
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0, 0.0],
                 [0.0, 0.0, 1.0, 0.0],
-                [0.0, 0.0, 0.0, 1.0f32],
-            ]
+                [ t , 0.0, 0.0, 1.0f32],
+            ],
+            tex: &texture,
         };
 
         let mut target = display.draw();
