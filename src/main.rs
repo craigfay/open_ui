@@ -48,9 +48,14 @@ fn main() {
     let vertex3 = Vertex { position: [ 0.5,  0.5 ], tex_coords: [1.0, 1.0] };
     let vertex4 = Vertex { position: [ 0.0,  0.5 ], tex_coords: [0.0, 1.0] };
     let shape = vec![vertex1, vertex2, vertex3, vertex4];
+    
+    let indices: [u16; 6] = [0,1,2,2,3,0];
+
+    let indices = glium::IndexBuffer::new(&display, glium::index::PrimitiveType::TrianglesList,
+        &indices).unwrap();
 
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-    let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
+    // let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
 
     let mut t: f32 = -0.5;
 
