@@ -6,7 +6,10 @@ fn main() {
     use glium::{glutin, Surface};
 
     let event_loop = glutin::event_loop::EventLoop::new();
-    let wb = glutin::window::WindowBuilder::new();
+
+    let wb = glutin::window::WindowBuilder::new()
+        .with_inner_size(glutin::dpi::Size::Logical(glutin::dpi::LogicalSize::new(400.0, 400.0)));
+
     let cb = glutin::ContextBuilder::new();
     let display = glium::Display::new(wb, cb, &event_loop).unwrap();
 
