@@ -13,10 +13,18 @@ fn main() {
     let mut bytes: Vec<u8> = vec![];
 
     for i in 0..16 {
-        bytes.push(0);
-        bytes.push(255);
-        bytes.push(0);
-        bytes.push(255);
+        if i % 2 == 0 {
+            bytes.push(0);
+            bytes.push(255);
+            bytes.push(0);
+            bytes.push(255);
+        }
+        else {
+            bytes.push(255);
+            bytes.push(0);
+            bytes.push(0);
+            bytes.push(255);
+        }
     }
 
     let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
@@ -47,11 +55,11 @@ fn main() {
     let mut t: f32 = -0.5;
 
     let vertex_shader_src = r#"
-        #version 140
+        #version 150
 
         in vec2 position;
         in vec2 tex_coords;
-        out vec2 v_tex_coords;
+        flat out vec2 v_tex_coords;
 
         uniform mat4 matrix;
 
@@ -62,9 +70,9 @@ fn main() {
     "#;
 
     let fragment_shader_src = r#"
-        #version 140
+        #version 150
 
-        in vec2 v_tex_coords;
+        flat in vec2 v_tex_coords;
         out vec4 color;
     
         uniform sampler2D tex;
