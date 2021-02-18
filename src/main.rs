@@ -35,6 +35,41 @@ const FRAGMENT_SHADER_SRC: &str = r#"
     }
 "#;
 
+
+// Scale an image using nearest neighbor interpolation
+pub fn scale(img: &RgbaImage, factor: f32) -> RgbaImage {
+    let mut new_img = RgbaImage::new(
+        (img.width as f32 * factor) as u32,
+        (img.height as f32 * factor) as u32,
+    );
+
+    // Calculating a ratio of a single pixel's size to the whole image
+    let ratio_x = 1.0 / new_img.width as f32;
+    let ratio_y = 1.0 / new_img.height as f32;
+
+    for y in 0..new_img.height {
+        for x in 0..new_img.width {
+
+            // Determining which x and y values to sample from
+            let progress_x = ratio_x * x as f32;
+            let progress_y = ratio_y * y as f32;
+
+            let src_x = progress_x * img.width as f32;
+            let src_y = progress_y * img.height as f32;
+
+            // Determining which x and y values to write to
+            let dest_x = ratio_x * new_img.width as f32;
+            let dest_y = ratio_y * new_img.height as f32;
+
+            // Applying the sampled pixel to the output image
+            let pixel = img.get_pixel(src_x as u32, src_y as u32);
+            new_img.set_pixel(x, y, pixel);
+        }
+    }
+
+    new_img
+}
+
 pub struct RgbaImage {
     pub width: u32,
     pub height: u32,
@@ -208,7 +243,7 @@ impl Window {
             };
     
             let mut target = display.draw();
-            target.clear_color(1.0, 0.0, 0.0, 1.0);
+            target.clear_color(1.0, 1.0, 1.0, 1.0);
     
             target.draw(&vertex_buffer, &indices, &program, &uniforms,
                 &Default::default()).unwrap();
@@ -273,29 +308,29 @@ impl WindowBuilder {
 
 fn main() {
     let img = RgbaImage {
-        width: 100,
-        height: 100,
-        bytes: vec![255; 100 * 100 * 4]
-        // bytes: vec![
-        //     0, 255, 0, 255,
-        //     0, 255, 0, 255,
-        //     0, 255, 0, 255,
-        //     255, 0, 0, 255,
-        //     255, 0, 0, 255,
-        //     255, 0, 0, 255,
-        //     0, 0, 255, 255,
-        //     0, 0, 255, 255,
-        //     0, 0, 255, 255,
-        // ],
+        width: 3,
+        height: 3,
+        bytes: vec![
+            0, 255, 0, 255,
+            0, 255, 0, 255,
+            0, 255, 0, 255,
+            255, 0, 0, 255,
+            255, 0, 0, 255,
+            255, 0, 0, 255,
+            0, 0, 255, 255,
+            0, 0, 255, 255,
+            0, 0, 255, 255,
+        ],
     };
+
+    let img2 = scale(&img, 100.0);
 
     let mut window = WindowBuilder::new()
         .width(400)
         .height(400)
         .build();
 
-    window.draw(&img, 0, 0);
+    window.draw(&img2, 0, 0);
 
     window.open();
-
 }
