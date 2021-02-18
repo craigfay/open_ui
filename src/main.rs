@@ -258,7 +258,7 @@ impl Window {
                 let pixel = img.get_pixel(img_x, img_y);
 
                 let canvas_x = x + img_x as i32;
-                let canvas_y = x + img_y as i32;
+                let canvas_y = y + img_y as i32;
 
                 if canvas_x >= 0 && canvas_y >= 0 {
                     self.canvas.set_pixel(
@@ -323,14 +323,14 @@ fn main() {
         ],
     };
 
-    let img2 = scale(&img, 100.0);
+    let img2 = scale(&img, 50.0);
 
     let mut window = WindowBuilder::new()
         .width(400)
         .height(400)
         .build();
 
-    window.draw(&img2, 0, 0);
+    window.draw(&img2, 50, 150);
 
     window.open();
 }
