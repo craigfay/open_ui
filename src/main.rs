@@ -113,6 +113,7 @@ impl Window {
             *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
     
             match event {
+
                 glutin::event::Event::WindowEvent { event, .. } => match event {
                     glutin::event::WindowEvent::CloseRequested => {
                         *control_flow = glutin::event_loop::ControlFlow::Exit;
@@ -120,18 +121,13 @@ impl Window {
                     },
                     _ => return,
                 },
+
                 glutin::event::Event::NewEvents(cause) => match cause {
                     glutin::event::StartCause::ResumeTimeReached { .. } => (),
                     glutin::event::StartCause::Init => (),
                     _ => return,
                 },
                 _ => return,
-            }
-    
-            // t += 0.002;
-    
-            if t > 0.5 {
-                t = -0.5;
             }
     
             let uniforms = uniform! {
