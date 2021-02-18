@@ -4,6 +4,8 @@ extern crate glium;
 #[allow(unused_imports)]
 use glium::{glutin, Surface};
 
+use glium::glutin::dpi::Size::Logical;
+use glium::glutin::dpi::LogicalSize;
 
 const VERTEX_SHADER_SRC: &str = r#"
     #version 150
@@ -45,8 +47,12 @@ impl Window {
 
         let event_loop = glutin::event_loop::EventLoop::new();
 
+        let size = Logical(
+            LogicalSize::new(self.width as f64, self.height as f64)
+        );
+
         let wb = glutin::window::WindowBuilder::new()
-            .with_inner_size(glutin::dpi::Size::Logical(glutin::dpi::LogicalSize::new(400.0, 400.0)));
+            .with_inner_size(size);
     
         let cb = glutin::ContextBuilder::new();
         let display = glium::Display::new(wb, cb, &event_loop).unwrap();
