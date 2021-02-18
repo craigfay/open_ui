@@ -32,11 +32,11 @@ fn main() {
 
     let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
         &bytes,
-        (4, 4)
+        (4, 4) // dimensions
     );
 
-    let texture = glium::texture::Texture2d::new(&display, image).unwrap();
-
+    let texture = glium::texture::Texture2d::new(&display, image)
+        .unwrap();
 
     #[derive(Copy, Clone)]
     struct Vertex {
@@ -68,7 +68,7 @@ fn main() {
 
         in vec2 position;
         in vec2 tex_coords;
-        flat out vec2 v_tex_coords;
+        out vec2 v_tex_coords;
 
         uniform mat4 matrix;
 
@@ -81,13 +81,13 @@ fn main() {
     let fragment_shader_src = r#"
         #version 150
 
-        flat in vec2 v_tex_coords;
+        in vec2 v_tex_coords;
         out vec4 color;
     
-        uniform sampler2D tex;
+        uniform sampler2D sampler;
     
         void main() {
-            color = texture(tex, v_tex_coords);
+            color = texture(sampler, v_tex_coords);
         }
     "#;
 
@@ -129,11 +129,18 @@ fn main() {
                 [0.0, 0.0, 1.0, 0.0],
                 [ t , 0.0, 0.0, 1.0f32],
             ],
-            tex: &texture,
+
+            // Applying filters to prevent unwanted image smoothing
+            sampler: texture.sampled()
+                .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
+                .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
         };
 
+
+
+
         let mut target = display.draw();
-        target.clear_color(0.0, 0.0, 1.0, 1.0);
+        target.clear_color(0.0, 0.0, 0.0, 1.0);
 
         target.draw(&vertex_buffer, &indices, &program, &uniforms,
             &Default::default()).unwrap();
