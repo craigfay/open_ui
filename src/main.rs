@@ -35,11 +35,53 @@ const FRAGMENT_SHADER_SRC: &str = r#"
     }
 "#;
 
+pub struct RgbaImage {
+    pub width: u32,
+    pub height: u32,
+    pub bytes: Vec<u8>,
+}
 
+pub type RgbaPixel = (u8,u8,u8,u8);
+
+impl RgbaImage {
+    pub fn new(width: u32, height: u32) -> RgbaImage {
+        RgbaImage {
+            width,
+            height,
+            bytes: {
+                let byte_count = (width * height) * 4;
+                let mut bytes = vec![];
+                
+                for i in (0..byte_count).step_by(4) {
+                    let i = i as usize;
+                    bytes.push(0);
+                    bytes.push(0);
+                    bytes.push(0);
+                    bytes.push(255);
+                }
+                bytes
+            }
+        }
+    }
+
+    pub fn set_pixel(&mut self, x: u32, y: u32, pixel: RgbaPixel) -> bool {
+        if 0 < x && x < self.width { return false; }
+        if 0 < y && y < self.height { return false; }
+
+        let index = (((self.width * y) + x) * 4) as usize;
+        self.bytes[index + 0] = pixel.0;
+        self.bytes[index + 1] = pixel.1;
+        self.bytes[index + 2] = pixel.2;
+        self.bytes[index + 3] = pixel.3;
+
+        true
+    }
+}
 
 pub struct Window {
     width: u32,
     height: u32,
+    canvas: RgbaImage,
 }
 
 impl Window {
@@ -159,6 +201,11 @@ impl Window {
             target.finish().unwrap();
         });
     }
+
+    pub fn draw(&mut self, img: &RgbaImage) {
+
+    }
+
 }
 
 pub struct WindowBuilder {
@@ -179,6 +226,7 @@ impl WindowBuilder {
         Window {
             width: self.width,
             height: self.height,
+            canvas: RgbaImage::new(self.width, self.height),
         }
     }
 
@@ -201,4 +249,23 @@ fn main() {
         .build();
 
     window.open();
+
+    let img = RgbaImage {
+        width: 3,
+        height: 3,
+        bytes: vec![
+            0, 255, 0, 255,
+            0, 255, 0, 255,
+            0, 255, 0, 255,
+            255, 0, 0, 255,
+            255, 0, 0, 255,
+            255, 0, 0, 255,
+            0, 0, 255, 255,
+            0, 0, 255, 255,
+            0, 0, 255, 255,
+        ],
+    };
+
+    window.draw(&img);
+
 }
