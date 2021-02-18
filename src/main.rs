@@ -76,6 +76,16 @@ impl RgbaImage {
 
         true
     }
+
+    pub fn get_pixel(&self, x: u32, y: u32) -> RgbaPixel {
+        let index = (((self.width * y) + x) * 4) as usize;
+        (
+            self.bytes[index + 0],
+            self.bytes[index + 1],
+            self.bytes[index + 2],
+            self.bytes[index + 3],
+        )
+    }
 }
 
 pub struct Window {
@@ -202,8 +212,23 @@ impl Window {
         });
     }
 
-    pub fn draw(&mut self, img: &RgbaImage) {
+    pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
+        for img_y in 0..img.height {
+            for img_x in 0..img.width {
+                let pixel = img.get_pixel(img_x, img_y);
+                
+                let canvas_x = x + img_x as i32;
+                let canvas_y = x + img_x as i32;
 
+                if canvas_x >= 0 && canvas_y >= 0 {
+                    self.canvas.set_pixel(
+                        canvas_x as u32,
+                        canvas_y as u32,
+                        pixel
+                    );
+                }
+            }
+        }
     }
 
 }
@@ -266,6 +291,6 @@ fn main() {
         ],
     };
 
-    window.draw(&img);
+    window.draw(&img, 0, 0);
 
 }
