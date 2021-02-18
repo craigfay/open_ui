@@ -13,26 +13,23 @@ fn main() {
     let cb = glutin::ContextBuilder::new();
     let display = glium::Display::new(wb, cb, &event_loop).unwrap();
 
-    let mut bytes: Vec<u8> = vec![];
+    let mut bytes: Vec<u8> = vec![
+        0, 255, 0, 255,
+        0, 255, 0, 255,
+        0, 255, 0, 255,
 
-    for i in 0..16 {
-        if i % 2 == 0 {
-            bytes.push(0);
-            bytes.push(255);
-            bytes.push(0);
-            bytes.push(255);
-        }
-        else {
-            bytes.push(255);
-            bytes.push(0);
-            bytes.push(0);
-            bytes.push(255);
-        }
-    }
+        255, 0, 0, 255,
+        255, 0, 0, 255,
+        255, 0, 0, 255,
+
+        0, 0, 255, 255,
+        0, 0, 255, 255,
+        0, 0, 255, 255,
+    ];
 
     let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
         &bytes,
-        (4, 4) // dimensions
+        (3, 3) // dimensions
     );
 
     let texture = glium::texture::Texture2d::new(&display, image)
