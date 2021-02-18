@@ -65,8 +65,8 @@ impl RgbaImage {
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, pixel: RgbaPixel) -> bool {
-        if 0 < x && x < self.width { return false; }
-        if 0 < y && y < self.height { return false; }
+        if 0 > x || x > self.width { return false; }
+        if 0 > y || y > self.height { return false; }
 
         let index = (((self.width * y) + x) * 4) as usize;
         self.bytes[index + 0] = pixel.0;
@@ -124,8 +124,8 @@ impl Window {
         ];
     
         let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-            &bytes,
-            (3, 3) // dimensions
+            &self.canvas.bytes,
+            (self.width, self.height),
         );
     
         let texture = glium::texture::Texture2d::new(&display, image)
@@ -138,6 +138,11 @@ impl Window {
         }
     
         implement_vertex!(Vertex, position, tex_coords);
+
+        // let vertex1 = Vertex { position: [-1.0,  1.0 ], tex_coords: [0.0, 0.0] };
+        // let vertex2 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 0.0] };
+        // let vertex3 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 1.0] };
+        // let vertex4 = Vertex { position: [-1.0, -1.0 ], tex_coords: [0.0, 1.0] };
     
         let vertex1 = Vertex { position: [ 0.0,  0.0 ], tex_coords: [0.0, 0.0] };
         let vertex2 = Vertex { position: [ 0.5,  0.0 ], tex_coords: [1.0, 0.0] };
@@ -193,7 +198,7 @@ impl Window {
                     [1.0, 0.0, 0.0, 0.0],
                     [0.0, 1.0, 0.0, 0.0],
                     [0.0, 0.0, 1.0, 0.0],
-                    [ t , 0.0, 0.0, 1.0],
+                    [0.0, 0.0, 0.0, 1.0f32],
                 ],
     
                 // Applying filters to prevent unwanted image smoothing
@@ -203,7 +208,7 @@ impl Window {
             };
     
             let mut target = display.draw();
-            target.clear_color(0.0, 0.0, 0.0, 1.0);
+            target.clear_color(1.0, 0.0, 0.0, 1.0);
     
             target.draw(&vertex_buffer, &indices, &program, &uniforms,
                 &Default::default()).unwrap();
@@ -216,9 +221,9 @@ impl Window {
         for img_y in 0..img.height {
             for img_x in 0..img.width {
                 let pixel = img.get_pixel(img_x, img_y);
-                
+
                 let canvas_x = x + img_x as i32;
-                let canvas_y = x + img_x as i32;
+                let canvas_y = x + img_y as i32;
 
                 if canvas_x >= 0 && canvas_y >= 0 {
                     self.canvas.set_pixel(
@@ -267,30 +272,30 @@ impl WindowBuilder {
 
 
 fn main() {
+    let img = RgbaImage {
+        width: 100,
+        height: 100,
+        bytes: vec![255; 100 * 100 * 4]
+        // bytes: vec![
+        //     0, 255, 0, 255,
+        //     0, 255, 0, 255,
+        //     0, 255, 0, 255,
+        //     255, 0, 0, 255,
+        //     255, 0, 0, 255,
+        //     255, 0, 0, 255,
+        //     0, 0, 255, 255,
+        //     0, 0, 255, 255,
+        //     0, 0, 255, 255,
+        // ],
+    };
 
     let mut window = WindowBuilder::new()
         .width(400)
         .height(400)
         .build();
 
-    window.open();
-
-    let img = RgbaImage {
-        width: 3,
-        height: 3,
-        bytes: vec![
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-        ],
-    };
-
     window.draw(&img, 0, 0);
+
+    window.open();
 
 }
