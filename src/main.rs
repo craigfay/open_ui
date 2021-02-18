@@ -1,6 +1,44 @@
 #[macro_use]
 extern crate glium;
 
+
+pub struct Window {
+    width: u32,
+    height: u32,
+}
+
+pub struct WindowSettings {
+    width: u32,
+    height: u32,
+}
+
+impl WindowSettings {
+
+    pub fn new() -> WindowSettings {
+        WindowSettings {
+            width: 0,
+            height: 0,
+        }
+    }
+
+    pub fn build(&self) -> Window {
+        Window {
+            width: self.width,
+            height: self.height,
+        }
+    }
+
+    pub fn width(self, width: u32) -> WindowSettings {
+        WindowSettings { width, ..self }
+    }
+
+    pub fn height(self, height: u32) -> WindowSettings {
+        WindowSettings { height, ..self }
+    }
+
+}
+
+
 fn main() {
     #[allow(unused_imports)]
     use glium::{glutin, Surface};
@@ -47,6 +85,7 @@ fn main() {
     let vertex2 = Vertex { position: [ 0.5,  0.0 ], tex_coords: [1.0, 0.0] };
     let vertex3 = Vertex { position: [ 0.5,  0.5 ], tex_coords: [1.0, 1.0] };
     let vertex4 = Vertex { position: [ 0.0,  0.5 ], tex_coords: [0.0, 1.0] };
+    
     let shape = vec![vertex1, vertex2, vertex3, vertex4];
     
     let indices: [u16; 6] = [0,1,2,2,3,0];
@@ -58,7 +97,7 @@ fn main() {
 
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
 
-    let mut t: f32 = -0.5;
+    let mut t: f32 = 0.0;
 
     let vertex_shader_src = r#"
         #version 150
@@ -114,7 +153,8 @@ fn main() {
             _ => return,
         }
 
-        t += 0.002;
+        // t += 0.002;
+
         if t > 0.5 {
             t = -0.5;
         }
@@ -124,7 +164,7 @@ fn main() {
                 [1.0, 0.0, 0.0, 0.0],
                 [0.0, 1.0, 0.0, 0.0],
                 [0.0, 0.0, 1.0, 0.0],
-                [ t , 0.0, 0.0, 1.0f32],
+                [ t , 0.0, 0.0, 1.0],
             ],
 
             // Applying filters to prevent unwanted image smoothing
