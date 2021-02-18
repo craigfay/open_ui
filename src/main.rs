@@ -99,36 +99,12 @@ impl Window {
     
         let mut t: f32 = 0.0;
     
-        let vertex_shader_src = r#"
-            #version 150
-    
-            in vec2 position;
-            in vec2 tex_coords;
-            out vec2 v_tex_coords;
-    
-            uniform mat4 matrix;
-    
-            void main() {
-                v_tex_coords = tex_coords;
-                gl_Position = matrix * vec4(position, 0.0, 1.0);
-            }
-        "#;
-    
-        let fragment_shader_src = r#"
-            #version 150
-    
-            in vec2 v_tex_coords;
-            out vec4 color;
-        
-            uniform sampler2D sampler;
-        
-            void main() {
-                color = texture(sampler, v_tex_coords);
-            }
-        "#;
-    
-    
-        let program = glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None).unwrap();
+        let program = glium::Program::from_source(
+            &display,
+            VERTEX_SHADER_SRC,
+            FRAGMENT_SHADER_SRC,
+            None
+        ).unwrap();
     
         event_loop.run(move |event, _, control_flow| {
             let next_frame_time = std::time::Instant::now() +
