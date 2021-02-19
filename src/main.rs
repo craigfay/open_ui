@@ -14,11 +14,9 @@ const VERTEX_SHADER_SRC: &str = r#"
     in vec2 tex_coords;
     out vec2 v_tex_coords;
 
-    uniform mat4 matrix;
-
     void main() {
         v_tex_coords = tex_coords;
-        gl_Position = matrix * vec4(position, 0.0, 1.0);
+        gl_Position = vec4(position, 0.0, 1.0);
     }
 "#;
 
@@ -218,13 +216,6 @@ impl WindowManager {
                 // TODO this should match a specific event
                 _ => {
                     let uniforms = uniform! {
-                        matrix: [
-                            [1.0, 0.0, 0.0, 0.0],
-                            [0.0, 1.0, 0.0, 0.0],
-                            [0.0, 0.0, 1.0, 0.0],
-                            [0.0, 0.0, 0.0, 1.0f32],
-                        ],
-                    
                         // Applying filters to prevent unwanted image smoothing
                         sampler: texture.sampled()
                             .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
