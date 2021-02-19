@@ -100,8 +100,8 @@ impl RgbaImage {
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, pixel: RgbaPixel) -> bool {
-        if 0 > x || x > self.width { return false; }
-        if 0 > y || y > self.height { return false; }
+        if 0 > x || x >= self.width { return false; }
+        if 0 > y || y >= self.height { return false; }
 
         let index = (((self.width * y) + x) * 4) as usize;
         self.bytes[index + 0] = pixel.0;
@@ -129,13 +129,17 @@ pub struct Window {
     canvas: RgbaImage,
 }
 
-impl Window {
-    pub fn open(&mut self) {
+pub struct WindowManager {}
 
+impl WindowManager {
+    pub fn open(&self, mut state_manager: StateManager) {
         let event_loop = glutin::event_loop::EventLoop::new();
 
         let size = Logical(
-            LogicalSize::new(self.width as f64, self.height as f64)
+            LogicalSize::new(
+                state_manager.canvas.width as f64,
+                state_manager.canvas.height as f64
+            )
         );
 
         let wb = glutin::window::WindowBuilder::new()
@@ -144,28 +148,7 @@ impl Window {
         let cb = glutin::ContextBuilder::new();
         let display = glium::Display::new(wb, cb, &event_loop).unwrap();
     
-        let mut bytes: Vec<u8> = vec![
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-    
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-    
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-        ];
-    
-        let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-            &self.canvas.bytes,
-            (self.width, self.height),
-        );
-    
-        let texture = glium::texture::Texture2d::new(&display, image)
-            .unwrap();
-    
+
         #[derive(Copy, Clone)]
         struct Vertex {
             position: [f32; 2],
@@ -198,10 +181,21 @@ impl Window {
             FRAGMENT_SHADER_SRC,
             None
         ).unwrap();
-    
+
         event_loop.run(move |event, _, control_flow| {
+
+            let pixels = &state_manager.next();
+
+            let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
+                &pixels.bytes,
+                (pixels.width, pixels.height),
+            );
+    
+            let texture = glium::texture::Texture2d::new(&display, image)
+                .unwrap();
+
             let next_frame_time = std::time::Instant::now() +
-                std::time::Duration::from_nanos(16_666_667);
+                std::time::Duration::from_nanos(6_666_667);
     
             *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
     
@@ -220,31 +214,42 @@ impl Window {
                     glutin::event::StartCause::Init => (),
                     _ => return,
                 },
-                _ => return,
+
+                // TODO this should match a specific event
+                _ => {
+                    let uniforms = uniform! {
+                        matrix: [
+                            [1.0, 0.0, 0.0, 0.0],
+                            [0.0, 1.0, 0.0, 0.0],
+                            [0.0, 0.0, 1.0, 0.0],
+                            [0.0, 0.0, 0.0, 1.0f32],
+                        ],
+                    
+                        // Applying filters to prevent unwanted image smoothing
+                        sampler: texture.sampled()
+                            .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
+                            .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
+                    };
+                
+                    let mut target = display.draw();
+                
+                    target.clear_color(1.0, 1.0, 1.0, 1.0);
+                
+                    target.draw(&vertex_buffer, &indices, &program, &uniforms,
+                        &Default::default()).unwrap();
+                    
+                    target.finish().unwrap();
+                },
             }
-    
-            let uniforms = uniform! {
-                matrix: [
-                    [1.0, 0.0, 0.0, 0.0],
-                    [0.0, 1.0, 0.0, 0.0],
-                    [0.0, 0.0, 1.0, 0.0],
-                    [0.0, 0.0, 0.0, 1.0f32],
-                ],
-    
-                // Applying filters to prevent unwanted image smoothing
-                sampler: texture.sampled()
-                    .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
-                    .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
-            };
-    
-            let mut target = display.draw();
-            target.clear_color(1.0, 1.0, 1.0, 1.0);
-    
-            target.draw(&vertex_buffer, &indices, &program, &uniforms,
-                &Default::default()).unwrap();
-    
-            target.finish().unwrap();
+
         });
+
+    }
+}
+
+impl Window {
+    pub fn open(&mut self) {
+
     }
 
     pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
@@ -274,7 +279,7 @@ pub struct WindowBuilder {
 }
 
 impl WindowBuilder {
-
+    
     pub fn new() -> WindowBuilder {
         WindowBuilder {
             width: 0,
@@ -297,35 +302,82 @@ impl WindowBuilder {
     pub fn height(self, height: u32) -> WindowBuilder {
         WindowBuilder { height, ..self }
     }
+}
+
+impl RgbaImage {
+    pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
+        for img_y in 0..img.height {
+            for img_x in 0..img.width {
+                let pixel = img.get_pixel(img_x, img_y);
+
+                let canvas_x = x + img_x as i32;
+                let canvas_y = y + img_y as i32;
+
+                if canvas_x >= 0 && canvas_y >= 0 {
+                    self.set_pixel(
+                        canvas_x as u32,
+                        canvas_y as u32,
+                        pixel
+                    );
+                }
+            }
+        }
+    }
+
+    pub fn fill(&mut self, color: RgbaPixel) {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                self.set_pixel(x, y, color);
+            }
+        }
+    }
 
 }
 
 
+pub struct StateManager {
+    canvas: RgbaImage,
+    xval: i32,
+}
+
+impl StateManager {
+    pub fn next(&mut self) -> &RgbaImage {
+
+        self.canvas.fill((0,0,0,255));
+
+        let img = RgbaImage {
+            width: 3,
+            height: 3,
+            bytes: vec![
+                0, 255, 0, 255,
+                0, 255, 0, 255,
+                0, 255, 0, 255,
+                255, 0, 0, 255,
+                255, 0, 0, 255,
+                255, 0, 0, 255,
+                0, 0, 255, 255,
+                0, 0, 255, 255,
+                0, 0, 255, 255,
+            ],
+        };
+        
+
+        let img2 = scale(&img, 50.0);
+        self.canvas.draw(&img2, 0, self.xval);
+
+        self.xval += 1;
+
+        &self.canvas
+    }
+}
+
 fn main() {
-    let img = RgbaImage {
-        width: 3,
-        height: 3,
-        bytes: vec![
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-        ],
+    let state_manager = StateManager {
+        canvas: RgbaImage::new(400, 400),
+        xval: 0,
     };
 
-    let img2 = scale(&img, 50.0);
+    let window_manager = WindowManager {};
 
-    let mut window = WindowBuilder::new()
-        .width(400)
-        .height(400)
-        .build();
-
-    window.draw(&img2, 50, 150);
-
-    window.open();
+    window_manager.open(state_manager);
 }
