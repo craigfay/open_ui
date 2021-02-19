@@ -171,8 +171,6 @@ impl WindowManager {
     
         let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
     
-        let mut t: f32 = 0.0;
-    
         let program = glium::Program::from_source(
             &display,
             VERTEX_SHADER_SRC,
@@ -188,15 +186,30 @@ impl WindowManager {
                 &pixels.bytes,
                 (pixels.width, pixels.height),
             );
-    
+
             let texture = glium::texture::Texture2d::new(&display, image)
                 .unwrap();
 
+            let uniforms = uniform! {
+                    // Applying filters to prevent unwanted image smoothing
+                    sampler: texture.sampled()
+                        .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
+                        .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
+                };
+            
+            let mut target = display.draw();
+
+            target.draw(&vertex_buffer, &indices, &program, &uniforms,
+                &Default::default()).unwrap();
+
+            target.finish().unwrap();
+
             let next_frame_time = std::time::Instant::now() +
                 std::time::Duration::from_nanos(6_666_667);
-    
+
             *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
-    
+
+
             match event {
 
                 glutin::event::Event::WindowEvent { event, .. } => match event {
@@ -212,25 +225,7 @@ impl WindowManager {
                     glutin::event::StartCause::Init => (),
                     _ => return,
                 },
-
-                // TODO this should match a specific event
-                _ => {
-                    let uniforms = uniform! {
-                        // Applying filters to prevent unwanted image smoothing
-                        sampler: texture.sampled()
-                            .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
-                            .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
-                    };
-                
-                    let mut target = display.draw();
-                
-                    target.clear_color(1.0, 1.0, 1.0, 1.0);
-                
-                    target.draw(&vertex_buffer, &indices, &program, &uniforms,
-                        &Default::default()).unwrap();
-                    
-                    target.finish().unwrap();
-                },
+                _ => {}
             }
 
         });
@@ -329,42 +324,46 @@ impl RgbaImage {
 pub struct StateManager {
     canvas: RgbaImage,
     xval: i32,
+    images: Vec<RgbaImage>,
 }
 
 impl StateManager {
     pub fn next(&mut self) -> &RgbaImage {
-
         self.canvas.fill((0,0,0,255));
 
-        let img = RgbaImage {
-            width: 3,
-            height: 3,
-            bytes: vec![
-                0, 255, 0, 255,
-                0, 255, 0, 255,
-                0, 255, 0, 255,
-                255, 0, 0, 255,
-                255, 0, 0, 255,
-                255, 0, 0, 255,
-                0, 0, 255, 255,
-                0, 0, 255, 255,
-                0, 0, 255, 255,
-            ],
-        };
-        
-
-        let img2 = scale(&img, 50.0);
-        self.canvas.draw(&img2, 0, self.xval);
+        for i in 0..self.images.len() {
+            let image = &self.images[i];
+            self.canvas.draw(&image, 0, self.xval);
+        }
 
         self.xval += 1;
-
         &self.canvas
     }
 }
 
 fn main() {
+
+    let img = RgbaImage {
+        width: 3,
+        height: 3,
+        bytes: vec![
+            0, 255, 0, 255,
+            0, 255, 0, 255,
+            0, 255, 0, 255,
+            255, 0, 0, 255,
+            255, 0, 0, 255,
+            255, 0, 0, 255,
+            0, 0, 255, 255,
+            0, 0, 255, 255,
+            0, 0, 255, 255,
+        ],
+    }; 
+
+    let img = scale(&img, 20.0);
+
     let state_manager = StateManager {
-        canvas: RgbaImage::new(400, 400),
+        canvas: RgbaImage::new(250, 250),
+        images: vec![img],
         xval: 0,
     };
 
