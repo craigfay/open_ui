@@ -119,13 +119,35 @@ impl RgbaImage {
             self.bytes[index + 3],
         )
     }
+
+    pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
+        for img_y in 0..img.height {
+            for img_x in 0..img.width {
+                let pixel = img.get_pixel(img_x, img_y);
+
+                let canvas_x = x + img_x as i32;
+                let canvas_y = y + img_y as i32;
+
+                if canvas_x >= 0 && canvas_y >= 0 {
+                    self.set_pixel(
+                        canvas_x as u32,
+                        canvas_y as u32,
+                        pixel
+                    );
+                }
+            }
+        }
+    }
+
+    pub fn fill(&mut self, color: RgbaPixel) {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                self.set_pixel(x, y, color);
+            }
+        }
+    }
 }
 
-pub struct Window {
-    width: u32,
-    height: u32,
-    canvas: RgbaImage,
-}
 
 pub struct WindowManager {}
 
@@ -233,92 +255,9 @@ impl WindowManager {
     }
 }
 
-impl Window {
-    pub fn open(&mut self) {
 
-    }
 
-    pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
-        for img_y in 0..img.height {
-            for img_x in 0..img.width {
-                let pixel = img.get_pixel(img_x, img_y);
 
-                let canvas_x = x + img_x as i32;
-                let canvas_y = y + img_y as i32;
-
-                if canvas_x >= 0 && canvas_y >= 0 {
-                    self.canvas.set_pixel(
-                        canvas_x as u32,
-                        canvas_y as u32,
-                        pixel
-                    );
-                }
-            }
-        }
-    }
-
-}
-
-pub struct WindowBuilder {
-    width: u32,
-    height: u32,
-}
-
-impl WindowBuilder {
-    
-    pub fn new() -> WindowBuilder {
-        WindowBuilder {
-            width: 0,
-            height: 0,
-        }
-    }
-
-    pub fn build(&self) -> Window {
-        Window {
-            width: self.width,
-            height: self.height,
-            canvas: RgbaImage::new(self.width, self.height),
-        }
-    }
-
-    pub fn width(self, width: u32) -> WindowBuilder {
-        WindowBuilder { width, ..self }
-    }
-
-    pub fn height(self, height: u32) -> WindowBuilder {
-        WindowBuilder { height, ..self }
-    }
-}
-
-impl RgbaImage {
-    pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
-        for img_y in 0..img.height {
-            for img_x in 0..img.width {
-                let pixel = img.get_pixel(img_x, img_y);
-
-                let canvas_x = x + img_x as i32;
-                let canvas_y = y + img_y as i32;
-
-                if canvas_x >= 0 && canvas_y >= 0 {
-                    self.set_pixel(
-                        canvas_x as u32,
-                        canvas_y as u32,
-                        pixel
-                    );
-                }
-            }
-        }
-    }
-
-    pub fn fill(&mut self, color: RgbaPixel) {
-        for y in 0..self.height {
-            for x in 0..self.width {
-                self.set_pixel(x, y, color);
-            }
-        }
-    }
-
-}
 
 
 pub struct StateManager {
@@ -342,7 +281,6 @@ impl StateManager {
 }
 
 fn main() {
-
     let img = RgbaImage {
         width: 3,
         height: 3,
