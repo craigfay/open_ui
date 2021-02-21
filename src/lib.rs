@@ -7,7 +7,8 @@ use glium::{glutin, Surface};
 use glium::glutin::dpi::Size::Logical;
 use glium::glutin::dpi::LogicalSize;
 
-use glium::glutin::event::Event::DeviceEvent;
+use glium::glutin::event::Event;
+use glium::glutin::event::DeviceEvent;
 use glium::glutin::event::KeyboardInput;
 use glium::glutin::event::VirtualKeyCode;
 use glium::glutin::event::ElementState;
@@ -267,8 +268,9 @@ impl GUI {
                     _ => return,
                 },
 
-                DeviceEvent { event, .. } => {
-                    println!("{:?}", event);
+                Event::DeviceEvent { event, .. } => {
+                    apply_device_event(&event, &mut input_state);
+                    // println!("{:?}", event);
                 },
                 _ => {}
             }
@@ -447,4 +449,12 @@ pub struct KeyboardState {
     copy: bool,
     paste: bool,
     cut: bool,
+}
+
+fn apply_device_event(device_event: &DeviceEvent, input_state: &mut InputState) {
+    match device_event {
+        KeyboardInput => {
+            let keyboard_index = 0;
+        }
+    }
 }
