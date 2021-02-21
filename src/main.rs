@@ -1,14 +1,14 @@
 
-use winlib::{RgbaImage, Window, WindowController};
+use gui::{RgbaImage, GUI, GUIController};
 
-pub struct MyWindow {
+pub struct MyApplication {
     canvas: RgbaImage,
     xval: i32,
     images: Vec<RgbaImage>,
 }
 
-impl MyWindow {
-    pub fn new() -> MyWindow {
+impl MyApplication {
+    pub fn new() -> MyApplication {
         let img = RgbaImage {
             width: 3,
             height: 3,
@@ -27,7 +27,7 @@ impl MyWindow {
     
         let img = RgbaImage::nearest_neighbor_scale(&img, 20.0);
     
-        MyWindow {
+        MyApplication {
             canvas: RgbaImage::new(250, 250),
             images: vec![img],
             xval: 0,
@@ -35,9 +35,9 @@ impl MyWindow {
     }
 }
 
-impl WindowController for MyWindow {
+impl GUIController for MyApplication {
     fn title(&self) -> &str {
-        "My Window"
+        "My Application"
     }
 
     fn dimensions(&self) -> (u32, u32) {
@@ -62,6 +62,6 @@ impl WindowController for MyWindow {
 }
 
 fn main() {
-    let my_window = MyWindow::new();
-    Window::open(my_window);
+    let application = MyApplication::new();
+    GUI::launch(application);
 }

@@ -11,7 +11,7 @@ use std::time::Duration;
 use std::time::Instant;
 
 
-pub trait WindowController {
+pub trait GUIController {
     fn title(&self) -> &str;
     fn dimensions(&self) -> (u32, u32);
     fn frames_per_second(&self) -> u32;
@@ -156,10 +156,10 @@ impl RgbaImage {
     }
 }
 
-pub struct Window;
+pub struct GUI;
 
-impl Window {
-    pub fn open<T: 'static + WindowController>(mut controller: T) {
+impl GUI {
+    pub fn launch<T: 'static + GUIController>(mut controller: T) {
         let event_loop = glutin::event_loop::EventLoop::new();
 
         let (width, height) = controller.dimensions();
@@ -240,7 +240,7 @@ impl Window {
                 last_render = Instant::now();
             }
 
-            // Responding to window events
+            // Responding to GUI events
             match event {
                 glutin::event::Event::WindowEvent { event, .. } => match event {
                     glutin::event::WindowEvent::CloseRequested => {
