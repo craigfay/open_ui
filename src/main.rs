@@ -158,6 +158,7 @@ impl Window {
         let size = Logical(LogicalSize::new(width as f64, height as f64));
 
         let wb = glutin::window::WindowBuilder::new()
+            .with_title(state_manager.title())
             .with_inner_size(size);
     
         let cb = glutin::ContextBuilder::new();
@@ -254,8 +255,9 @@ impl Window {
 
 
 pub trait WindowController {
-    fn next_frame(&mut self) -> &RgbaImage;
+    fn title(&self) -> &str;
     fn dimensions(&self) -> (u32, u32);
+    fn next_frame(&mut self) -> &RgbaImage;
 }
 
 
@@ -294,6 +296,15 @@ impl MyWindow {
 }
 
 impl WindowController for MyWindow {
+
+    fn title(&self) -> &str {
+        "MyWindow"
+    }
+
+    fn dimensions(&self) -> (u32, u32) {
+        (self.canvas.height, self.canvas.width)
+    }
+
     fn next_frame(&mut self) -> &RgbaImage {
         self.canvas.fill((0,0,0,255));
 
@@ -306,9 +317,7 @@ impl WindowController for MyWindow {
         &self.canvas
     }
 
-    fn dimensions(&self) -> (u32, u32) {
-        (self.canvas.height, self.canvas.width)
-    }
+
 }
 
 fn main() {
