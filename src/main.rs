@@ -152,7 +152,7 @@ impl RgbaImage {
 pub struct WindowManager {}
 
 impl WindowManager {
-    pub fn open(&self, mut state_manager: StateManager) {
+    pub fn open(mut state_manager: StateManager) {
         let event_loop = glutin::event_loop::EventLoop::new();
 
         let size = Logical(
@@ -305,7 +305,6 @@ fn main() {
         xval: 0,
     };
 
-    let window_manager = WindowManager {};
 
-    window_manager.open(state_manager);
+    WindowManager::open(state_manager);
 }
