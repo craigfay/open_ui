@@ -214,6 +214,12 @@ impl GUI {
         let fps = controller.frames_per_second();
         let refresh_interval = Duration::from_millis(1000 / fps as u64);
 
+        // Setting up input state
+        let mut input_state = InputState {
+            keyboards: vec![
+                KeyboardState::default(),
+            ]
+        };
 
         event_loop.run(move |event, _, control_flow| {
             // Maybe draw the next frame
@@ -272,8 +278,12 @@ impl GUI {
     }
 }
 
-
 pub struct InputState {
+    keyboards: Vec<KeyboardState>,
+}
+
+#[derive(Default)]
+pub struct KeyboardState {
     key_1: bool,
     key_2: bool,
     key_3: bool,
