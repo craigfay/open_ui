@@ -45,40 +45,6 @@ const FRAGMENT_SHADER_SRC: &str = r#"
 "#;
 
 
-// Scale an image using nearest neighbor interpolation
-pub fn scale(img: &RgbaImage, factor: f32) -> RgbaImage {
-    let mut new_img = RgbaImage::new(
-        (img.width as f32 * factor) as u32,
-        (img.height as f32 * factor) as u32,
-    );
-
-    // Calculating a ratio of a single pixel's size to the whole image
-    let ratio_x = 1.0 / new_img.width as f32;
-    let ratio_y = 1.0 / new_img.height as f32;
-
-    for y in 0..new_img.height {
-        for x in 0..new_img.width {
-
-            // Determining which x and y values to sample from
-            let progress_x = ratio_x * x as f32;
-            let progress_y = ratio_y * y as f32;
-
-            let src_x = progress_x * img.width as f32;
-            let src_y = progress_y * img.height as f32;
-
-            // Determining which x and y values to write to
-            let dest_x = ratio_x * new_img.width as f32;
-            let dest_y = ratio_y * new_img.height as f32;
-
-            // Applying the sampled pixel to the output image
-            let pixel = img.get_pixel(src_x as u32, src_y as u32);
-            new_img.set_pixel(x, y, pixel);
-        }
-    }
-
-    new_img
-}
-
 pub struct RgbaImage {
     pub width: u32,
     pub height: u32,
@@ -86,6 +52,44 @@ pub struct RgbaImage {
 }
 
 pub type RgbaPixel = (u8,u8,u8,u8);
+
+// Image manipulation functionality
+impl RgbaImage {
+
+    // Scale an image using nearest neighbor interpolation
+    pub fn scale(img: &RgbaImage, factor: f32) -> RgbaImage {
+        let mut new_img = RgbaImage::new(
+            (img.width as f32 * factor) as u32,
+            (img.height as f32 * factor) as u32,
+        );
+
+        // Calculating a ratio of a single pixel's size to the whole image
+        let ratio_x = 1.0 / new_img.width as f32;
+        let ratio_y = 1.0 / new_img.height as f32;
+
+        for y in 0..new_img.height {
+            for x in 0..new_img.width {
+
+                // Determining which x and y values to sample from
+                let progress_x = ratio_x * x as f32;
+                let progress_y = ratio_y * y as f32;
+
+                let src_x = progress_x * img.width as f32;
+                let src_y = progress_y * img.height as f32;
+
+                // Determining which x and y values to write to
+                let dest_x = ratio_x * new_img.width as f32;
+                let dest_y = ratio_y * new_img.height as f32;
+
+                // Applying the sampled pixel to the output image
+                let pixel = img.get_pixel(src_x as u32, src_y as u32);
+                new_img.set_pixel(x, y, pixel);
+            }
+        }
+
+        new_img
+    }
+}
 
 impl RgbaImage {
     pub fn new(width: u32, height: u32) -> RgbaImage {

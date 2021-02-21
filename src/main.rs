@@ -1,5 +1,5 @@
 
-use winlib::{RgbaImage, scale, Window, WindowController};
+use winlib::{RgbaImage, Window, WindowController};
 
 pub struct MyWindow {
     canvas: RgbaImage,
@@ -25,7 +25,7 @@ impl MyWindow {
             ],
         }; 
     
-        let img = scale(&img, 20.0);
+        let img = RgbaImage::scale(&img, 20.0);
     
         MyWindow {
             canvas: RgbaImage::new(250, 250),
