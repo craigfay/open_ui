@@ -4,3 +4,4 @@
 * Write tests for image manipulation
 * Enable / Disable Resizing
 * Introduce partial builder pattern
+* Test scaling with different x and y factors
