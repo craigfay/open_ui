@@ -1,5 +1,5 @@
 [package]
-name = "opengl_rust"
+name = "gui"
 version = "0.1.0"
 authors = ["craig <craigfay1@gmail.com>"]
 edition = "2018"
