@@ -1,5 +1,5 @@
 
-use gui::{GUI, GUIController, RgbaImage};
+use open_gui::{GUI, GUIController, RgbaImage};
 
 pub struct MyApplication {
     canvas: RgbaImage,
