@@ -7,6 +7,9 @@ use glium::{glutin, Surface};
 use glium::glutin::dpi::Size::Logical;
 use glium::glutin::dpi::LogicalSize;
 
+use std::time::Duration;
+use std::time::Instant;
+
 const VERTEX_SHADER_SRC: &str = r#"
     #version 150
 
@@ -196,37 +199,41 @@ impl Window {
             None
         ).unwrap();
 
+        // Setting up timekeeping
+        let mut last_render = Instant::now();
+        let fps = controller.frames_per_second();
+        let refresh_interval = Duration::from_millis(1000 / fps as u64);
+
         event_loop.run(move |event, _, control_flow| {
 
-            let pixels = &controller.next_frame();
+            // Maybe draw the next frame
+            if last_render + refresh_interval < Instant::now() {
+                let pixels = &controller.next_frame();
 
-            let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-                &pixels.bytes,
-                (pixels.width, pixels.height),
-            );
+                let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
+                    &pixels.bytes,
+                    (pixels.width, pixels.height),
+                );
 
-            let texture = glium::texture::Texture2d::new(&display, image)
-                .unwrap();
+                let texture = glium::texture::Texture2d::new(&display, image)
+                    .unwrap();
 
-            let uniforms = uniform! {
-                    // Applying filters to prevent unwanted image smoothing
-                    sampler: texture.sampled()
-                        .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
-                        .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
-                };
+                let uniforms = uniform! {
+                        // Applying filters to prevent unwanted image smoothing
+                        sampler: texture.sampled()
+                            .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
+                            .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
+                    };
             
-            let mut target = display.draw();
+                let mut target = display.draw();
 
-            target.draw(&vertex_buffer, &indices, &program, &uniforms,
-                &Default::default()).unwrap();
+                target.draw(&vertex_buffer, &indices, &program, &uniforms,
+                    &Default::default()).unwrap();
 
-            target.finish().unwrap();
+                target.finish().unwrap();
 
-            let next_frame_time = std::time::Instant::now() +
-                std::time::Duration::from_nanos(6_666_667);
-
-            *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
-
+                last_render = Instant::now();
+            }
 
             match event {
 
@@ -257,6 +264,7 @@ impl Window {
 pub trait WindowController {
     fn title(&self) -> &str;
     fn dimensions(&self) -> (u32, u32);
+    fn frames_per_second(&self) -> u32;
     fn next_frame(&mut self) -> &RgbaImage;
 }
 
@@ -296,13 +304,16 @@ impl MyWindow {
 }
 
 impl WindowController for MyWindow {
-
     fn title(&self) -> &str {
         "My Window"
     }
 
     fn dimensions(&self) -> (u32, u32) {
         (self.canvas.height * 2, self.canvas.width * 2)
+    }
+
+    fn frames_per_second(&self) -> u32 {
+        60
     }
 
     fn next_frame(&mut self) -> &RgbaImage {
