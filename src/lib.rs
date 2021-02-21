@@ -55,9 +55,7 @@ pub type RgbaPixel = (u8,u8,u8,u8);
 
 // Image manipulation functionality
 impl RgbaImage {
-
-    // Scale an image using nearest neighbor interpolation
-    pub fn scale(img: &RgbaImage, factor: f32) -> RgbaImage {
+    pub fn nearest_neighbor_scale(img: &RgbaImage, factor: f32) -> RgbaImage {
         let mut new_img = RgbaImage::new(
             (img.width as f32 * factor) as u32,
             (img.height as f32 * factor) as u32,

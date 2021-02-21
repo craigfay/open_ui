@@ -25,7 +25,7 @@ impl MyWindow {
             ],
         }; 
     
-        let img = RgbaImage::scale(&img, 20.0);
+        let img = RgbaImage::nearest_neighbor_scale(&img, 20.0);
     
         MyWindow {
             canvas: RgbaImage::new(250, 250),
