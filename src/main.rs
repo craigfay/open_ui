@@ -151,14 +151,14 @@ impl RgbaImage {
 pub struct Window;
 
 impl Window {
-    pub fn open<T: 'static + WindowController>(mut state_manager: T) {
+    pub fn open<T: 'static + WindowController>(mut controller: T) {
         let event_loop = glutin::event_loop::EventLoop::new();
 
-        let (width, height) = state_manager.dimensions();
+        let (width, height) = controller.dimensions();
         let size = Logical(LogicalSize::new(width as f64, height as f64));
 
         let wb = glutin::window::WindowBuilder::new()
-            .with_title(state_manager.title())
+            .with_title(controller.title())
             .with_inner_size(size);
     
         let cb = glutin::ContextBuilder::new();
@@ -198,7 +198,7 @@ impl Window {
 
         event_loop.run(move |event, _, control_flow| {
 
-            let pixels = &state_manager.next_frame();
+            let pixels = &controller.next_frame();
 
             let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
                 &pixels.bytes,
