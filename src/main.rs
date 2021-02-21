@@ -202,7 +202,7 @@ impl WindowManager {
 
         event_loop.run(move |event, _, control_flow| {
 
-            let pixels = &state_manager.next();
+            let pixels = &state_manager.next_frame();
 
             let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
                 &pixels.bytes,
@@ -258,6 +258,9 @@ impl WindowManager {
 
 
 
+pub trait CanProduceFrames {
+    fn next_frame(&mut self) -> &RgbaImage;
+}
 
 
 pub struct StateManager {
@@ -266,8 +269,8 @@ pub struct StateManager {
     images: Vec<RgbaImage>,
 }
 
-impl StateManager {
-    pub fn next(&mut self) -> &RgbaImage {
+impl CanProduceFrames for StateManager {
+    fn next_frame(&mut self) -> &RgbaImage {
         self.canvas.fill((0,0,0,255));
 
         for i in 0..self.images.len() {
@@ -299,12 +302,12 @@ fn main() {
 
     let img = scale(&img, 20.0);
 
-    let state_manager = StateManager {
+    let logic = StateManager {
         canvas: RgbaImage::new(250, 250),
         images: vec![img],
         xval: 0,
     };
 
 
-    WindowManager::open(state_manager);
+    WindowManager::open(logic);
 }
