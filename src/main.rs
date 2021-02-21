@@ -148,9 +148,9 @@ impl RgbaImage {
     }
 }
 
-pub struct WindowManager;
+pub struct Window;
 
-impl WindowManager {
+impl Window {
     pub fn open<T: 'static + WindowController>(mut state_manager: T) {
         let event_loop = glutin::event_loop::EventLoop::new();
 
@@ -265,6 +265,34 @@ pub struct MyWindow {
     images: Vec<RgbaImage>,
 }
 
+impl MyWindow {
+    pub fn new() -> MyWindow {
+        let img = RgbaImage {
+            width: 3,
+            height: 3,
+            bytes: vec![
+                255, 0, 0, 255,
+                255, 0, 0, 255,
+                255, 0, 0, 255,
+                0, 255, 0, 255,
+                0, 255, 0, 255,
+                0, 255, 0, 255,
+                0, 0, 255, 255,
+                0, 0, 255, 255,
+                0, 0, 255, 255,
+            ],
+        }; 
+    
+        let img = scale(&img, 20.0);
+    
+        MyWindow {
+            canvas: RgbaImage::new(250, 250),
+            images: vec![img],
+            xval: 0,
+        }
+    }
+}
+
 impl WindowController for MyWindow {
     fn next_frame(&mut self) -> &RgbaImage {
         self.canvas.fill((0,0,0,255));
@@ -284,30 +312,6 @@ impl WindowController for MyWindow {
 }
 
 fn main() {
-    let img = RgbaImage {
-        width: 3,
-        height: 3,
-        bytes: vec![
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-            0, 255, 0, 255,
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-            255, 0, 0, 255,
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-            0, 0, 255, 255,
-        ],
-    }; 
-
-    let img = scale(&img, 20.0);
-
-    let logic = MyWindow {
-        canvas: RgbaImage::new(250, 250),
-        images: vec![img],
-        xval: 0,
-    };
-
-
-    WindowManager::open(logic);
+    let my_window = MyWindow::new();
+    Window::open(my_window);
 }
