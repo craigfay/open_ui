@@ -3,7 +3,7 @@ use open_gui::{GUI, GUIController, RgbaImage};
 
 pub struct MyApplication {
     canvas: RgbaImage,
-    xval: i32,
+    xval: f32,
     images: Vec<RgbaImage>,
 }
 
@@ -25,12 +25,12 @@ impl MyApplication {
             ],
         }; 
     
-        let img = RgbaImage::nearest_neighbor_scale(&img, 20.0);
+        // let img = RgbaImage::nearest_neighbor_scale(&img, 20.0);
     
         MyApplication {
-            canvas: RgbaImage::new(250, 250),
+            canvas: RgbaImage::new(24, 24),
             images: vec![img],
-            xval: 0,
+            xval: 0.0,
         }
     }
 }
@@ -41,7 +41,7 @@ impl GUIController for MyApplication {
     }
 
     fn dimensions(&self) -> (u32, u32) {
-        (self.canvas.height * 2, self.canvas.width * 2)
+        (self.canvas.height * 20, self.canvas.width * 20)
     }
 
     fn frames_per_second(&self) -> u32 {
@@ -53,10 +53,10 @@ impl GUIController for MyApplication {
 
         for i in 0..self.images.len() {
             let image = &self.images[i];
-            self.canvas.draw(&image, 0, self.xval);
+            self.canvas.draw(&image, 0, self.xval as i32);
         }
 
-        self.xval += 1;
+        self.xval += 0.01;
         &self.canvas
     }
 }
