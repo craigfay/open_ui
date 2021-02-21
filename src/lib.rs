@@ -53,7 +53,7 @@ pub struct RgbaImage {
 
 pub type RgbaPixel = (u8,u8,u8,u8);
 
-// Image manipulation functionality
+// #[cfg(feature = "image_manipulation")]
 impl RgbaImage {
     pub fn nearest_neighbor_scale(img: &RgbaImage, factor: f32) -> RgbaImage {
         let mut new_img = RgbaImage::new(
@@ -75,10 +75,6 @@ impl RgbaImage {
                 let src_x = progress_x * img.width as f32;
                 let src_y = progress_y * img.height as f32;
 
-                // Determining which x and y values to write to
-                let dest_x = ratio_x * new_img.width as f32;
-                let dest_y = ratio_y * new_img.height as f32;
-
                 // Applying the sampled pixel to the output image
                 let pixel = img.get_pixel(src_x as u32, src_y as u32);
                 new_img.set_pixel(x, y, pixel);
@@ -98,8 +94,7 @@ impl RgbaImage {
                 let byte_count = (width * height) * 4;
                 let mut bytes = vec![];
                 
-                for i in (0..byte_count).step_by(4) {
-                    let i = i as usize;
+                for _ in (0..byte_count).step_by(4) {
                     bytes.push(0);
                     bytes.push(0);
                     bytes.push(0);
@@ -111,8 +106,8 @@ impl RgbaImage {
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, pixel: RgbaPixel) -> bool {
-        if 0 > x || x >= self.width { return false; }
-        if 0 > y || y >= self.height { return false; }
+        if x >= self.width { return false; }
+        if y >= self.height { return false; }
 
         let index = (((self.width * y) + x) * 4) as usize;
         self.bytes[index + 0] = pixel.0;

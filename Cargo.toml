@@ -10,5 +10,8 @@ edition = "2018"
 name = "winlib"
 path = "src/lib.rs"
 
+[features]
+image_manipulation = []
+
 [dependencies]
 glium = "*"
