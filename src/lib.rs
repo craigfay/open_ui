@@ -259,18 +259,13 @@ impl GUI {
                         *control_flow = glutin::event_loop::ControlFlow::Exit;
                         return;
                     },
+                    glutin::event::WindowEvent::KeyboardInput { device_id, input, .. } => {
+                        println!("KB {:?} {:?}", device_id, input);
+                    },
                     _ => return,
                 },
-
-                glutin::event::Event::NewEvents(cause) => match cause {
-                    glutin::event::StartCause::ResumeTimeReached { .. } => (),
-                    glutin::event::StartCause::Init => (),
-                    _ => return,
-                },
-
                 Event::DeviceEvent { event, .. } => {
                     apply_device_event(&event, &mut input_state);
-                    // println!("{:?}", event);
                 },
                 _ => {}
             }
@@ -453,8 +448,17 @@ pub struct KeyboardState {
 
 fn apply_device_event(device_event: &DeviceEvent, input_state: &mut InputState) {
     match device_event {
-        KeyboardInput => {
+        DeviceEvent::MouseMotion { delta } => {
+            println!("{:?}", delta);
+        },
+        DeviceEvent::Button { state, button } => {
+            println!("{:?} {:?}", state, button);
+        },
+        // DeviceEvent::Key(KeyboardInput { state, virtual_keycode, .. }) => {
+        DeviceEvent::Key(KeyboardInput) => {
             let keyboard_index = 0;
-        }
+            println!("KEYBOARD");
+        },
+        _ => {},
     }
 }
