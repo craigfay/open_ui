@@ -151,7 +151,7 @@ impl RgbaImage {
 pub struct WindowManager;
 
 impl WindowManager {
-    pub fn open<T: 'static + CanProduceFrames>(mut state_manager: T) {
+    pub fn open<T: 'static + WindowController>(mut state_manager: T) {
         let event_loop = glutin::event_loop::EventLoop::new();
 
         let (width, height) = state_manager.dimensions();
@@ -253,19 +253,19 @@ impl WindowManager {
 
 
 
-pub trait CanProduceFrames {
+pub trait WindowController {
     fn next_frame(&mut self) -> &RgbaImage;
     fn dimensions(&self) -> (u32, u32);
 }
 
 
-pub struct StateManager {
+pub struct MyWindow {
     canvas: RgbaImage,
     xval: i32,
     images: Vec<RgbaImage>,
 }
 
-impl CanProduceFrames for StateManager {
+impl WindowController for MyWindow {
     fn next_frame(&mut self) -> &RgbaImage {
         self.canvas.fill((0,0,0,255));
 
@@ -302,7 +302,7 @@ fn main() {
 
     let img = scale(&img, 20.0);
 
-    let logic = StateManager {
+    let logic = MyWindow {
         canvas: RgbaImage::new(250, 250),
         images: vec![img],
         xval: 0,
