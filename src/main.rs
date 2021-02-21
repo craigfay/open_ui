@@ -204,8 +204,8 @@ impl Window {
         let fps = controller.frames_per_second();
         let refresh_interval = Duration::from_millis(1000 / fps as u64);
 
-        event_loop.run(move |event, _, control_flow| {
 
+        event_loop.run(move |event, _, control_flow| {
             // Maybe draw the next frame
             if last_render + refresh_interval < Instant::now() {
                 let pixels = &controller.next_frame();
@@ -235,8 +235,8 @@ impl Window {
                 last_render = Instant::now();
             }
 
+            // Responding to window events
             match event {
-
                 glutin::event::Event::WindowEvent { event, .. } => match event {
                     glutin::event::WindowEvent::CloseRequested => {
                         *control_flow = glutin::event_loop::ControlFlow::Exit;
@@ -327,8 +327,6 @@ impl WindowController for MyWindow {
         self.xval += 1;
         &self.canvas
     }
-
-
 }
 
 fn main() {
