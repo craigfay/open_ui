@@ -298,11 +298,11 @@ impl MyWindow {
 impl WindowController for MyWindow {
 
     fn title(&self) -> &str {
-        "MyWindow"
+        "My Window"
     }
 
     fn dimensions(&self) -> (u32, u32) {
-        (self.canvas.height, self.canvas.width)
+        (self.canvas.height * 2, self.canvas.width * 2)
     }
 
     fn next_frame(&mut self) -> &RgbaImage {
