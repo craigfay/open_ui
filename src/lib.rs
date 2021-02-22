@@ -689,6 +689,39 @@ fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
         Some(VirtualKeyCode::Caret) => {
             state.keyboards[keyboard_index].caret = is_pressed;
         },
+        Some(VirtualKeyCode::Numlock) => {
+            state.keyboards[keyboard_index].numlock = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad0) => {
+            state.keyboards[keyboard_index].numpad0 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad1) => {
+            state.keyboards[keyboard_index].numpad1 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad2) => {
+            state.keyboards[keyboard_index].numpad2 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad3) => {
+            state.keyboards[keyboard_index].numpad3 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad4) => {
+            state.keyboards[keyboard_index].numpad4 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad5) => {
+            state.keyboards[keyboard_index].numpad5 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad6) => {
+            state.keyboards[keyboard_index].numpad6 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad7) => {
+            state.keyboards[keyboard_index].numpad7 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad8) => {
+            state.keyboards[keyboard_index].numpad8 = is_pressed;
+        },
+        Some(VirtualKeyCode::Numpad9) => {
+            state.keyboards[keyboard_index].numpad9 = is_pressed;
+        },
         _ => {},
     }
 }
