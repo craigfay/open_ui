@@ -560,6 +560,81 @@ fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
         Some(VirtualKeyCode::Z) => {
             state.keyboards[keyboard_index].z = is_pressed;
         },
+        Some(VirtualKeyCode::Escape) => {
+            state.keyboards[keyboard_index].escape = is_pressed;
+        },
+        Some(VirtualKeyCode::F1) => {
+            state.keyboards[keyboard_index].f1 = is_pressed;
+        },
+        Some(VirtualKeyCode::F2) => {
+            state.keyboards[keyboard_index].f2 = is_pressed;
+        },
+        Some(VirtualKeyCode::F3) => {
+            state.keyboards[keyboard_index].f3 = is_pressed;
+        },
+        Some(VirtualKeyCode::F4) => {
+            state.keyboards[keyboard_index].f4 = is_pressed;
+        },
+        Some(VirtualKeyCode::F5) => {
+            state.keyboards[keyboard_index].f5 = is_pressed;
+        },
+        Some(VirtualKeyCode::F6) => {
+            state.keyboards[keyboard_index].f6 = is_pressed;
+        },
+        Some(VirtualKeyCode::F7) => {
+            state.keyboards[keyboard_index].f7 = is_pressed;
+        },
+        Some(VirtualKeyCode::F8) => {
+            state.keyboards[keyboard_index].f8 = is_pressed;
+        },
+        Some(VirtualKeyCode::F9) => {
+            state.keyboards[keyboard_index].f9 = is_pressed;
+        },
+        Some(VirtualKeyCode::F10) => {
+            state.keyboards[keyboard_index].f10 = is_pressed;
+        },
+        Some(VirtualKeyCode::F11) => {
+            state.keyboards[keyboard_index].f11 = is_pressed;
+        },
+        Some(VirtualKeyCode::F12) => {
+            state.keyboards[keyboard_index].f12 = is_pressed;
+        },
+        Some(VirtualKeyCode::F13) => {
+            state.keyboards[keyboard_index].f13 = is_pressed;
+        },
+        Some(VirtualKeyCode::F14) => {
+            state.keyboards[keyboard_index].f14 = is_pressed;
+        },
+        Some(VirtualKeyCode::F15) => {
+            state.keyboards[keyboard_index].f15 = is_pressed;
+        },
+        Some(VirtualKeyCode::F16) => {
+            state.keyboards[keyboard_index].f16 = is_pressed;
+        },
+        Some(VirtualKeyCode::F17) => {
+            state.keyboards[keyboard_index].f17 = is_pressed;
+        },
+        Some(VirtualKeyCode::F18) => {
+            state.keyboards[keyboard_index].f18 = is_pressed;
+        },
+        Some(VirtualKeyCode::F19) => {
+            state.keyboards[keyboard_index].f19 = is_pressed;
+        },
+        Some(VirtualKeyCode::F20) => {
+            state.keyboards[keyboard_index].f20 = is_pressed;
+        },
+        Some(VirtualKeyCode::F21) => {
+            state.keyboards[keyboard_index].f21 = is_pressed;
+        },
+        Some(VirtualKeyCode::F22) => {
+            state.keyboards[keyboard_index].f22 = is_pressed;
+        },
+        Some(VirtualKeyCode::F23) => {
+            state.keyboards[keyboard_index].f23 = is_pressed;
+        },
+        Some(VirtualKeyCode::F24) => {
+            state.keyboards[keyboard_index].f24 = is_pressed;
+        },
         _ => {},
     }
 }
