@@ -280,7 +280,7 @@ pub struct InputState {
     keyboards: Vec<KeyboardState>,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct KeyboardState {
     key_1: bool,
     key_2: bool,
@@ -447,14 +447,41 @@ pub struct KeyboardState {
     cut: bool,
 }
 
-fn apply_keyboard_input(input: &KeyboardInput, input_state: &mut InputState) {
+fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
     let keyboard_index = 0;
     let is_pressed = input.state == Pressed;
 
     match input.virtual_keycode {
         Some(VirtualKeyCode::Key1) => {
-            //
-        }
+            state.keyboards[keyboard_index].key_1 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key2) => {
+            state.keyboards[keyboard_index].key_2 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key3) => {
+            state.keyboards[keyboard_index].key_3 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key4) => {
+            state.keyboards[keyboard_index].key_4 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key5) => {
+            state.keyboards[keyboard_index].key_5 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key6) => {
+            state.keyboards[keyboard_index].key_6 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key7) => {
+            state.keyboards[keyboard_index].key_7 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key8) => {
+            state.keyboards[keyboard_index].key_8 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key9) => {
+            state.keyboards[keyboard_index].key_9 = is_pressed;
+        },
+        Some(VirtualKeyCode::Key0) => {
+            state.keyboards[keyboard_index].key_0 = is_pressed;
+        },
         _ => {},
     }
 }
