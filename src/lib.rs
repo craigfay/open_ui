@@ -746,19 +746,40 @@ fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
         Some(VirtualKeyCode::NumpadSubtract) => {
             state.keyboards[keyboard_index].numpad_subtract = is_pressed;
         },
+        Some(VirtualKeyCode::AbntC1) => {
+            state.keyboards[keyboard_index].abnt_c1 = is_pressed;
+        },
+        Some(VirtualKeyCode::AbntC2) => {
+            state.keyboards[keyboard_index].abnt_c2 = is_pressed;
+        },
+        Some(VirtualKeyCode::Apostrophe) => {
+            state.keyboards[keyboard_index].apostrophe = is_pressed;
+        },
+        Some(VirtualKeyCode::Apps) => {
+            state.keyboards[keyboard_index].apps = is_pressed;
+        },
+        Some(VirtualKeyCode::At) => {
+            state.keyboards[keyboard_index].at = is_pressed;
+        },
+        Some(VirtualKeyCode::Ax) => {
+            state.keyboards[keyboard_index].ax = is_pressed;
+        },
+        Some(VirtualKeyCode::Backslash) => {
+            state.keyboards[keyboard_index].backslash = is_pressed;
+        },
+        Some(VirtualKeyCode::Calculator) => {
+            state.keyboards[keyboard_index].calculator = is_pressed;
+        },
+        Some(VirtualKeyCode::Capital) => {
+            state.keyboards[keyboard_index].capital = is_pressed;
+        },
+        Some(VirtualKeyCode::Colon) => {
+            state.keyboards[keyboard_index].colon = is_pressed;
+        },
+        Some(VirtualKeyCode::Comma) => {
+            state.keyboards[keyboard_index].comma = is_pressed;
+        },
         _ => {},
-        // abnt_c1: bool,
-        // abnt_c2: bool,
-        // apostrophe: bool,
-        // apps: bool,
-        // asterisk: bool,
-        // at: bool,
-        // ax: bool,
-        // backslash: bool,
-        // calculator: bool,
-        // capital: bool,
-        // colon: bool,
-        // comma: bool,
     }
 }
 
