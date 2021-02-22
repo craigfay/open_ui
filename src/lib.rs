@@ -226,6 +226,8 @@ impl GUI {
             ]
         };
 
+        let mut ui_events = vec![];
+
         event_loop.run(move |event, _, control_flow| {
             // Maybe draw the next frame
             if last_render + refresh_interval < Instant::now() {
@@ -264,11 +266,11 @@ impl GUI {
                         return;
                     },
                     glutin::event::WindowEvent::KeyboardInput { device_id, input, .. } => {
-                        let mut hasher = DefaultHasher::new();
-                        device_id.hash(&mut hasher);
-                        println!("{:?}", hasher.finish());
+                        // let mut hasher = DefaultHasher::new();
+                        // device_id.hash(&mut hasher);
+                        // println!("{:?}", hasher.finish());
 
-                        apply_keyboard_input(&input, &mut input_state);
+                        apply_keyboard_input(&input, &mut ui_events);
                     },
                     _ => return,
                 },
@@ -283,9 +285,66 @@ impl GUI {
     }
 }
 
+fn apply_keyboard_input(input: &KeyboardInput, state: &mut Vec<UIEvent>) {
+    //
+}
+
 pub struct InputState {
     keyboards: Vec<KeyboardState>,
 }
+
+pub enum KeyboardAction {
+    Press,
+    Release,
+}
+
+pub enum KeyboardKey {
+    Num0,
+    Num1,
+    Num2,
+    Num3,
+    Num4,
+    Num5,
+    Num6,
+    Num7,
+    Num8,
+    Num9,
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+    H,
+    I,
+    J,
+    K,
+    L,
+    M,
+    N,
+    O,
+    P,
+    Q,
+    R,
+    S,
+    T,
+    U,
+    V,
+    W,
+    X,
+    Y,
+    Z,
+}
+
+pub enum UIEvent {
+    KeyboardEvent {
+        device_id: u64,
+        key: KeyboardKey,
+        action: KeyboardAction,
+    }
+}
+
 
 #[derive(Default, Debug)]
 pub struct KeyboardState {
@@ -454,7 +513,7 @@ pub struct KeyboardState {
     cut: bool,
 }
 
-fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
+fn _apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
     let keyboard_index = 0;
     let is_pressed = input.state == Pressed;
 
