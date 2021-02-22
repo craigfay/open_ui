@@ -722,7 +722,43 @@ fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
         Some(VirtualKeyCode::Numpad9) => {
             state.keyboards[keyboard_index].numpad9 = is_pressed;
         },
+        Some(VirtualKeyCode::NumpadAdd) => {
+            state.keyboards[keyboard_index].numpad_add = is_pressed;
+        },
+        Some(VirtualKeyCode::NumpadDivide) => {
+            state.keyboards[keyboard_index].numpad_divide = is_pressed;
+        },
+        Some(VirtualKeyCode::NumpadDecimal) => {
+            state.keyboards[keyboard_index].numpad_decimal = is_pressed;
+        },
+        Some(VirtualKeyCode::NumpadComma) => {
+            state.keyboards[keyboard_index].numpad_comma = is_pressed;
+        },
+        Some(VirtualKeyCode::NumpadEnter) => {
+            state.keyboards[keyboard_index].numpad_enter = is_pressed;
+        },
+        Some(VirtualKeyCode::NumpadEquals) => {
+            state.keyboards[keyboard_index].numpad_equals = is_pressed;
+        },
+        Some(VirtualKeyCode::NumpadMultiply) => {
+            state.keyboards[keyboard_index].numpad_multiply = is_pressed;
+        },
+        Some(VirtualKeyCode::NumpadSubtract) => {
+            state.keyboards[keyboard_index].numpad_subtract = is_pressed;
+        },
         _ => {},
+        // abnt_c1: bool,
+        // abnt_c2: bool,
+        // apostrophe: bool,
+        // apps: bool,
+        // asterisk: bool,
+        // at: bool,
+        // ax: bool,
+        // backslash: bool,
+        // calculator: bool,
+        // capital: bool,
+        // colon: bool,
+        // comma: bool,
     }
 }
 
