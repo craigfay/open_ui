@@ -11,7 +11,7 @@ use glium::glutin::event::Event;
 use glium::glutin::event::DeviceEvent;
 use glium::glutin::event::KeyboardInput;
 use glium::glutin::event::VirtualKeyCode;
-use glium::glutin::event::ElementState;
+use glium::glutin::event::ElementState::Pressed;
 
 use std::time::Duration;
 use std::time::Instant;
@@ -260,7 +260,8 @@ impl GUI {
                         return;
                     },
                     glutin::event::WindowEvent::KeyboardInput { device_id, input, .. } => {
-                        println!("KB {:?} {:?}", device_id, input);
+                        apply_keyboard_input(&input, &mut input_state);
+                        // println!("KB {:?} {:?}", device_id, input);
                     },
                     _ => return,
                 },
@@ -446,19 +447,31 @@ pub struct KeyboardState {
     cut: bool,
 }
 
-fn apply_device_event(device_event: &DeviceEvent, input_state: &mut InputState) {
-    match device_event {
-        DeviceEvent::MouseMotion { delta } => {
-            println!("{:?}", delta);
-        },
-        DeviceEvent::Button { state, button } => {
-            println!("{:?} {:?}", state, button);
-        },
-        // DeviceEvent::Key(KeyboardInput { state, virtual_keycode, .. }) => {
-        DeviceEvent::Key(KeyboardInput) => {
-            let keyboard_index = 0;
-            println!("KEYBOARD");
-        },
+fn apply_keyboard_input(input: &KeyboardInput, input_state: &mut InputState) {
+    let keyboard_index = 0;
+    let is_pressed = input.state == Pressed;
+
+    match input.virtual_keycode {
+        Some(VirtualKeyCode::Key1) => {
+            //
+        }
         _ => {},
     }
+}
+
+fn apply_device_event(device_event: &DeviceEvent, input_state: &mut InputState) {
+    // match device_event {
+    //     DeviceEvent::MouseMotion { delta } => {
+    //         println!("{:?}", delta);
+    //     },
+    //     DeviceEvent::Button { state, button } => {
+    //         println!("{:?} {:?}", state, button);
+    //     },
+    //     // DeviceEvent::Key(KeyboardInput { state, virtual_keycode, .. }) => {
+    //     DeviceEvent::Key(KeyboardInput) => {
+    //         let keyboard_index = 0;
+    //         println!("KEYBOARD");
+    //     },
+    //     _ => {},
+    // }
 }
