@@ -779,6 +779,51 @@ fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
         Some(VirtualKeyCode::Comma) => {
             state.keyboards[keyboard_index].comma = is_pressed;
         },
+        Some(VirtualKeyCode::Convert) => {
+            state.keyboards[keyboard_index].convert = is_pressed;
+        },
+        Some(VirtualKeyCode::Equals) => {
+            state.keyboards[keyboard_index].equals = is_pressed;
+        },
+        Some(VirtualKeyCode::Grave) => {
+            state.keyboards[keyboard_index].grave = is_pressed;
+        },
+        Some(VirtualKeyCode::Kana) => {
+            state.keyboards[keyboard_index].kana = is_pressed;
+        },
+        Some(VirtualKeyCode::Kanji) => {
+            state.keyboards[keyboard_index].kanji = is_pressed;
+        },
+        Some(VirtualKeyCode::LAlt) => {
+            state.keyboards[keyboard_index].l_alt = is_pressed;
+        },
+        Some(VirtualKeyCode::LBracket) => {
+            state.keyboards[keyboard_index].l_bracket = is_pressed;
+        },
+        Some(VirtualKeyCode::LControl) => {
+            state.keyboards[keyboard_index].l_control = is_pressed;
+        },
+        Some(VirtualKeyCode::LShift) => {
+            state.keyboards[keyboard_index].l_shift = is_pressed;
+        },
+        Some(VirtualKeyCode::LWin) => {
+            state.keyboards[keyboard_index].l_win = is_pressed;
+        },
+        Some(VirtualKeyCode::Mail) => {
+            state.keyboards[keyboard_index].mail = is_pressed;
+        },
+        Some(VirtualKeyCode::MediaSelect) => {
+            state.keyboards[keyboard_index].media_select = is_pressed;
+        },
+        Some(VirtualKeyCode::MediaStop) => {
+            state.keyboards[keyboard_index].media_stop = is_pressed;
+        },
+        Some(VirtualKeyCode::Minus) => {
+            state.keyboards[keyboard_index].minus = is_pressed;
+        },
+        Some(VirtualKeyCode::Mute) => {
+            state.keyboards[keyboard_index].mute = is_pressed;
+        },
         _ => {},
     }
 }
