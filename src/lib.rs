@@ -15,6 +15,10 @@ use glium::glutin::event::ElementState::Pressed;
 
 use std::time::Duration;
 use std::time::Instant;
+use std::hash::Hasher;
+use std::hash::Hash;
+use std::collections::hash_map::DefaultHasher;
+
 
 
 pub trait GUIController {
@@ -260,8 +264,11 @@ impl GUI {
                         return;
                     },
                     glutin::event::WindowEvent::KeyboardInput { device_id, input, .. } => {
+                        let mut hasher = DefaultHasher::new();
+                        device_id.hash(&mut hasher);
+                        println!("{:?}", hasher.finish());
+
                         apply_keyboard_input(&input, &mut input_state);
-                        // println!("KB {:?} {:?}", device_id, input);
                     },
                     _ => return,
                 },
