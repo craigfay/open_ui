@@ -266,11 +266,7 @@ impl GUI {
                         return;
                     },
                     glutin::event::WindowEvent::KeyboardInput { device_id, input, .. } => {
-                        // let mut hasher = DefaultHasher::new();
-                        // device_id.hash(&mut hasher);
-                        // println!("{:?}", hasher.finish());
-
-                        apply_keyboard_input(&input, &mut ui_events);
+                        apply_keyboard_input(&device_id, &input, &mut ui_events);
                     },
                     _ => return,
                 },
@@ -285,8 +281,14 @@ impl GUI {
     }
 }
 
-fn apply_keyboard_input(input: &KeyboardInput, state: &mut Vec<UIEvent>) {
-    //
+fn apply_keyboard_input(
+    device_id: &glutin::event::DeviceId,
+    input: &glutin::event::KeyboardInput,
+    ui_events: &mut Vec<UIEvent>
+) {
+    let mut hasher = DefaultHasher::new();
+    device_id.hash(&mut hasher);
+    println!("{:?}", hasher.finish());
 }
 
 pub struct InputState {
