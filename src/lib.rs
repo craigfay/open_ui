@@ -824,6 +824,120 @@ fn apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
         Some(VirtualKeyCode::Mute) => {
             state.keyboards[keyboard_index].mute = is_pressed;
         },
+        Some(VirtualKeyCode::MyComputer) => {
+            state.keyboards[keyboard_index].my_computer = is_pressed;
+        },
+        Some(VirtualKeyCode::NavigateForward) => {
+            state.keyboards[keyboard_index].navigate_forward = is_pressed;
+        },
+        Some(VirtualKeyCode::NavigateBackward) => {
+            state.keyboards[keyboard_index].navigate_backward = is_pressed;
+        },
+        Some(VirtualKeyCode::NextTrack) => {
+            state.keyboards[keyboard_index].next_track = is_pressed;
+        },
+        Some(VirtualKeyCode::NoConvert) => {
+            state.keyboards[keyboard_index].no_convert = is_pressed;
+        },
+        Some(VirtualKeyCode::OEM102) => {
+            state.keyboards[keyboard_index].oem102 = is_pressed;
+        },
+        Some(VirtualKeyCode::Period) => {
+            state.keyboards[keyboard_index].period = is_pressed;
+        },
+        Some(VirtualKeyCode::PlayPause) => {
+            state.keyboards[keyboard_index].play_pause = is_pressed;
+        },
+        Some(VirtualKeyCode::Plus) => {
+            state.keyboards[keyboard_index].plus = is_pressed;
+        },
+        Some(VirtualKeyCode::Power) => {
+            state.keyboards[keyboard_index].power = is_pressed;
+        },
+        Some(VirtualKeyCode::PrevTrack) => {
+            state.keyboards[keyboard_index].prev_track = is_pressed;
+        },
+        Some(VirtualKeyCode::RAlt) => {
+            state.keyboards[keyboard_index].r_alt = is_pressed;
+        },
+        Some(VirtualKeyCode::RBracket) => {
+            state.keyboards[keyboard_index].r_bracket = is_pressed;
+        },
+        Some(VirtualKeyCode::RControl) => {
+            state.keyboards[keyboard_index].r_control = is_pressed;
+        },
+        Some(VirtualKeyCode::RShift) => {
+            state.keyboards[keyboard_index].r_shift = is_pressed;
+        },
+        Some(VirtualKeyCode::RWin) => {
+            state.keyboards[keyboard_index].r_win = is_pressed;
+        },
+        Some(VirtualKeyCode::Semicolon) => {
+            state.keyboards[keyboard_index].semicolon = is_pressed;
+        },
+        Some(VirtualKeyCode::Slash) => {
+            state.keyboards[keyboard_index].slash = is_pressed;
+        },
+        Some(VirtualKeyCode::Sleep) => {
+            state.keyboards[keyboard_index].sleep = is_pressed;
+        },
+        Some(VirtualKeyCode::Stop) => {
+            state.keyboards[keyboard_index].stop = is_pressed;
+        },
+        Some(VirtualKeyCode::Sysrq) => {
+            state.keyboards[keyboard_index].sysrq = is_pressed;
+        },
+        Some(VirtualKeyCode::Tab) => {
+            state.keyboards[keyboard_index].tab = is_pressed;
+        },
+        Some(VirtualKeyCode::Underline) => {
+            state.keyboards[keyboard_index].underline = is_pressed;
+        },
+        Some(VirtualKeyCode::Unlabeled) => {
+            state.keyboards[keyboard_index].unlabeled = is_pressed;
+        },
+        Some(VirtualKeyCode::VolumeDown) => {
+            state.keyboards[keyboard_index].volume_down = is_pressed;
+        },
+        Some(VirtualKeyCode::VolumeUp) => {
+            state.keyboards[keyboard_index].volume_up = is_pressed;
+        },
+        Some(VirtualKeyCode::Wake) => {
+            state.keyboards[keyboard_index].wake = is_pressed;
+        },
+        Some(VirtualKeyCode::WebBack) => {
+            state.keyboards[keyboard_index].web_back = is_pressed;
+        },
+        Some(VirtualKeyCode::WebFavorites) => {
+            state.keyboards[keyboard_index].web_favorites = is_pressed;
+        },
+        Some(VirtualKeyCode::WebForward) => {
+            state.keyboards[keyboard_index].web_forward = is_pressed;
+        },
+        Some(VirtualKeyCode::WebHome) => {
+            state.keyboards[keyboard_index].web_home = is_pressed;
+        },
+        Some(VirtualKeyCode::WebRefresh) => {
+            state.keyboards[keyboard_index].web_refresh = is_pressed;
+        },
+        Some(VirtualKeyCode::WebSearch) => {
+            state.keyboards[keyboard_index].web_search = is_pressed;
+        },
+        Some(VirtualKeyCode::WebStop) => {
+            state.keyboards[keyboard_index].web_stop = is_pressed;
+        },
+        Some(VirtualKeyCode::Yen) => {
+            state.keyboards[keyboard_index].yen = is_pressed;
+        },
+        Some(VirtualKeyCode::Copy) => {
+            state.keyboards[keyboard_index].copy = is_pressed;
+        },
+        Some(VirtualKeyCode::Paste) => {
+            state.keyboards[keyboard_index].paste = is_pressed;
+        },
+        Some(VirtualKeyCode::Cut) => {
+            state.keyboards[keyboard_index].cut = is_pressed;
+        },
         _ => {},
     }
 }
