@@ -8,6 +8,27 @@ use open_ui::{
     KeyboardAction::*,
 };
 
+
+// The character that the player controls
+pub struct Snake {
+    segments: Vec<Segment>,
+    direction: Direction,
+}
+
+// A piece of the snake
+struct Segment {
+    x_position: i32,
+    y_position: i32,
+}
+
+// The directions that the snake can move
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
 pub struct MyApplication {
     canvas: RgbaImage,
     images: Vec<RgbaImage>,
