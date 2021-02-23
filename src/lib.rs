@@ -288,7 +288,24 @@ fn apply_keyboard_input(
 ) {
     let mut hasher = DefaultHasher::new();
     device_id.hash(&mut hasher);
-    println!("{:?}", hasher.finish());
+    let device_id = hasher.finish();
+
+    let action = match input.state {
+        glutin::event::ElementState::Pressed => KeyboardAction::Press,
+        glutin::event::ElementState::Released => KeyboardAction::Release,
+    };
+
+    let key = match input.virtual_keycode {
+        Some(VirtualKeyCode::Key0) => KeyboardKey::Num0,
+        Some(VirtualKeyCode::Key1) => KeyboardKey::Num1,
+        _ => return,
+    };
+
+    ui_events.push(UIEvent::KeyboardEvent {
+        device_id,
+        action,
+        key,
+    });
 }
 
 pub struct InputState {
