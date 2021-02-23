@@ -1,5 +1,5 @@
 
-use open_gui::{GUI, GUIController, RgbaImage};
+use open_gui::{GUI, GUIController, RgbaImage, UIEvent};
 
 pub struct MyApplication {
     canvas: RgbaImage,
@@ -46,6 +46,12 @@ impl GUIController for MyApplication {
 
     fn frames_per_second(&self) -> u32 {
         60
+    }
+
+    fn process_events(&mut self, events: &Vec<UIEvent>) {
+        if events.len() > 0 {
+            println!("{:?}", events);
+        }
     }
 
     fn next_frame(&mut self) -> &RgbaImage {

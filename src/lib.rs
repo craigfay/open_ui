@@ -26,6 +26,7 @@ pub trait GUIController {
     fn dimensions(&self) -> (u32, u32);
     fn frames_per_second(&self) -> u32;
     fn next_frame(&mut self) -> &RgbaImage;
+    fn process_events(&mut self, events: &Vec<UIEvent>);
 }
 
 const VERTEX_SHADER_SRC: &str = r#"
@@ -268,6 +269,10 @@ impl GUI {
                 },
                 _ => {}
             }
+
+            // Processing and flushing events
+            controller.process_events(&ui_events);
+            ui_events = vec![];
 
         });
 
