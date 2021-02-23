@@ -9,6 +9,7 @@ use open_ui::{
 };
 
 
+
 // The character that the player controls
 pub struct Snake {
     segments: Vec<Segment>,
@@ -193,4 +194,22 @@ impl UIController for SnakeGame {
 fn main() {
     let application = SnakeGame::new();
     UI::launch(application);
+}
+
+pub struct PseudoRandomness {
+    start: std::time::Instant,
+}
+
+impl PseudoRandomness {
+    pub fn new() -> PseudoRandomness {
+        PseudoRandomness {
+            start: std::time::Instant::now(),
+        }
+    }
+
+    pub fn integer_in_range(&self, min: i32, max: i32) -> i32 {
+        let now = std::time::Instant::now();
+        let large_number = now.duration_since(self.start).as_nanos() as i32;
+        min + (large_number % (max - min))
+    }
 }
