@@ -64,10 +64,10 @@ impl SnakeGame {
         // Defining the initial state of the snake
         let snake = Snake {
             direction: Direction::Down,
-            segments: vec![Segment {
-                x: 0,
-                y: 0,
-            }],
+            segments: vec![
+                Segment { x: 0, y: 1 },
+                Segment { x: 0, y: 0 },
+            ],
         };
     
         SnakeGame {
