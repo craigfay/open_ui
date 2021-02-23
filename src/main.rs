@@ -3,8 +3,9 @@ use open_ui::{UI, UIController, RgbaImage, UIEvent};
 
 pub struct MyApplication {
     canvas: RgbaImage,
-    xval: f32,
     images: Vec<RgbaImage>,
+    position: (f32, f32),
+    momentum: (f32, f32),
 }
 
 impl MyApplication {
@@ -25,12 +26,11 @@ impl MyApplication {
             ],
         }; 
     
-        // let img = RgbaImage::nearest_neighbor_scale(&img, 20.0);
-    
         MyApplication {
             canvas: RgbaImage::new(24, 24),
             images: vec![img],
-            xval: 0.0,
+            position: (0.0, 0.0),
+            momentum: (0.0, 0.0),
         }
     }
 }
@@ -58,11 +58,16 @@ impl UIController for MyApplication {
         self.canvas.fill((0,0,0,255));
 
         for i in 0..self.images.len() {
-            let image = &self.images[i];
-            self.canvas.draw(&image, 0, self.xval as i32);
+            self.canvas.draw(
+                &self.images[i],
+                self.position.0 as i32,
+                self.position.1 as i32,
+            );
         }
 
-        self.xval += 0.01;
+        self.position.0 += self.momentum.0;
+        self.position.1 += self.momentum.1;
+
         &self.canvas
     }
 }
