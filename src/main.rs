@@ -198,17 +198,18 @@ fn main() {
     UI::launch(application);
 }
 
+
 pub struct PseudoRandomness {
     start: std::time::Instant,
 }
 
 impl PseudoRandomness {
     pub fn new() -> PseudoRandomness {
-        PseudoRandomness {
-            start: std::time::Instant::now(),
-        }
+        PseudoRandomness { start: std:time::Instant::now() }
     }
 
+    // Generate a random-ish number between min (inclusive)
+    // and max (exclusive)
     pub fn integer_between(&self, min: i32, max: i32) -> i32 {
         let now = std::time::Instant::now();
         let large_number = now.duration_since(self.start).as_nanos() as i32;
