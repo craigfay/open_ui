@@ -219,13 +219,6 @@ impl GUI {
         let fps = controller.frames_per_second();
         let refresh_interval = Duration::from_millis(1000 / fps as u64);
 
-        // Setting up input state
-        let mut input_state = InputState {
-            keyboards: vec![
-                KeyboardState::default(),
-            ]
-        };
-
         let mut ui_events = vec![];
 
         event_loop.run(move |event, _, control_flow| {
@@ -271,7 +264,7 @@ impl GUI {
                     _ => return,
                 },
                 Event::DeviceEvent { event, .. } => {
-                    apply_device_event(&event, &mut input_state);
+                    //
                 },
                 _ => {}
             }
@@ -298,6 +291,167 @@ fn apply_keyboard_input(
     let key = match input.virtual_keycode {
         Some(VirtualKeyCode::Key0) => KeyboardKey::Num0,
         Some(VirtualKeyCode::Key1) => KeyboardKey::Num1,
+        Some(VirtualKeyCode::Key2) => KeyboardKey::Num2,
+        Some(VirtualKeyCode::Key3) => KeyboardKey::Num3,
+        Some(VirtualKeyCode::Key4) => KeyboardKey::Num4,
+        Some(VirtualKeyCode::Key5) => KeyboardKey::Num5,
+        Some(VirtualKeyCode::Key6) => KeyboardKey::Num6,
+        Some(VirtualKeyCode::Key7) => KeyboardKey::Num7,
+        Some(VirtualKeyCode::Key8) => KeyboardKey::Num8,
+        Some(VirtualKeyCode::Key9) => KeyboardKey::Num9,
+        Some(VirtualKeyCode::A) => KeyboardKey::A,
+        Some(VirtualKeyCode::B) => KeyboardKey::B,
+        Some(VirtualKeyCode::C) => KeyboardKey::C,
+        Some(VirtualKeyCode::D) => KeyboardKey::D,
+        Some(VirtualKeyCode::E) => KeyboardKey::E,
+        Some(VirtualKeyCode::F) => KeyboardKey::F,
+        Some(VirtualKeyCode::G) => KeyboardKey::G,
+        Some(VirtualKeyCode::H) => KeyboardKey::H,
+        Some(VirtualKeyCode::I) => KeyboardKey::I,
+        Some(VirtualKeyCode::J) => KeyboardKey::J,
+        Some(VirtualKeyCode::K) => KeyboardKey::K,
+        Some(VirtualKeyCode::L) => KeyboardKey::L,
+        Some(VirtualKeyCode::M) => KeyboardKey::N,
+        Some(VirtualKeyCode::N) => KeyboardKey::M,
+        Some(VirtualKeyCode::O) => KeyboardKey::O,
+        Some(VirtualKeyCode::P) => KeyboardKey::P,
+        Some(VirtualKeyCode::Q) => KeyboardKey::Q,
+        Some(VirtualKeyCode::R) => KeyboardKey::R,
+        Some(VirtualKeyCode::S) => KeyboardKey::S,
+        Some(VirtualKeyCode::T) => KeyboardKey::T,
+        Some(VirtualKeyCode::U) => KeyboardKey::U,
+        Some(VirtualKeyCode::V) => KeyboardKey::V,
+        Some(VirtualKeyCode::W) => KeyboardKey::W,
+        Some(VirtualKeyCode::X) => KeyboardKey::X,
+        Some(VirtualKeyCode::Y) => KeyboardKey::Y,
+        Some(VirtualKeyCode::Z) => KeyboardKey::Z,
+        // Escape,
+        //     F1,
+        //     F2,
+        //     F3,
+        //     F4,
+        //     F5,
+        //     F6,
+        //     F7,
+        //     F8,
+        //     F9,
+        //     F10,
+        //     F11,
+        //     F12,
+        //     F13,
+        //     F14,
+        //     F15,
+        //     F16,
+        //     F17,
+        //     F18,
+        //     F19,
+        //     F20,
+        //     F21,
+        //     F22,
+        //     F23,
+        //     F24,
+        //     Snapshot,
+        //     Scroll,
+        //     Pause,
+        //     Insert,
+        //     Home,
+        //     Delete,
+        //     End,
+        //     PageDown,
+        //     PageUp,
+        //     Left,
+        //     Up,
+        //     Right,
+        //     Down,
+        //     Back,
+        //     Return,
+        //     Space,
+        //     Compose,
+        //     Caret,
+        //     Numlock,
+        //     Numpad0,
+        //     Numpad1,
+        //     Numpad2,
+        //     Numpad3,
+        //     Numpad4,
+        //     Numpad5,
+        //     Numpad6,
+        //     Numpad7,
+        //     Numpad8,
+        //     Numpad9,
+        //     NumpadAdd,
+        //     NumpadDivide,
+        //     NumpadDecimal,
+        //     NumpadComma,
+        //     NumpadEnter,
+        //     NumpadEquals,
+        //     NumpadMultiply,
+        //     NumpadSubtract,
+        //     AbntC1,
+        //     AbntC2,
+        //     Apostrophe,
+        //     Apps,
+        //     Asterisk,
+        //     At,
+        //     Ax,
+        //     Backslash,
+        //     Calculator,
+        //     Capital,
+        //     Colon,
+        //     Comma,
+        //     Convert,
+        //     Equals,
+        //     Grave,
+        //     Kana,
+        //     Kanji,
+        //     LAlt,
+        //     LBracket,
+        //     LControl,
+        //     LShift,
+        //     LWin,
+        //     Mail,
+        //     MediaSelect,
+        //     MediaStop,
+        //     Minus,
+        //     Mute,
+        //     MyComputer,
+        //     NavigateForward,
+        //     NavigateBackward,
+        //     NextTrack,
+        //     NoConvert,
+        //     OEM102,
+        //     Period,
+        //     PlayPause,
+        //     Plus,
+        //     Power,
+        //     PrevTrack,
+        //     RAlt,
+        //     RBracket,
+        //     RControl,
+        //     RShift,
+        //     RWin,
+        //     Semicolon,
+        //     Slash,
+        //     Sleep,
+        //     Stop,
+        //     Sysrq,
+        //     Tab,
+        //     Underline,
+        //     Unlabeled,
+        //     VolumeDown,
+        //     VolumeUp,
+        //     Wake,
+        //     WebBack,
+        //     WebFavorites,
+        //     WebForward,
+        //     WebHome,
+        //     WebRefresh,
+        //     WebSearch,
+        //     WebStop,
+        //     Yen,
+        //     Copy,
+        //     Paste,
+        //     Cut,
         _ => return,
     };
 
@@ -306,10 +460,6 @@ fn apply_keyboard_input(
         action,
         key,
     });
-}
-
-pub struct InputState {
-    keyboards: Vec<KeyboardState>,
 }
 
 pub enum KeyboardAction {
@@ -354,6 +504,133 @@ pub enum KeyboardKey {
     X,
     Y,
     Z,
+Escape,
+    F1,
+    F2,
+    F3,
+    F4,
+    F5,
+    F6,
+    F7,
+    F8,
+    F9,
+    F10,
+    F11,
+    F12,
+    F13,
+    F14,
+    F15,
+    F16,
+    F17,
+    F18,
+    F19,
+    F20,
+    F21,
+    F22,
+    F23,
+    F24,
+    Snapshot,
+    Scroll,
+    Pause,
+    Insert,
+    Home,
+    Delete,
+    End,
+    PageDown,
+    PageUp,
+    Left,
+    Up,
+    Right,
+    Down,
+    Back,
+    Return,
+    Space,
+    Compose,
+    Caret,
+    Numlock,
+    Numpad0,
+    Numpad1,
+    Numpad2,
+    Numpad3,
+    Numpad4,
+    Numpad5,
+    Numpad6,
+    Numpad7,
+    Numpad8,
+    Numpad9,
+    NumpadAdd,
+    NumpadDivide,
+    NumpadDecimal,
+    NumpadComma,
+    NumpadEnter,
+    NumpadEquals,
+    NumpadMultiply,
+    NumpadSubtract,
+    AbntC1,
+    AbntC2,
+    Apostrophe,
+    Apps,
+    Asterisk,
+    At,
+    Ax,
+    Backslash,
+    Calculator,
+    Capital,
+    Colon,
+    Comma,
+    Convert,
+    Equals,
+    Grave,
+    Kana,
+    Kanji,
+    LAlt,
+    LBracket,
+    LControl,
+    LShift,
+    LWin,
+    Mail,
+    MediaSelect,
+    MediaStop,
+    Minus,
+    Mute,
+    MyComputer,
+    NavigateForward,
+    NavigateBackward,
+    NextTrack,
+    NoConvert,
+    OEM102,
+    Period,
+    PlayPause,
+    Plus,
+    Power,
+    PrevTrack,
+    RAlt,
+    RBracket,
+    RControl,
+    RShift,
+    RWin,
+    Semicolon,
+    Slash,
+    Sleep,
+    Stop,
+    Sysrq,
+    Tab,
+    Underline,
+    Unlabeled,
+    VolumeDown,
+    VolumeUp,
+    Wake,
+    WebBack,
+    WebFavorites,
+    WebForward,
+    WebHome,
+    WebRefresh,
+    WebSearch,
+    WebStop,
+    Yen,
+    Copy,
+    Paste,
+    Cut,
 }
 
 pub enum UIEvent {
@@ -362,684 +639,4 @@ pub enum UIEvent {
         key: KeyboardKey,
         action: KeyboardAction,
     }
-}
-
-
-#[derive(Default, Debug)]
-pub struct KeyboardState {
-    key_1: bool,
-    key_2: bool,
-    key_3: bool,
-    key_4: bool,
-    key_5: bool,
-    key_6: bool,
-    key_7: bool,
-    key_8: bool,
-    key_9: bool,
-    key_0: bool,
-    a: bool,
-    b: bool,
-    c: bool,
-    d: bool,
-    e: bool,
-    f: bool,
-    g: bool,
-    h: bool,
-    i: bool,
-    j: bool,
-    k: bool,
-    l: bool,
-    m: bool,
-    n: bool,
-    o: bool,
-    p: bool,
-    q: bool,
-    r: bool,
-    s: bool,
-    t: bool,
-    u: bool,
-    v: bool,
-    w: bool,
-    x: bool,
-    y: bool,
-    z: bool,
-    escape: bool,
-    f1: bool,
-    f2: bool,
-    f3: bool,
-    f4: bool,
-    f5: bool,
-    f6: bool,
-    f7: bool,
-    f8: bool,
-    f9: bool,
-    f10: bool,
-    f11: bool,
-    f12: bool,
-    f13: bool,
-    f14: bool,
-    f15: bool,
-    f16: bool,
-    f17: bool,
-    f18: bool,
-    f19: bool,
-    f20: bool,
-    f21: bool,
-    f22: bool,
-    f23: bool,
-    f24: bool,
-    snapshot: bool,
-    scroll: bool,
-    pause: bool,
-    insert: bool,
-    home: bool,
-    delete: bool,
-    end: bool,
-    page_down: bool,
-    page_up: bool,
-    left: bool,
-    up: bool,
-    right: bool,
-    down: bool,
-    back: bool,
-    _return: bool,
-    space: bool,
-    compose: bool,
-    caret: bool,
-    numlock: bool,
-    numpad0: bool,
-    numpad1: bool,
-    numpad2: bool,
-    numpad3: bool,
-    numpad4: bool,
-    numpad5: bool,
-    numpad6: bool,
-    numpad7: bool,
-    numpad8: bool,
-    numpad9: bool,
-    numpad_add: bool,
-    numpad_divide: bool,
-    numpad_decimal: bool,
-    numpad_comma: bool,
-    numpad_enter: bool,
-    numpad_equals: bool,
-    numpad_multiply: bool,
-    numpad_subtract: bool,
-    abnt_c1: bool,
-    abnt_c2: bool,
-    apostrophe: bool,
-    apps: bool,
-    asterisk: bool,
-    at: bool,
-    ax: bool,
-    backslash: bool,
-    calculator: bool,
-    capital: bool,
-    colon: bool,
-    comma: bool,
-    convert: bool,
-    equals: bool,
-    grave: bool,
-    kana: bool,
-    kanji: bool,
-    l_alt: bool,
-    l_bracket: bool,
-    l_control: bool,
-    l_shift: bool,
-    l_win: bool,
-    mail: bool,
-    media_select: bool,
-    media_stop: bool,
-    minus: bool,
-    mute: bool,
-    my_computer: bool,
-    navigate_forward: bool,
-    navigate_backward: bool,
-    next_track: bool,
-    no_convert: bool,
-    oem102: bool,
-    period: bool,
-    play_pause: bool,
-    plus: bool,
-    power: bool,
-    prev_track: bool,
-    r_alt: bool,
-    r_bracket: bool,
-    r_control: bool,
-    r_shift: bool,
-    r_win: bool,
-    semicolon: bool,
-    slash: bool,
-    sleep: bool,
-    stop: bool,
-    sysrq: bool,
-    tab: bool,
-    underline: bool,
-    unlabeled: bool,
-    volume_down: bool,
-    volume_up: bool,
-    wake: bool,
-    web_back: bool,
-    web_favorites: bool,
-    web_forward: bool,
-    web_home: bool,
-    web_refresh: bool,
-    web_search: bool,
-    web_stop: bool,
-    yen: bool,
-    copy: bool,
-    paste: bool,
-    cut: bool,
-}
-
-fn _apply_keyboard_input(input: &KeyboardInput, state: &mut InputState) {
-    let keyboard_index = 0;
-    let is_pressed = input.state == Pressed;
-
-    match input.virtual_keycode {
-        Some(VirtualKeyCode::Key1) => {
-            state.keyboards[keyboard_index].key_1 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key2) => {
-            state.keyboards[keyboard_index].key_2 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key3) => {
-            state.keyboards[keyboard_index].key_3 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key4) => {
-            state.keyboards[keyboard_index].key_4 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key5) => {
-            state.keyboards[keyboard_index].key_5 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key6) => {
-            state.keyboards[keyboard_index].key_6 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key7) => {
-            state.keyboards[keyboard_index].key_7 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key8) => {
-            state.keyboards[keyboard_index].key_8 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key9) => {
-            state.keyboards[keyboard_index].key_9 = is_pressed;
-        },
-        Some(VirtualKeyCode::Key0) => {
-            state.keyboards[keyboard_index].key_0 = is_pressed;
-        },
-        Some(VirtualKeyCode::A) => {
-            state.keyboards[keyboard_index].a = is_pressed;
-        },
-        Some(VirtualKeyCode::B) => {
-            state.keyboards[keyboard_index].b = is_pressed;
-        },
-        Some(VirtualKeyCode::C) => {
-            state.keyboards[keyboard_index].c = is_pressed;
-        },
-        Some(VirtualKeyCode::D) => {
-            state.keyboards[keyboard_index].d = is_pressed;
-        },
-        Some(VirtualKeyCode::E) => {
-            state.keyboards[keyboard_index].e = is_pressed;
-        },
-        Some(VirtualKeyCode::F) => {
-            state.keyboards[keyboard_index].f = is_pressed;
-        },
-        Some(VirtualKeyCode::G) => {
-            state.keyboards[keyboard_index].g = is_pressed;
-        },
-        Some(VirtualKeyCode::H) => {
-            state.keyboards[keyboard_index].h = is_pressed;
-        },
-        Some(VirtualKeyCode::I) => {
-            state.keyboards[keyboard_index].i = is_pressed;
-        },
-        Some(VirtualKeyCode::J) => {
-            state.keyboards[keyboard_index].j = is_pressed;
-        },
-        Some(VirtualKeyCode::K) => {
-            state.keyboards[keyboard_index].k = is_pressed;
-        },
-        Some(VirtualKeyCode::L) => {
-            state.keyboards[keyboard_index].l = is_pressed;
-        },
-        Some(VirtualKeyCode::M) => {
-            state.keyboards[keyboard_index].m = is_pressed;
-        },
-        Some(VirtualKeyCode::N) => {
-            state.keyboards[keyboard_index].n = is_pressed;
-        },
-        Some(VirtualKeyCode::O) => {
-            state.keyboards[keyboard_index].o = is_pressed;
-        },
-        Some(VirtualKeyCode::P) => {
-            state.keyboards[keyboard_index].p = is_pressed;
-        },
-        Some(VirtualKeyCode::Q) => {
-            state.keyboards[keyboard_index].q = is_pressed;
-        },
-        Some(VirtualKeyCode::R) => {
-            state.keyboards[keyboard_index].r = is_pressed;
-        },
-        Some(VirtualKeyCode::S) => {
-            state.keyboards[keyboard_index].s = is_pressed;
-        },
-        Some(VirtualKeyCode::T) => {
-            state.keyboards[keyboard_index].t = is_pressed;
-        },
-        Some(VirtualKeyCode::U) => {
-            state.keyboards[keyboard_index].u = is_pressed;
-        },
-        Some(VirtualKeyCode::V) => {
-            state.keyboards[keyboard_index].v = is_pressed;
-        },
-        Some(VirtualKeyCode::W) => {
-            state.keyboards[keyboard_index].w = is_pressed;
-        },
-        Some(VirtualKeyCode::X) => {
-            state.keyboards[keyboard_index].x = is_pressed;
-        },
-        Some(VirtualKeyCode::Y) => {
-            state.keyboards[keyboard_index].y = is_pressed;
-        },
-        Some(VirtualKeyCode::Z) => {
-            state.keyboards[keyboard_index].z = is_pressed;
-        },
-        Some(VirtualKeyCode::Escape) => {
-            state.keyboards[keyboard_index].escape = is_pressed;
-        },
-        Some(VirtualKeyCode::F1) => {
-            state.keyboards[keyboard_index].f1 = is_pressed;
-        },
-        Some(VirtualKeyCode::F2) => {
-            state.keyboards[keyboard_index].f2 = is_pressed;
-        },
-        Some(VirtualKeyCode::F3) => {
-            state.keyboards[keyboard_index].f3 = is_pressed;
-        },
-        Some(VirtualKeyCode::F4) => {
-            state.keyboards[keyboard_index].f4 = is_pressed;
-        },
-        Some(VirtualKeyCode::F5) => {
-            state.keyboards[keyboard_index].f5 = is_pressed;
-        },
-        Some(VirtualKeyCode::F6) => {
-            state.keyboards[keyboard_index].f6 = is_pressed;
-        },
-        Some(VirtualKeyCode::F7) => {
-            state.keyboards[keyboard_index].f7 = is_pressed;
-        },
-        Some(VirtualKeyCode::F8) => {
-            state.keyboards[keyboard_index].f8 = is_pressed;
-        },
-        Some(VirtualKeyCode::F9) => {
-            state.keyboards[keyboard_index].f9 = is_pressed;
-        },
-        Some(VirtualKeyCode::F10) => {
-            state.keyboards[keyboard_index].f10 = is_pressed;
-        },
-        Some(VirtualKeyCode::F11) => {
-            state.keyboards[keyboard_index].f11 = is_pressed;
-        },
-        Some(VirtualKeyCode::F12) => {
-            state.keyboards[keyboard_index].f12 = is_pressed;
-        },
-        Some(VirtualKeyCode::F13) => {
-            state.keyboards[keyboard_index].f13 = is_pressed;
-        },
-        Some(VirtualKeyCode::F14) => {
-            state.keyboards[keyboard_index].f14 = is_pressed;
-        },
-        Some(VirtualKeyCode::F15) => {
-            state.keyboards[keyboard_index].f15 = is_pressed;
-        },
-        Some(VirtualKeyCode::F16) => {
-            state.keyboards[keyboard_index].f16 = is_pressed;
-        },
-        Some(VirtualKeyCode::F17) => {
-            state.keyboards[keyboard_index].f17 = is_pressed;
-        },
-        Some(VirtualKeyCode::F18) => {
-            state.keyboards[keyboard_index].f18 = is_pressed;
-        },
-        Some(VirtualKeyCode::F19) => {
-            state.keyboards[keyboard_index].f19 = is_pressed;
-        },
-        Some(VirtualKeyCode::F20) => {
-            state.keyboards[keyboard_index].f20 = is_pressed;
-        },
-        Some(VirtualKeyCode::F21) => {
-            state.keyboards[keyboard_index].f21 = is_pressed;
-        },
-        Some(VirtualKeyCode::F22) => {
-            state.keyboards[keyboard_index].f22 = is_pressed;
-        },
-        Some(VirtualKeyCode::F23) => {
-            state.keyboards[keyboard_index].f23 = is_pressed;
-        },
-        Some(VirtualKeyCode::F24) => {
-            state.keyboards[keyboard_index].f24 = is_pressed;
-        },
-        Some(VirtualKeyCode::Snapshot) => {
-            state.keyboards[keyboard_index].snapshot = is_pressed;
-        },
-        Some(VirtualKeyCode::Scroll) => {
-            state.keyboards[keyboard_index].scroll = is_pressed;
-        },
-        Some(VirtualKeyCode::Pause) => {
-            state.keyboards[keyboard_index].pause = is_pressed;
-        },
-        Some(VirtualKeyCode::Insert) => {
-            state.keyboards[keyboard_index].insert = is_pressed;
-        },
-        Some(VirtualKeyCode::Home) => {
-            state.keyboards[keyboard_index].home = is_pressed;
-        },
-        Some(VirtualKeyCode::Delete) => {
-            state.keyboards[keyboard_index].delete = is_pressed;
-        },
-        Some(VirtualKeyCode::End) => {
-            state.keyboards[keyboard_index].end = is_pressed;
-        },
-        Some(VirtualKeyCode::PageDown) => {
-            state.keyboards[keyboard_index].page_down = is_pressed;
-        },
-        Some(VirtualKeyCode::PageUp) => {
-            state.keyboards[keyboard_index].page_up = is_pressed;
-        },
-        Some(VirtualKeyCode::Left) => {
-            state.keyboards[keyboard_index].left = is_pressed;
-        },
-        Some(VirtualKeyCode::Up) => {
-            state.keyboards[keyboard_index].up = is_pressed;
-        },
-        Some(VirtualKeyCode::Right) => {
-            state.keyboards[keyboard_index].right = is_pressed;
-        },
-        Some(VirtualKeyCode::Down) => {
-            state.keyboards[keyboard_index].down = is_pressed;
-        },
-        Some(VirtualKeyCode::Back) => {
-            state.keyboards[keyboard_index].back = is_pressed;
-        },
-        Some(VirtualKeyCode::Return) => {
-            state.keyboards[keyboard_index]._return = is_pressed;
-        },
-        Some(VirtualKeyCode::Space) => {
-            state.keyboards[keyboard_index].space = is_pressed;
-        },
-        Some(VirtualKeyCode::Compose) => {
-            state.keyboards[keyboard_index].compose = is_pressed;
-        },
-        Some(VirtualKeyCode::Caret) => {
-            state.keyboards[keyboard_index].caret = is_pressed;
-        },
-        Some(VirtualKeyCode::Numlock) => {
-            state.keyboards[keyboard_index].numlock = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad0) => {
-            state.keyboards[keyboard_index].numpad0 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad1) => {
-            state.keyboards[keyboard_index].numpad1 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad2) => {
-            state.keyboards[keyboard_index].numpad2 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad3) => {
-            state.keyboards[keyboard_index].numpad3 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad4) => {
-            state.keyboards[keyboard_index].numpad4 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad5) => {
-            state.keyboards[keyboard_index].numpad5 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad6) => {
-            state.keyboards[keyboard_index].numpad6 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad7) => {
-            state.keyboards[keyboard_index].numpad7 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad8) => {
-            state.keyboards[keyboard_index].numpad8 = is_pressed;
-        },
-        Some(VirtualKeyCode::Numpad9) => {
-            state.keyboards[keyboard_index].numpad9 = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadAdd) => {
-            state.keyboards[keyboard_index].numpad_add = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadDivide) => {
-            state.keyboards[keyboard_index].numpad_divide = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadDecimal) => {
-            state.keyboards[keyboard_index].numpad_decimal = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadComma) => {
-            state.keyboards[keyboard_index].numpad_comma = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadEnter) => {
-            state.keyboards[keyboard_index].numpad_enter = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadEquals) => {
-            state.keyboards[keyboard_index].numpad_equals = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadMultiply) => {
-            state.keyboards[keyboard_index].numpad_multiply = is_pressed;
-        },
-        Some(VirtualKeyCode::NumpadSubtract) => {
-            state.keyboards[keyboard_index].numpad_subtract = is_pressed;
-        },
-        Some(VirtualKeyCode::AbntC1) => {
-            state.keyboards[keyboard_index].abnt_c1 = is_pressed;
-        },
-        Some(VirtualKeyCode::AbntC2) => {
-            state.keyboards[keyboard_index].abnt_c2 = is_pressed;
-        },
-        Some(VirtualKeyCode::Apostrophe) => {
-            state.keyboards[keyboard_index].apostrophe = is_pressed;
-        },
-        Some(VirtualKeyCode::Apps) => {
-            state.keyboards[keyboard_index].apps = is_pressed;
-        },
-        Some(VirtualKeyCode::At) => {
-            state.keyboards[keyboard_index].at = is_pressed;
-        },
-        Some(VirtualKeyCode::Ax) => {
-            state.keyboards[keyboard_index].ax = is_pressed;
-        },
-        Some(VirtualKeyCode::Backslash) => {
-            state.keyboards[keyboard_index].backslash = is_pressed;
-        },
-        Some(VirtualKeyCode::Calculator) => {
-            state.keyboards[keyboard_index].calculator = is_pressed;
-        },
-        Some(VirtualKeyCode::Capital) => {
-            state.keyboards[keyboard_index].capital = is_pressed;
-        },
-        Some(VirtualKeyCode::Colon) => {
-            state.keyboards[keyboard_index].colon = is_pressed;
-        },
-        Some(VirtualKeyCode::Comma) => {
-            state.keyboards[keyboard_index].comma = is_pressed;
-        },
-        Some(VirtualKeyCode::Convert) => {
-            state.keyboards[keyboard_index].convert = is_pressed;
-        },
-        Some(VirtualKeyCode::Equals) => {
-            state.keyboards[keyboard_index].equals = is_pressed;
-        },
-        Some(VirtualKeyCode::Grave) => {
-            state.keyboards[keyboard_index].grave = is_pressed;
-        },
-        Some(VirtualKeyCode::Kana) => {
-            state.keyboards[keyboard_index].kana = is_pressed;
-        },
-        Some(VirtualKeyCode::Kanji) => {
-            state.keyboards[keyboard_index].kanji = is_pressed;
-        },
-        Some(VirtualKeyCode::LAlt) => {
-            state.keyboards[keyboard_index].l_alt = is_pressed;
-        },
-        Some(VirtualKeyCode::LBracket) => {
-            state.keyboards[keyboard_index].l_bracket = is_pressed;
-        },
-        Some(VirtualKeyCode::LControl) => {
-            state.keyboards[keyboard_index].l_control = is_pressed;
-        },
-        Some(VirtualKeyCode::LShift) => {
-            state.keyboards[keyboard_index].l_shift = is_pressed;
-        },
-        Some(VirtualKeyCode::LWin) => {
-            state.keyboards[keyboard_index].l_win = is_pressed;
-        },
-        Some(VirtualKeyCode::Mail) => {
-            state.keyboards[keyboard_index].mail = is_pressed;
-        },
-        Some(VirtualKeyCode::MediaSelect) => {
-            state.keyboards[keyboard_index].media_select = is_pressed;
-        },
-        Some(VirtualKeyCode::MediaStop) => {
-            state.keyboards[keyboard_index].media_stop = is_pressed;
-        },
-        Some(VirtualKeyCode::Minus) => {
-            state.keyboards[keyboard_index].minus = is_pressed;
-        },
-        Some(VirtualKeyCode::Mute) => {
-            state.keyboards[keyboard_index].mute = is_pressed;
-        },
-        Some(VirtualKeyCode::MyComputer) => {
-            state.keyboards[keyboard_index].my_computer = is_pressed;
-        },
-        Some(VirtualKeyCode::NavigateForward) => {
-            state.keyboards[keyboard_index].navigate_forward = is_pressed;
-        },
-        Some(VirtualKeyCode::NavigateBackward) => {
-            state.keyboards[keyboard_index].navigate_backward = is_pressed;
-        },
-        Some(VirtualKeyCode::NextTrack) => {
-            state.keyboards[keyboard_index].next_track = is_pressed;
-        },
-        Some(VirtualKeyCode::NoConvert) => {
-            state.keyboards[keyboard_index].no_convert = is_pressed;
-        },
-        Some(VirtualKeyCode::OEM102) => {
-            state.keyboards[keyboard_index].oem102 = is_pressed;
-        },
-        Some(VirtualKeyCode::Period) => {
-            state.keyboards[keyboard_index].period = is_pressed;
-        },
-        Some(VirtualKeyCode::PlayPause) => {
-            state.keyboards[keyboard_index].play_pause = is_pressed;
-        },
-        Some(VirtualKeyCode::Plus) => {
-            state.keyboards[keyboard_index].plus = is_pressed;
-        },
-        Some(VirtualKeyCode::Power) => {
-            state.keyboards[keyboard_index].power = is_pressed;
-        },
-        Some(VirtualKeyCode::PrevTrack) => {
-            state.keyboards[keyboard_index].prev_track = is_pressed;
-        },
-        Some(VirtualKeyCode::RAlt) => {
-            state.keyboards[keyboard_index].r_alt = is_pressed;
-        },
-        Some(VirtualKeyCode::RBracket) => {
-            state.keyboards[keyboard_index].r_bracket = is_pressed;
-        },
-        Some(VirtualKeyCode::RControl) => {
-            state.keyboards[keyboard_index].r_control = is_pressed;
-        },
-        Some(VirtualKeyCode::RShift) => {
-            state.keyboards[keyboard_index].r_shift = is_pressed;
-        },
-        Some(VirtualKeyCode::RWin) => {
-            state.keyboards[keyboard_index].r_win = is_pressed;
-        },
-        Some(VirtualKeyCode::Semicolon) => {
-            state.keyboards[keyboard_index].semicolon = is_pressed;
-        },
-        Some(VirtualKeyCode::Slash) => {
-            state.keyboards[keyboard_index].slash = is_pressed;
-        },
-        Some(VirtualKeyCode::Sleep) => {
-            state.keyboards[keyboard_index].sleep = is_pressed;
-        },
-        Some(VirtualKeyCode::Stop) => {
-            state.keyboards[keyboard_index].stop = is_pressed;
-        },
-        Some(VirtualKeyCode::Sysrq) => {
-            state.keyboards[keyboard_index].sysrq = is_pressed;
-        },
-        Some(VirtualKeyCode::Tab) => {
-            state.keyboards[keyboard_index].tab = is_pressed;
-        },
-        Some(VirtualKeyCode::Underline) => {
-            state.keyboards[keyboard_index].underline = is_pressed;
-        },
-        Some(VirtualKeyCode::Unlabeled) => {
-            state.keyboards[keyboard_index].unlabeled = is_pressed;
-        },
-        Some(VirtualKeyCode::VolumeDown) => {
-            state.keyboards[keyboard_index].volume_down = is_pressed;
-        },
-        Some(VirtualKeyCode::VolumeUp) => {
-            state.keyboards[keyboard_index].volume_up = is_pressed;
-        },
-        Some(VirtualKeyCode::Wake) => {
-            state.keyboards[keyboard_index].wake = is_pressed;
-        },
-        Some(VirtualKeyCode::WebBack) => {
-            state.keyboards[keyboard_index].web_back = is_pressed;
-        },
-        Some(VirtualKeyCode::WebFavorites) => {
-            state.keyboards[keyboard_index].web_favorites = is_pressed;
-        },
-        Some(VirtualKeyCode::WebForward) => {
-            state.keyboards[keyboard_index].web_forward = is_pressed;
-        },
-        Some(VirtualKeyCode::WebHome) => {
-            state.keyboards[keyboard_index].web_home = is_pressed;
-        },
-        Some(VirtualKeyCode::WebRefresh) => {
-            state.keyboards[keyboard_index].web_refresh = is_pressed;
-        },
-        Some(VirtualKeyCode::WebSearch) => {
-            state.keyboards[keyboard_index].web_search = is_pressed;
-        },
-        Some(VirtualKeyCode::WebStop) => {
-            state.keyboards[keyboard_index].web_stop = is_pressed;
-        },
-        Some(VirtualKeyCode::Yen) => {
-            state.keyboards[keyboard_index].yen = is_pressed;
-        },
-        Some(VirtualKeyCode::Copy) => {
-            state.keyboards[keyboard_index].copy = is_pressed;
-        },
-        Some(VirtualKeyCode::Paste) => {
-            state.keyboards[keyboard_index].paste = is_pressed;
-        },
-        Some(VirtualKeyCode::Cut) => {
-            state.keyboards[keyboard_index].cut = is_pressed;
-        },
-        _ => {},
-    }
-}
-
-fn apply_device_event(device_event: &DeviceEvent, input_state: &mut InputState) {
-    // match device_event {
-    //     DeviceEvent::MouseMotion { delta } => {
-    //         println!("{:?}", delta);
-    //     },
-    //     DeviceEvent::Button { state, button } => {
-    //         println!("{:?} {:?}", state, button);
-    //     },
-    //     // DeviceEvent::Key(KeyboardInput { state, virtual_keycode, .. }) => {
-    //     DeviceEvent::Key(KeyboardInput) => {
-    //         let keyboard_index = 0;
-    //         println!("KEYBOARD");
-    //     },
-    //     _ => {},
-    // }
 }
