@@ -45,6 +45,23 @@ enum Direction {
     Right,
 }
 
+// An rudimentary pseudo-random number generator
+pub struct PseudoRandomness {
+    seed: std::time::Instant,
+}
+impl PseudoRandomness {
+    // Create a new instance, "seeded" with the current time
+    pub fn new() -> PseudoRandomness {
+        PseudoRandomness { seed: std:time::Instant::now() }
+    }
+    // Generate a seemingly random i32 that's >= min and < max
+    pub fn integer_between(&self, min: i32, max: i32) -> i32 {
+        let now = std::time::Instant::now();
+        let large_number = now.duration_since(self.seed).as_nanos() as i32;
+        min + (large_number % (max - min))
+    }
+}
+
 // The data that the application will store in memory
 pub struct SnakeGame {
     canvas: RgbaImage,
@@ -196,23 +213,4 @@ impl UIController for SnakeGame {
 fn main() {
     let application = SnakeGame::new();
     UI::launch(application);
-}
-
-
-pub struct PseudoRandomness {
-    start: std::time::Instant,
-}
-
-impl PseudoRandomness {
-    pub fn new() -> PseudoRandomness {
-        PseudoRandomness { start: std:time::Instant::now() }
-    }
-
-    // Generate a random-ish number between min (inclusive)
-    // and max (exclusive)
-    pub fn integer_between(&self, min: i32, max: i32) -> i32 {
-        let now = std::time::Instant::now();
-        let large_number = now.duration_since(self.start).as_nanos() as i32;
-        min + (large_number % (max - min))
-    }
 }
