@@ -45,6 +45,12 @@ enum Direction {
     Right,
 }
 
+// A piece of food for the snake to eat
+struct Food {
+    x: i32,
+    y: i32,
+}
+
 // An rudimentary pseudo-random number generator
 pub struct PseudoRandomness {
     seed: std::time::Instant,
@@ -52,7 +58,7 @@ pub struct PseudoRandomness {
 impl PseudoRandomness {
     // Create a new instance, "seeded" with the current time
     pub fn new() -> PseudoRandomness {
-        PseudoRandomness { seed: std:time::Instant::now() }
+        PseudoRandomness { seed: std::time::Instant::now() }
     }
     // Generate a seemingly random i32 that's >= min and < max
     pub fn integer_between(&self, min: i32, max: i32) -> i32 {
@@ -66,6 +72,7 @@ impl PseudoRandomness {
 pub struct SnakeGame {
     canvas: RgbaImage,
     snake: Snake,
+    food: Food,
     frame_count: u64,
     rng: PseudoRandomness,
 }
@@ -88,11 +95,17 @@ impl SnakeGame {
         };
 
         let rng = PseudoRandomness::new();
+
+        let food = Food {
+            x: rng.integer_between(0, (canvas.width - 1) as i32),
+            y: rng.integer_between(0, (canvas.height - 1) as i32),
+        };
     
         SnakeGame {
             frame_count: 0,
             canvas,
             snake,
+            food,
             rng,
         }
     }
@@ -191,11 +204,17 @@ impl UIController for SnakeGame {
         self.canvas.fill((0,0,0,255));
 
         // Defining the image that will represent a segment of the snake
-        let segment_image = RgbaImage {
-            width: 1,
-            height: 1,
-            bytes: vec![255, 255, 255, 255],
-        }; 
+        let mut segment_image = RgbaImage::new(1, 1);
+        segment_image.fill((255,255,255,255));
+
+        let mut food_image = RgbaImage::new(1, 1);
+        food_image.fill((255,255,0,255));
+
+        self.canvas.draw(
+            &food_image,
+            self.food.x,
+            self.food.y,
+        );
 
         // Drawing each snake segment to the canvas
         for segment in &self.snake.segments {
@@ -205,7 +224,6 @@ impl UIController for SnakeGame {
                 segment.y,
             );
         }
-
         &self.canvas
     }
 }
