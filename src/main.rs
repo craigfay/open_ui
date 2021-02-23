@@ -139,13 +139,11 @@ impl SnakeGame {
                 Direction::Left => (head.x - 1, head.y),
             };
 
-            let new_head = Segment {
+            // Adding the new head in the proper direction
+            self.snake.segments.insert(0,Segment {
                 x: next_x,
                 y: next_y,
-            };
-
-            // Adding the new head in the proper direction
-            self.snake.segments.insert(0, new_head);
+            });
 
             if did_eat {
                 // Generating new food
