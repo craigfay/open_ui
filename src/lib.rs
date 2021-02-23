@@ -260,6 +260,9 @@ impl UI {
                     glutin::event::WindowEvent::KeyboardInput { device_id, input, .. } => {
                         apply_keyboard_input(&device_id, &input, &mut ui_events);
                     },
+                    glutin::event::WindowEvent::MouseInput { device_id, state, button, .. } => {
+                        apply_mouse_input(&device_id, &state, &button, &mut ui_events);
+                    },
                     _ => return,
                 },
                 Event::DeviceEvent { event, .. } => {
@@ -464,6 +467,15 @@ fn apply_keyboard_input(
     };
 
     ui_events.push(UIEvent::Keyboard(keyboard_event));
+}
+
+fn apply_mouse_input(
+    device_id: &glutin::event::DeviceId,
+    state: &glutin::event::ElementState,
+    button: &glutin::event::MouseButton,
+    ui_events: &mut Vec<UIEvent>,
+) {
+
 }
 
 #[derive(Debug, Copy, Clone)]
