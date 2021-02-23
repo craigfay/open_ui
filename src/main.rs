@@ -17,8 +17,8 @@ pub struct Snake {
 
 // A piece of the snake
 struct Segment {
-    x_position: i32,
-    y_position: i32,
+    x: i32,
+    y: i32,
 }
 
 // The directions that the snake can move
@@ -30,14 +30,15 @@ enum Direction {
 }
 
 // The data that the application will store in memory
-pub struct SnakeApplication {
+pub struct SnakeGame {
     canvas: RgbaImage,
     snake: Snake,
+    frame_count: u64,
 }
 
-impl SnakeApplication {
+impl SnakeGame {
     // A method we can use to initialize the application's data
-    pub fn new() -> SnakeApplication {
+    pub fn new() -> SnakeGame {
 
         // Defining the dimensions of an image that we will draw pixels onto
         // and use to render each frame
@@ -47,20 +48,65 @@ impl SnakeApplication {
         let snake = Snake {
             direction: Direction::Down,
             segments: vec![Segment {
-                x_position: 0,
-                y_position: 0,
+                x: 0,
+                y: 0,
             }],
         };
     
-        SnakeApplication {
+        SnakeGame {
+            frame_count: 0,
             canvas,
             snake,
         }
     }
+
+    // A method that we'll use to store our "game logic". This will decide
+    // how the game data changes from frame to frame.
+    pub fn calculate_changes(&mut self) {
+
+        self.frame_count += 1;
+
+        let did_eat = false;
+
+        // Only applying changes once every 10 frames, so the game doesn't move
+        // to quickly for the player to respond. A similar effect could be
+        // achieved by using floating point numbers for `x` and
+        // `y`, or just lowering the framerate.
+        if self.frame_count % 5 == 0 {
+            let head = self.snake.segments.first().unwrap();
+
+            // Determining the new position of the head
+            let (next_x, next_y)= match self.snake.direction {
+                Direction::Up => (head.x, head.y - 1),
+                Direction::Down => (head.x, head.y + 1),
+                Direction::Right => (head.x + 1, head.y),
+                Direction::Left => (head.x - 1, head.y),
+            };
+
+            if did_eat {
+                
+            }
+
+            else {
+                let new_head = Segment {
+                    x: next_x,
+                    y: next_y,
+                };
+
+                // Adding the new head in the proper direction
+                self.snake.segments.insert(0, new_head);
+
+                // Cutting the tail to compensate
+                self.snake.segments.pop();
+            }
+
+        }
+
+    }
 }
 
 
-impl UIController for SnakeApplication {
+impl UIController for SnakeGame {
     fn title(&self) -> &str {
         "Snake Game"
     }
@@ -73,7 +119,8 @@ impl UIController for SnakeApplication {
         60
     }
 
-    // A function that will use a player's inputs to affect application data
+    // A function that will use a player's inputs to affect application data.
+    // This will be executed at the beginning of each frame.
     fn process_events(&mut self, events: &Vec<UIEvent>) {
         for &event in events {
             match event {
@@ -94,6 +141,9 @@ impl UIController for SnakeApplication {
                 _ => {},
             }
         }
+
+        // Applying game logic
+        self.calculate_changes();
     }
 
     // A function that will use application data to decide which image to
@@ -114,8 +164,8 @@ impl UIController for SnakeApplication {
         for segment in &self.snake.segments {
             self.canvas.draw(
                 &segment_image,
-                segment.x_position,
-                segment.y_position,
+                segment.x,
+                segment.y,
             );
         }
 
@@ -124,6 +174,6 @@ impl UIController for SnakeApplication {
 }
 
 fn main() {
-    let application = SnakeApplication::new();
+    let application = SnakeGame::new();
     UI::launch(application);
 }
