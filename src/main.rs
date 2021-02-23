@@ -15,6 +15,23 @@ pub struct Snake {
     direction: Direction,
 }
 
+impl Snake {
+    pub fn is_eating_self(&self) -> bool {
+        let head = self.segments.first().unwrap();
+        let length = self.segments.len();
+        if length == 1 { return false }
+
+        for i in 0..length {
+            let segment = &self.segments[i];
+            if head.x == segment.x && head.y == segment.y {
+                return true
+            }
+        }
+
+        false
+    }
+}
+
 // A piece of the snake
 struct Segment {
     x: i32,
