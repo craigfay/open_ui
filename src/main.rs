@@ -1,5 +1,5 @@
 
-use open_gui::{GUI, GUIController, RgbaImage, UIEvent};
+use open_ui::{UI, UIController, RgbaImage, UIEvent};
 
 pub struct MyApplication {
     canvas: RgbaImage,
@@ -35,7 +35,7 @@ impl MyApplication {
     }
 }
 
-impl GUIController for MyApplication {
+impl UIController for MyApplication {
     fn title(&self) -> &str {
         "My Application"
     }
@@ -69,5 +69,5 @@ impl GUIController for MyApplication {
 
 fn main() {
     let application = MyApplication::new();
-    GUI::launch(application);
+    UI::launch(application);
 }

@@ -1,4 +1,4 @@
-# OpenGUI
+# OpenUI
 A user friendly Rust library for creating cross-platform GUI apps easily. Built on OpenGL.
 
 # Todo List

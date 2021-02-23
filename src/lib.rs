@@ -21,7 +21,7 @@ use std::collections::hash_map::DefaultHasher;
 
 
 
-pub trait GUIController {
+pub trait UIController {
     fn title(&self) -> &str;
     fn dimensions(&self) -> (u32, u32);
     fn frames_per_second(&self) -> u32;
@@ -167,10 +167,10 @@ impl RgbaImage {
     }
 }
 
-pub struct GUI;
+pub struct UI;
 
-impl GUI {
-    pub fn launch<T: 'static + GUIController>(mut controller: T) {
+impl UI {
+    pub fn launch<T: 'static + UIController>(mut controller: T) {
         let event_loop = glutin::event_loop::EventLoop::new();
 
         let (width, height) = controller.dimensions();
@@ -252,7 +252,7 @@ impl GUI {
                 last_render = Instant::now();
             }
 
-            // Responding to GUI events
+            // Responding to UI events
             match event {
                 glutin::event::Event::WindowEvent { event, .. } => match event {
                     glutin::event::WindowEvent::CloseRequested => {
