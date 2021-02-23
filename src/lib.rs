@@ -19,8 +19,6 @@ use std::hash::Hasher;
 use std::hash::Hash;
 use std::collections::hash_map::DefaultHasher;
 
-
-
 pub trait UIController {
     fn title(&self) -> &str;
     fn dimensions(&self) -> (u32, u32);
@@ -459,11 +457,13 @@ fn apply_keyboard_input(
         _ => return,
     };
 
-    ui_events.push(UIEvent::KeyboardEvent {
+    let keyboard_event = KeyboardEvent {
         device_id,
         action,
         key,
-    });
+    };
+
+    ui_events.push(UIEvent::KeyboardEvent(keyboard_event));
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -640,10 +640,13 @@ pub enum KeyboardKey {
 }
 
 #[derive(Debug, Copy, Clone)]
+pub struct KeyboardEvent {
+    device_id: u64,
+    key: KeyboardKey,
+    action: KeyboardAction,
+}
+
+#[derive(Debug, Copy, Clone)]
 pub enum UIEvent {
-    KeyboardEvent {
-        device_id: u64,
-        key: KeyboardKey,
-        action: KeyboardAction,
-    }
+    KeyboardEvent(KeyboardEvent),
 }
