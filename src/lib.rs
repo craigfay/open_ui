@@ -461,11 +461,13 @@ fn apply_keyboard_input(
     });
 }
 
+#[derive(Debug, Copy, Clone)]
 pub enum KeyboardAction {
     Press,
     Release,
 }
 
+#[derive(Debug, Copy, Clone)]
 pub enum KeyboardKey {
     Num0,
     Num1,
@@ -503,7 +505,7 @@ pub enum KeyboardKey {
     X,
     Y,
     Z,
-Escape,
+    Escape,
     F1,
     F2,
     F3,
@@ -632,6 +634,7 @@ Escape,
     Cut,
 }
 
+#[derive(Debug, Copy, Clone)]
 pub enum UIEvent {
     KeyboardEvent {
         device_id: u64,
