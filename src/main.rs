@@ -1,5 +1,12 @@
 
-use open_ui::{UI, UIController, RgbaImage, UIEvent};
+use open_ui::{
+    UI,
+    UIController,
+    RgbaImage,
+    UIEvent,
+    KeyboardKey::*,
+    KeyboardAction::*,
+};
 
 pub struct MyApplication {
     canvas: RgbaImage,
@@ -49,9 +56,33 @@ impl UIController for MyApplication {
     }
 
     fn process_events(&mut self, events: &Vec<UIEvent>) {
-        if events.len() > 0 {
-            println!("{:?}", events);
+        for &event in events {
+            match event {
+                UIEvent::Keyboard(event) => {
+                    if event.key == Up && event.action == Press {
+                        self.momentum.1 = -0.2;
+                        self.momentum.0 = 0.0;
+                    }
+                    if event.key == Down && event.action == Press {
+                        self.momentum.1 = 0.2;
+                        self.momentum.0 = 0.0;
+                    }
+                    if event.key == Right && event.action == Press {
+                        self.momentum.0 = 0.2;
+                        self.momentum.1 = 0.0;
+                    }
+                    if event.key == Left && event.action == Press {
+                        self.momentum.0 = -0.2;
+                        self.momentum.1 = 0.0;
+                    }
+                },
+                _ => {},
+            }
         }
+
+        // if events.len() > 0 {
+            // println!("{:?}", events);
+        // }
     }
 
     fn next_frame(&mut self) -> &RgbaImage {

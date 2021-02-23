@@ -503,13 +503,13 @@ fn apply_mouse_button_input(
     ui_events.push(UIEvent::MouseButton(event));
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum KeyboardAction {
     Press,
     Release,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum KeyboardKey {
     Num0,
     Num1,
@@ -676,21 +676,21 @@ pub enum KeyboardKey {
     Cut,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct KeyboardEvent {
-    device_id: u64,
-    key: KeyboardKey,
-    action: KeyboardAction,
+    pub device_id: u64,
+    pub key: KeyboardKey,
+    pub action: KeyboardAction,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct MouseButtonEvent {
-    device_id: u64,
-    button: MouseButton,
-    action: MouseButtonAction,
+    pub device_id: u64,
+    pub button: MouseButton,
+    pub action: MouseButtonAction,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum MouseButton {
     Left,
     Right,
@@ -698,7 +698,7 @@ pub enum MouseButton {
     Other(u16),
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum MouseButtonAction {
     Press,
     Release,
