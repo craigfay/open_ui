@@ -8,8 +8,6 @@ use open_ui::{
     KeyboardAction::*,
 };
 
-
-
 // The character that the player controls
 pub struct Snake {
     segments: Vec<Segment>,
@@ -52,6 +50,7 @@ pub struct SnakeGame {
     canvas: RgbaImage,
     snake: Snake,
     frame_count: u64,
+    rng: PseudoRandomness,
 }
 
 impl SnakeGame {
@@ -70,11 +69,14 @@ impl SnakeGame {
                 Segment { x: 0, y: 0 },
             ],
         };
+
+        let rng = PseudoRandomness::new();
     
         SnakeGame {
             frame_count: 0,
             canvas,
             snake,
+            rng,
         }
     }
 
@@ -207,7 +209,7 @@ impl PseudoRandomness {
         }
     }
 
-    pub fn integer_in_range(&self, min: i32, max: i32) -> i32 {
+    pub fn integer_between(&self, min: i32, max: i32) -> i32 {
         let now = std::time::Instant::now();
         let large_number = now.duration_since(self.start).as_nanos() as i32;
         min + (large_number % (max - min))
