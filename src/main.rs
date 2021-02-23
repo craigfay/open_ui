@@ -29,33 +29,40 @@ enum Direction {
     Right,
 }
 
-pub struct MyApplication {
+// The data that the application will store in memory
+pub struct SnakeApplication {
     canvas: RgbaImage,
-    images: Vec<RgbaImage>,
-    position: (f32, f32),
-    momentum: (f32, f32),
+    snake: Snake,
 }
 
-impl MyApplication {
-    pub fn new() -> MyApplication {
-        let img = RgbaImage {
-            width: 1,
-            height: 1,
-            bytes: vec![255, 255, 255, 255],
-        }; 
+impl SnakeApplication {
+    // A method we can use to initialize the application's data
+    pub fn new() -> SnakeApplication {
+
+        // Defining the dimensions of an image that we will draw pixels onto
+        // and use to render each frame
+        let canvas = RgbaImage::new(24, 24);
+
+        // Defining the initial state of the snake
+        let snake = Snake {
+            direction: Direction::Down,
+            segments: vec![Segment {
+                x_position: 0,
+                y_position: 0,
+            }],
+        };
     
-        MyApplication {
-            canvas: RgbaImage::new(24, 24),
-            images: vec![img],
-            position: (0.0, 0.0),
-            momentum: (0.0, 0.0),
+        SnakeApplication {
+            canvas,
+            snake,
         }
     }
 }
 
-impl UIController for MyApplication {
+
+impl UIController for SnakeApplication {
     fn title(&self) -> &str {
-        "My Application"
+        "Snake Game"
     }
 
     fn dimensions(&self) -> (u32, u32) {
@@ -66,25 +73,22 @@ impl UIController for MyApplication {
         60
     }
 
+    // A function that will use a player's inputs to affect application data
     fn process_events(&mut self, events: &Vec<UIEvent>) {
         for &event in events {
             match event {
                 UIEvent::Keyboard(event) => {
                     if event.key == Up && event.action == Press {
-                        self.momentum.1 = -0.2;
-                        self.momentum.0 = 0.0;
+                        self.snake.direction = Direction::Up;
                     }
                     if event.key == Down && event.action == Press {
-                        self.momentum.1 = 0.2;
-                        self.momentum.0 = 0.0;
+                        self.snake.direction = Direction::Down;
                     }
                     if event.key == Right && event.action == Press {
-                        self.momentum.0 = 0.2;
-                        self.momentum.1 = 0.0;
+                        self.snake.direction = Direction::Right;
                     }
                     if event.key == Left && event.action == Press {
-                        self.momentum.0 = -0.2;
-                        self.momentum.1 = 0.0;
+                        self.snake.direction = Direction::Left;
                     }
                 },
                 _ => {},
@@ -92,26 +96,34 @@ impl UIController for MyApplication {
         }
     }
 
+    // A function that will use application data to decide which image to
+    // render on the next frame
     fn next_frame(&mut self) -> &RgbaImage {
+
         // Erasing the canvas
         self.canvas.fill((0,0,0,255));
 
-        for i in 0..self.images.len() {
+        // Defining the image that will represent a segment of the snake
+        let segment_image = RgbaImage {
+            width: 1,
+            height: 1,
+            bytes: vec![255, 255, 255, 255],
+        }; 
+
+        // Drawing each snake segment to the canvas
+        for segment in &self.snake.segments {
             self.canvas.draw(
-                &self.images[i],
-                self.position.0 as i32,
-                self.position.1 as i32,
+                &segment_image,
+                segment.x_position,
+                segment.y_position,
             );
         }
-
-        self.position.0 += self.momentum.0;
-        self.position.1 += self.momentum.1;
 
         &self.canvas
     }
 }
 
 fn main() {
-    let application = MyApplication::new();
+    let application = SnakeApplication::new();
     UI::launch(application);
 }
