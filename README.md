@@ -8,4 +8,4 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Enable / Disable Resizing
 * Introduce partial builder pattern
 * Test scaling with different x and y factors
-* Allow GUI controllers to decide which types of input state they want
+* Allow UIController to terminate the window
