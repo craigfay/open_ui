@@ -221,6 +221,7 @@ impl UI {
         let mut ui_events = vec![];
 
         event_loop.run(move |event, _, control_flow| {
+
             // Maybe draw the next frame
             if last_render + refresh_interval < Instant::now() {
                 let pixels = &controller.next_frame();
@@ -240,14 +241,22 @@ impl UI {
                             .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
                     };
             
-                let mut target = display.draw();
+                let mut frame = display.draw();
 
-                target.draw(&vertex_buffer, &indices, &program, &uniforms,
+                // Drawing on the next frame
+                frame.draw(&vertex_buffer, &indices, &program, &uniforms,
                     &Default::default()).unwrap();
 
-                target.finish().unwrap();
+                // Committing the drawn frame
+                frame.finish().unwrap();
 
+                // Updating the frame clock
                 last_render = Instant::now();
+
+                // Processing and flushing events
+                // Should this happen at the beginning or end of each frame?
+                controller.process_events(&ui_events);
+                ui_events = vec![];
             }
 
             // Responding to UI events
@@ -265,15 +274,9 @@ impl UI {
                     },
                     _ => return,
                 },
-                Event::DeviceEvent { event, .. } => {
-                    //
-                },
+                Event::DeviceEvent { event, .. } => {},
                 _ => {}
             }
-
-            // Processing and flushing events
-            controller.process_events(&ui_events);
-            ui_events = vec![];
 
         });
 
