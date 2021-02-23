@@ -64,7 +64,7 @@ impl PseudoRandomness {
     pub fn integer_between(&self, min: i32, max: i32) -> i32 {
         let now = std::time::Instant::now();
         let large_number = now.duration_since(self.seed).as_nanos() as i32;
-        min + (large_number % (max - min))
+        min + (large_number.abs() % (max - min))
     }
 }
 
@@ -116,7 +116,13 @@ impl SnakeGame {
 
         self.frame_count += 1;
 
-        let did_eat = false;
+        // Determining if the snake has eaten the food
+        let mut did_eat = false;
+        for segment in &self.snake.segments {
+            if segment.x == self.food.x && segment.y == self.food.y {
+                did_eat = true;
+            }
+        }
 
         // Only applying changes once every 10 frames, so the game doesn't move
         // to quickly for the player to respond. A similar effect could be
@@ -133,23 +139,26 @@ impl SnakeGame {
                 Direction::Left => (head.x - 1, head.y),
             };
 
+            let new_head = Segment {
+                x: next_x,
+                y: next_y,
+            };
+
+            // Adding the new head in the proper direction
+            self.snake.segments.insert(0, new_head);
+
             if did_eat {
-                
+                // Generating new food
+                self.food = Food {
+                    x: self.rng.integer_between(0, (self.canvas.width - 1) as i32),
+                    y: self.rng.integer_between(0, (self.canvas.height - 1) as i32),
+                };
             }
 
             else {
-                let new_head = Segment {
-                    x: next_x,
-                    y: next_y,
-                };
-
-                // Adding the new head in the proper direction
-                self.snake.segments.insert(0, new_head);
-
-                // Cutting the tail to compensate
+                // Cutting the tail to compensate for the new head
                 self.snake.segments.pop();
             }
-
         }
 
     }
