@@ -463,7 +463,7 @@ fn apply_keyboard_input(
         key,
     };
 
-    ui_events.push(UIEvent::KeyboardEvent(keyboard_event));
+    ui_events.push(UIEvent::Keyboard(keyboard_event));
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -648,5 +648,5 @@ pub struct KeyboardEvent {
 
 #[derive(Debug, Copy, Clone)]
 pub enum UIEvent {
-    KeyboardEvent(KeyboardEvent),
+    Keyboard(KeyboardEvent),
 }
