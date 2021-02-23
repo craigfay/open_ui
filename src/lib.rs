@@ -261,7 +261,7 @@ impl UI {
                         apply_keyboard_input(&device_id, &input, &mut ui_events);
                     },
                     glutin::event::WindowEvent::MouseInput { device_id, state, button, .. } => {
-                        apply_mouse_input(&device_id, &state, &button, &mut ui_events);
+                        apply_mouse_button_input(&device_id, &state, &button, &mut ui_events);
                     },
                     _ => return,
                 },
@@ -469,13 +469,38 @@ fn apply_keyboard_input(
     ui_events.push(UIEvent::Keyboard(keyboard_event));
 }
 
-fn apply_mouse_input(
+// Converting glutin mouse events to native mouse button events
+fn apply_mouse_button_input(
     device_id: &glutin::event::DeviceId,
     state: &glutin::event::ElementState,
     button: &glutin::event::MouseButton,
     ui_events: &mut Vec<UIEvent>,
 ) {
+    // Hashing device id
+    let mut hasher = DefaultHasher::new();
+    device_id.hash(&mut hasher);
+    let device_id = hasher.finish();
 
+    // Determining button pressed/released
+    let button = match button {
+        glutin::event::MouseButton::Left => MouseButton::Left,
+        glutin::event::MouseButton::Right => MouseButton::Right,
+        glutin::event::MouseButton::Middle => MouseButton::Middle,
+        glutin::event::MouseButton::Other(num) => MouseButton::Other(*num),
+    };
+
+    let action = match state {
+        glutin::event::ElementState::Pressed => MouseButtonAction::Press,
+        glutin::event::ElementState::Released => MouseButtonAction::Release,
+    };
+
+    let event = MouseButtonEvent {
+        device_id,
+        button,
+        action,
+    };
+
+    ui_events.push(UIEvent::MouseButton(event));
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -659,6 +684,28 @@ pub struct KeyboardEvent {
 }
 
 #[derive(Debug, Copy, Clone)]
+pub struct MouseButtonEvent {
+    device_id: u64,
+    button: MouseButton,
+    action: MouseButtonAction,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum MouseButton {
+    Left,
+    Right,
+    Middle,
+    Other(u16),
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum MouseButtonAction {
+    Press,
+    Release,
+}
+
+#[derive(Debug, Copy, Clone)]
 pub enum UIEvent {
     Keyboard(KeyboardEvent),
+    MouseButton(MouseButtonEvent),
 }
