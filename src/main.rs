@@ -18,19 +18,9 @@ pub struct MyApplication {
 impl MyApplication {
     pub fn new() -> MyApplication {
         let img = RgbaImage {
-            width: 3,
-            height: 3,
-            bytes: vec![
-                255, 0, 0, 255,
-                255, 0, 0, 255,
-                255, 0, 0, 255,
-                0, 255, 0, 255,
-                0, 255, 0, 255,
-                0, 255, 0, 255,
-                0, 0, 255, 255,
-                0, 0, 255, 255,
-                0, 0, 255, 255,
-            ],
+            width: 1,
+            height: 1,
+            bytes: vec![255, 255, 255, 255],
         }; 
     
         MyApplication {
@@ -79,13 +69,10 @@ impl UIController for MyApplication {
                 _ => {},
             }
         }
-
-        // if events.len() > 0 {
-            // println!("{:?}", events);
-        // }
     }
 
     fn next_frame(&mut self) -> &RgbaImage {
+        // Erasing the canvas
         self.canvas.fill((0,0,0,255));
 
         for i in 0..self.images.len() {
