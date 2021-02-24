@@ -110,19 +110,22 @@ impl SnakeGame {
         }
     }
 
+
+    // Check to see if the snake is touching the food
+    pub fn snake_touches_food(&self) -> bool {
+        for segment in &self.snake.segments {
+            if segment.x == self.food.x && segment.y == self.food.y {
+                return true;
+            }
+        }
+        false
+    }
+
     // A method that we'll use to store our "game logic". This will decide
     // how the game data changes from frame to frame.
     pub fn calculate_changes(&mut self) {
 
         self.frame_count += 1;
-
-        // Determining if the snake has eaten the food
-        let mut did_eat = false;
-        for segment in &self.snake.segments {
-            if segment.x == self.food.x && segment.y == self.food.y {
-                did_eat = true;
-            }
-        }
 
         // Only applying changes once every 10 frames, so the game doesn't move
         // to quickly for the player to respond. A similar effect could be
@@ -145,16 +148,23 @@ impl SnakeGame {
                 y: next_y,
             });
 
-            if did_eat {
-                // Generating new food
+            let mut snake_has_eaten = false;
+
+            // Randomly placing new food if the snake is touching the food.
+            // This is done in a loop in the event that the new food is placed
+            // back onto the snake.
+            while self.snake_touches_food() {
+                snake_has_eaten = true;
+
                 self.food = Food {
                     x: self.rng.integer_between(0, (self.canvas.width - 1) as i32),
                     y: self.rng.integer_between(0, (self.canvas.height - 1) as i32),
                 };
             }
 
-            else {
-                // Cutting the tail to compensate for the new head
+            // Cutting the tail to create the illusion of motion, unless the
+            // snake is supposed to get longer because it just ate food
+            if !snake_has_eaten {
                 self.snake.segments.pop();
             }
         }
