@@ -146,7 +146,7 @@ impl SnakeGame {
         // to quickly for the player to respond. A similar effect could be
         // achieved by using floating point numbers for `x` and
         // `y`, or just lowering the framerate.
-        if self.frame_count % 5 == 0 {
+        if self.frame_count % 4 == 0 {
             let head = self.snake.segments.first().unwrap();
 
             // Determining the new position of the head
@@ -158,24 +158,20 @@ impl SnakeGame {
             };
 
             // Adding the new head in the proper direction
-            self.snake.segments.insert(0,Segment {
-                x: next_x,
-                y: next_y,
-            });
+            self.snake.segments.insert(0, Segment { x: next_x, y: next_y });
 
-            // Randomly placing new food if the snake is touching the food.
-            // This is done in a loop in the event that the new food is placed
-            // back onto the snake.
+            // Replacing the food when it touches the snake's head
             if self.snake_head_touches_food() {
                 self.replace_food();
 
+                // Making sure that we haven't placed the food on the snake
                 while self.snake_body_touches_food() {
                     self.replace_food();
                 }
             }
 
             // Cutting the tail to create the illusion of motion, unless the
-            // snake is supposed to get longer because it just ate food           
+            // snake is supposed to get longer because it just ate food
             else {
                 self.snake.segments.pop();
             }
