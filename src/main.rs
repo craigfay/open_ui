@@ -110,9 +110,8 @@ impl SnakeGame {
         }
     }
 
-
-    // Check to see if the snake is touching the food
-    pub fn snake_touches_food(&self) -> bool {
+    // Check to see if any segment of the snake is touching the food
+    pub fn snake_body_touches_food(&self) -> bool {
         for segment in &self.snake.segments {
             if segment.x == self.food.x && segment.y == self.food.y {
                 return true;
@@ -120,6 +119,22 @@ impl SnakeGame {
         }
         false
     }
+
+    // Check to see if the first segment of the snake is touching the food
+    pub fn snake_head_touches_food(&self) -> bool {
+        let head = self.snake.segments.first().unwrap();
+        head.x == self.food.x && head.y == self.food.y
+    }
+
+    // Place food in a new random spot
+    pub fn replace_food(&mut self) {
+        self.food = Food {
+            x: self.rng.integer_between(0, (self.canvas.width - 1) as i32),
+            y: self.rng.integer_between(0, (self.canvas.height - 1) as i32),
+        };
+    }
+
+
 
     // A method that we'll use to store our "game logic". This will decide
     // how the game data changes from frame to frame.
@@ -148,25 +163,23 @@ impl SnakeGame {
                 y: next_y,
             });
 
-            let mut snake_has_eaten = false;
-
             // Randomly placing new food if the snake is touching the food.
             // This is done in a loop in the event that the new food is placed
             // back onto the snake.
-            while self.snake_touches_food() {
-                snake_has_eaten = true;
+            if self.snake_head_touches_food() {
+                self.replace_food();
 
-                self.food = Food {
-                    x: self.rng.integer_between(0, (self.canvas.width - 1) as i32),
-                    y: self.rng.integer_between(0, (self.canvas.height - 1) as i32),
-                };
+                while self.snake_body_touches_food() {
+                    self.replace_food();
+                }
             }
 
             // Cutting the tail to create the illusion of motion, unless the
-            // snake is supposed to get longer because it just ate food
-            if !snake_has_eaten {
+            // snake is supposed to get longer because it just ate food           
+            else {
                 self.snake.segments.pop();
             }
+
         }
 
     }
