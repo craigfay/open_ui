@@ -29,6 +29,15 @@ impl Snake {
 
         false
     }
+
+    // Attempt to change the snake's direction. Reversing is disallowed
+    pub fn change_direction(&mut self, direction: Direction) {
+        if direction == Direction::Up && self.direction == Direction::Down { return }
+        if direction == Direction::Down && self.direction == Direction::Up { return }
+        if direction == Direction::Right && self.direction == Direction::Left { return }
+        if direction == Direction::Left && self.direction == Direction::Right { return }
+        self.direction = direction;
+    }
 }
 
 // A piece of the snake
@@ -38,7 +47,8 @@ struct Segment {
 }
 
 // The directions that the snake can move
-enum Direction {
+#[derive(PartialEq, Debug)]
+pub enum Direction {
     Up,
     Down,
     Left,
@@ -202,16 +212,16 @@ impl UIController for SnakeGame {
             match event {
                 UIEvent::Keyboard(event) => {
                     if event.key == Up && event.action == Press {
-                        self.snake.direction = Direction::Up;
+                        self.snake.change_direction(Direction::Up);
                     }
                     if event.key == Down && event.action == Press {
-                        self.snake.direction = Direction::Down;
+                        self.snake.change_direction(Direction::Down);
                     }
                     if event.key == Right && event.action == Press {
-                        self.snake.direction = Direction::Right;
+                        self.snake.change_direction(Direction::Right);
                     }
                     if event.key == Left && event.action == Press {
-                        self.snake.direction = Direction::Left;
+                        self.snake.change_direction(Direction::Left);
                     }
                 },
                 _ => {},
