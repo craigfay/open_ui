@@ -180,7 +180,7 @@ impl SnakeGame {
         // to quickly for the player to respond. A similar effect could be
         // achieved by using floating point numbers for `x` and
         // `y`, or just lowering the framerate.
-        if self.frame_count % 4 == 0 {
+        if self.frame_count % 5 == 0 {
             self.snake.last_direction = self.snake.direction;
 
             let head = self.snake.segments.first().unwrap();
@@ -237,7 +237,7 @@ impl UIController for SnakeGame {
         for &event in events {
             match event {
                 UIEvent::Keyboard(event) => {
-                    if event.key == Return && event.action == Press {
+                    if event.key == Space && event.action == Press {
                         self.toggle_pause();
                     }
                     if event.key == Up && event.action == Press {
