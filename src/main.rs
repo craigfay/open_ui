@@ -141,6 +141,14 @@ impl SnakeGame {
         head.x == self.food.x && head.y == self.food.y
     }
 
+    pub fn snake_head_is_offscreen(&self) -> bool {
+        let head = self.snake.segments.first().unwrap();
+        head.x > self.canvas.width as i32 - 1 || 
+        head.y > self.canvas.height as i32 - 1 || 
+        head.x < 0 ||
+        head.y < 0
+    }
+
     // Place food in a new random spot
     pub fn replace_food(&mut self) {
         self.food = Food {
@@ -162,7 +170,7 @@ impl SnakeGame {
         self.frame_count += 1;
 
         // Handling situations that cause the end of the game
-        if self.snake.is_eating_self() {
+        if self.snake.is_eating_self() || self.snake_head_is_offscreen() {
             *self = SnakeGame::new();
             self.paused = true;
         }
