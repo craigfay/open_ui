@@ -141,6 +141,7 @@ impl SnakeGame {
         head.x == self.food.x && head.y == self.food.y
     }
 
+    // Check to see if the snake head has gone beyond the walls of the game
     pub fn snake_head_is_offscreen(&self) -> bool {
         let head = self.snake.segments.first().unwrap();
         head.x > self.canvas.width as i32 - 1 || 
@@ -165,15 +166,15 @@ impl SnakeGame {
     // how the game data changes from frame to frame.
     pub fn calculate_changes(&mut self) {
 
-        // Not doing anything if the game is at frame 0
-        if self.paused { return }
-        self.frame_count += 1;
-
         // Handling situations that cause the end of the game
         if self.snake.is_eating_self() || self.snake_head_is_offscreen() {
             *self = SnakeGame::new();
             self.paused = true;
         }
+
+        // Not doing anything if the game is paused
+        if self.paused { return }
+        self.frame_count += 1;
 
         // Only applying changes once every 10 frames, so the game doesn't move
         // to quickly for the player to respond. A similar effect could be
