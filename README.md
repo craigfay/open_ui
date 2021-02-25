@@ -9,4 +9,3 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Introduce partial builder pattern
 * Test scaling with different x and y factors
 * Allow UIController to terminate the window
-* Add snake input queue to not miss inputs that happen too fast
