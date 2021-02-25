@@ -86,6 +86,7 @@ pub struct SnakeGame {
     food: Food,
     frame_count: u64,
     rng: PseudoRandomness,
+    paused: bool,
 }
 
 impl SnakeGame {
@@ -114,13 +115,15 @@ impl SnakeGame {
         };
     
         SnakeGame {
-            frame_count: 0,
+            frame_count: 1,
             canvas,
             snake,
             food,
             rng,
+            paused: false,
         }
     }
+
 
     // Check to see if any segment of the snake is touching the food
     pub fn snake_body_touches_food(&self) -> bool {
@@ -146,12 +149,16 @@ impl SnakeGame {
         };
     }
 
-
+    pub fn toggle_pause(&mut self) {
+        self.paused = !self.paused;
+    }
 
     // A method that we'll use to store our "game logic". This will decide
     // how the game data changes from frame to frame.
     pub fn calculate_changes(&mut self) {
 
+        // Not doing anything if the game is at frame 0
+        if self.paused { return }
         self.frame_count += 1;
 
         // Only applying changes once every 10 frames, so the game doesn't move
@@ -215,6 +222,9 @@ impl UIController for SnakeGame {
         for &event in events {
             match event {
                 UIEvent::Keyboard(event) => {
+                    if event.key == Return && event.action == Press {
+                        self.toggle_pause();
+                    }
                     if event.key == Up && event.action == Press {
                         self.snake.change_direction(Direction::Up);
                     }
