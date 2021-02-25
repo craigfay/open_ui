@@ -12,6 +12,7 @@ use open_ui::{
 pub struct Snake {
     segments: Vec<Segment>,
     direction: Direction,
+    is_actionable: bool,
 }
 
 impl Snake {
@@ -32,11 +33,14 @@ impl Snake {
 
     // Attempt to change the snake's direction. Reversing is disallowed
     pub fn change_direction(&mut self, direction: Direction) {
+        if !self.is_actionable { return }
         if direction == Direction::Up && self.direction == Direction::Down { return }
         if direction == Direction::Down && self.direction == Direction::Up { return }
         if direction == Direction::Right && self.direction == Direction::Left { return }
         if direction == Direction::Left && self.direction == Direction::Right { return }
+
         self.direction = direction;
+        self.is_actionable = false;
     }
 }
 
@@ -98,6 +102,7 @@ impl SnakeGame {
         // Defining the initial state of the snake
         let snake = Snake {
             direction: Direction::Down,
+            is_actionable: true,
             segments: vec![
                 Segment { x: 0, y: 1 },
                 Segment { x: 0, y: 0 },
@@ -157,6 +162,8 @@ impl SnakeGame {
         // achieved by using floating point numbers for `x` and
         // `y`, or just lowering the framerate.
         if self.frame_count % 4 == 0 {
+            self.snake.is_actionable = true;
+
             let head = self.snake.segments.first().unwrap();
 
             // Determining the new position of the head
