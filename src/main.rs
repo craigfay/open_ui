@@ -21,7 +21,7 @@ impl Snake {
         let length = self.segments.len();
         if length == 1 { return false }
 
-        for i in 0..length {
+        for i in 1..length {
             let segment = &self.segments[i];
             if head.x == segment.x && head.y == segment.y {
                 return true
@@ -115,12 +115,12 @@ impl SnakeGame {
         };
     
         SnakeGame {
-            frame_count: 1,
+            frame_count: 0,
+            paused: false,
             canvas,
             snake,
             food,
             rng,
-            paused: false,
         }
     }
 
@@ -160,6 +160,12 @@ impl SnakeGame {
         // Not doing anything if the game is at frame 0
         if self.paused { return }
         self.frame_count += 1;
+
+        // Handling situations that cause the end of the game
+        if self.snake.is_eating_self() {
+            *self = SnakeGame::new();
+            self.paused = true;
+        }
 
         // Only applying changes once every 10 frames, so the game doesn't move
         // to quickly for the player to respond. A similar effect could be
