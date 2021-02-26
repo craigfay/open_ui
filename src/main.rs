@@ -2,8 +2,9 @@
 use open_ui::{
     UI,
     UIController,
-    RgbaImage,
+    UIBlueprint,
     UIEvent,
+    RgbaImage,
     KeyboardKey::*,
     KeyboardAction::*,
 };
@@ -219,16 +220,13 @@ impl SnakeGame {
 
 
 impl UIController for SnakeGame {
-    fn title(&self) -> &str {
-        "Snake Game"
-    }
-
-    fn dimensions(&self) -> (u32, u32) {
-        (self.canvas.height * 20, self.canvas.width * 20)
-    }
-
-    fn frames_per_second(&self) -> u32 {
-        60
+    // A function that will determine the initial properties of the UI
+    fn blueprint(&self) -> UIBlueprint {
+        UIBlueprint {
+            title: "Snake Game".to_string(),
+            dimensions: (self.canvas.height * 20, self.canvas.width * 20),
+            frames_per_second: 60,
+        }
     }
 
     // A function that will use a player's inputs to affect application data.

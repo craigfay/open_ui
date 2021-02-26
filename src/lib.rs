@@ -19,10 +19,14 @@ use std::hash::Hasher;
 use std::hash::Hash;
 use std::collections::hash_map::DefaultHasher;
 
+pub struct UIBlueprint {
+    pub title: String,
+    pub dimensions: (u32, u32),
+    pub frames_per_second: u32,
+}
+
 pub trait UIController {
-    fn title(&self) -> &str;
-    fn dimensions(&self) -> (u32, u32);
-    fn frames_per_second(&self) -> u32;
+    fn blueprint(&self) -> UIBlueprint;
     fn next_frame(&mut self) -> &RgbaImage;
     fn process_events(&mut self, events: &Vec<UIEvent>);
 }
@@ -169,13 +173,14 @@ pub struct UI;
 
 impl UI {
     pub fn launch<T: 'static + UIController>(mut controller: T) {
+        let blueprint = controller.blueprint();
         let event_loop = glutin::event_loop::EventLoop::new();
 
-        let (width, height) = controller.dimensions();
+        let (width, height) = blueprint.dimensions;
         let size = Logical(LogicalSize::new(width as f64, height as f64));
 
         let wb = glutin::window::WindowBuilder::new()
-            .with_title(controller.title())
+            .with_title(blueprint.title)
             .with_inner_size(size);
     
         let cb = glutin::ContextBuilder::new();
@@ -215,7 +220,7 @@ impl UI {
 
         // Setting up timekeeping
         let mut last_render = Instant::now();
-        let fps = controller.frames_per_second();
+        let fps = blueprint.frames_per_second;
         let refresh_interval = Duration::from_millis(1000 / fps as u64);
 
         let mut ui_events = vec![];
