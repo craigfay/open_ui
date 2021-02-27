@@ -9,3 +9,4 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Introduce partial builder pattern
 * Test scaling with different x and y factors
 * Allow UIController to terminate the window
+* Rename the fields of the Vertex struct

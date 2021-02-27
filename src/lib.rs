@@ -194,20 +194,17 @@ impl UI {
             position: [f32; 2],
             tex_coords: [f32; 2],
         }
+
+        let preserve_aspect_ratio = true;
     
         implement_vertex!(Vertex, position, tex_coords);
 
-        let vertex1 = Vertex { position: [-1.0, -1.0 ], tex_coords: [0.0, 0.0] };
-        let vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
-        let vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
-        let vertex4 = Vertex { position: [-1.0,  1.0 ], tex_coords: [0.0, 1.0] };
+        let mut vertex1 = Vertex { position: [-1.0, -1.0 ], tex_coords: [0.0, 0.0] };
+        let mut vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
+        let mut vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
+        let mut vertex4 = Vertex { position: [-1.0,  1.0 ], tex_coords: [0.0, 1.0] };
     
-        let vertex1 = Vertex { position: [ 0.0, -1.0 ], tex_coords: [0.0, 0.0] };
-        let vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
-        let vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
-        let vertex4 = Vertex { position: [ 0.0,  1.0 ], tex_coords: [0.0, 1.0] };
-    
-        let shape = vec![vertex1, vertex2, vertex3, vertex4];
+
         
         let indices: [u16; 6] = [0,1,2,2,3,0];
         let indices = glium::IndexBuffer::new(
@@ -216,8 +213,7 @@ impl UI {
             &indices
         ).unwrap();
     
-        let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-    
+
         let program = glium::Program::from_source(
             &display,
             VERTEX_SHADER_SRC,
@@ -242,6 +238,32 @@ impl UI {
                     &pixels.bytes,
                     (pixels.width, pixels.height),
                 );
+
+                if preserve_aspect_ratio {
+                    // Defining "actual UI width / height"
+                    let a_ui = size.to_logical::<f64>(1.0);
+                    let a_ui_h = a_ui.height;
+                    let a_ui_w = a_ui.width;
+
+                    // Defining the number that the image will be scaled by
+                    // to fit nicely on the UI
+                    let scalar = {
+                        if a_ui_w > a_ui_h { a_ui_h / pixels.height as f64 }
+                        else { a_ui_w / pixels.width as f64 }
+                    };
+
+                    // Defining "actual image width / height"
+                    let a_img_w = pixels.width as f64 * scalar;
+                    let a_img_h = pixels.height as f64 * scalar;
+
+                    vertex1 = Vertex { position: [ 0.0, -1.0 ], tex_coords: [0.0, 0.0] };
+                    vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
+                    vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
+                    vertex4 = Vertex { position: [ 0.0,  1.0 ], tex_coords: [0.0, 1.0] };
+                }
+
+                let shape = vec![vertex1, vertex2, vertex3, vertex4];
+                let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
 
                 let texture = glium::texture::Texture2d::new(&display, image)
                     .unwrap();
