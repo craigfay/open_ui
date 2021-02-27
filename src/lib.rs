@@ -239,27 +239,36 @@ impl UI {
                     (pixels.width, pixels.height),
                 );
 
+
+                // As the UI is resized, we'll impose letterboxing to leave
+                // the aspect ratio of `image` unchanged. This means that the
+                // position of our vertices need to be recalculated.
                 if preserve_aspect_ratio {
                     // Defining "actual UI width / height"
-                    let a_ui = size.to_logical::<f64>(1.0);
-                    let a_ui_h = a_ui.height;
-                    let a_ui_w = a_ui.width;
+                    let ui_size = size.to_logical::<f32>(1.0);
+                    let ui_h = ui_size.height;
+                    let ui_w = ui_size.width;
 
                     // Defining the number that the image will be scaled by
                     // to fit nicely on the UI
                     let scalar = {
-                        if a_ui_w > a_ui_h { a_ui_h / pixels.height as f64 }
-                        else { a_ui_w / pixels.width as f64 }
+                        if ui_w > ui_h { ui_h / pixels.height as f32 }
+                        else { ui_w / pixels.width as f32 }
                     };
 
                     // Defining "actual image width / height"
-                    let a_img_w = pixels.width as f64 * scalar;
-                    let a_img_h = pixels.height as f64 * scalar;
+                    let img_w = pixels.width as f32 * scalar;
+                    let img_h = pixels.height as f32 * scalar;
 
-                    vertex1 = Vertex { position: [ 0.0, -1.0 ], tex_coords: [0.0, 0.0] };
-                    vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
-                    vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
-                    vertex4 = Vertex { position: [ 0.0,  1.0 ], tex_coords: [0.0, 1.0] };
+                    // Defining vector magnitudes that will correctly
+                    // position the 4 vertices.
+                    let mag_x = img_w / ui_w;
+                    let mag_y = img_h / ui_h;
+
+                    vertex1 = Vertex { position: [-mag_x, -mag_y ], tex_coords: [0.0, 0.0] };
+                    vertex2 = Vertex { position: [ mag_x, -mag_y ], tex_coords: [1.0, 0.0] };
+                    vertex3 = Vertex { position: [ mag_x,  mag_y ], tex_coords: [1.0, 1.0] };
+                    vertex4 = Vertex { position: [-mag_x,  mag_y ], tex_coords: [0.0, 1.0] };
                 }
 
                 let shape = vec![vertex1, vertex2, vertex3, vertex4];
@@ -307,7 +316,6 @@ impl UI {
                         apply_mouse_button_input(&device_id, &state, &button, &mut ui_events);
                     },
                     glutin::event::WindowEvent::Resized(phys_size) => {
-                        println!("{:?}", phys_size.to_logical::<f64>(1.0));
                         size = Logical(phys_size.to_logical::<f64>(1.0));
                     },
                     _ => return,

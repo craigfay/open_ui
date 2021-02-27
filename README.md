@@ -10,3 +10,5 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Test scaling with different x and y factors
 * Allow UIController to terminate the window
 * Rename the fields of the Vertex struct
+* Reduce vertex buffer redefinition work if resizeable is false
+* Minimize dimension type casting
