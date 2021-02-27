@@ -178,7 +178,7 @@ impl UI {
         let event_loop = glutin::event_loop::EventLoop::new();
 
         let (width, height) = blueprint.dimensions;
-        let size = Logical(LogicalSize::new(width as f64, height as f64));
+        let mut size = Logical(LogicalSize::new(width as f64, height as f64));
 
         let wb = glutin::window::WindowBuilder::new()
             .with_title(blueprint.title)
@@ -201,6 +201,11 @@ impl UI {
         let vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
         let vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
         let vertex4 = Vertex { position: [-1.0,  1.0 ], tex_coords: [0.0, 1.0] };
+    
+        let vertex1 = Vertex { position: [ 0.0, -1.0 ], tex_coords: [0.0, 0.0] };
+        let vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
+        let vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
+        let vertex4 = Vertex { position: [ 0.0,  1.0 ], tex_coords: [0.0, 1.0] };
     
         let shape = vec![vertex1, vertex2, vertex3, vertex4];
         
@@ -278,6 +283,10 @@ impl UI {
                     },
                     glutin::event::WindowEvent::MouseInput { device_id, state, button, .. } => {
                         apply_mouse_button_input(&device_id, &state, &button, &mut ui_events);
+                    },
+                    glutin::event::WindowEvent::Resized(phys_size) => {
+                        println!("{:?}", phys_size.to_logical::<f64>(1.0));
+                        size = Logical(phys_size.to_logical::<f64>(1.0));
                     },
                     _ => return,
                 },

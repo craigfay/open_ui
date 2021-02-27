@@ -224,8 +224,8 @@ impl UIController for SnakeGame {
     fn blueprint(&self) -> UIBlueprint {
         UIBlueprint {
             title: "Snake Game".to_string(),
-            dimensions: (self.canvas.height * 20, self.canvas.width * 20),
-            resizeable: false,
+            dimensions: (self.canvas.width * 30, self.canvas.height * 20),
+            resizeable: true,
             frames_per_second: 60,
         }
     }
@@ -265,7 +265,7 @@ impl UIController for SnakeGame {
     fn next_frame(&mut self) -> &RgbaImage {
 
         // Erasing the canvas
-        self.canvas.fill((0,0,0,255));
+        self.canvas.fill((0,0,255,255));
 
         // Defining the image that will represent a segment of the snake
         let mut segment_image = RgbaImage::new(1, 1);
