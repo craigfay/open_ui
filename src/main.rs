@@ -225,6 +225,7 @@ impl UIController for SnakeGame {
         UIBlueprint {
             title: "Snake Game".to_string(),
             dimensions: (self.canvas.height * 20, self.canvas.width * 20),
+            resizeable: false,
             frames_per_second: 60,
         }
     }

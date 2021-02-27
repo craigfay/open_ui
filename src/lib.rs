@@ -22,6 +22,7 @@ use std::collections::hash_map::DefaultHasher;
 pub struct UIBlueprint {
     pub title: String,
     pub dimensions: (u32, u32),
+    pub resizeable: bool,
     pub frames_per_second: u32,
 }
 
@@ -181,7 +182,8 @@ impl UI {
 
         let wb = glutin::window::WindowBuilder::new()
             .with_title(blueprint.title)
-            .with_inner_size(size);
+            .with_inner_size(size)
+            .with_resizable(blueprint.resizeable);
     
         let cb = glutin::ContextBuilder::new();
         let display = glium::Display::new(wb, cb, &event_loop).unwrap();
