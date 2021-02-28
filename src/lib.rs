@@ -23,6 +23,7 @@ pub struct UIBlueprint {
     pub title: String,
     pub dimensions: (u32, u32),
     pub resizeable: bool,
+    pub preserve_aspect_ratio: bool,
     pub frames_per_second: u32,
 }
 
@@ -179,6 +180,7 @@ impl UI {
 
         let (width, height) = blueprint.dimensions;
         let mut size = Logical(LogicalSize::new(width as f64, height as f64));
+        let preserve_aspect_ratio = blueprint.preserve_aspect_ratio;
 
         let wb = glutin::window::WindowBuilder::new()
             .with_title(blueprint.title)
@@ -195,16 +197,12 @@ impl UI {
             tex_coords: [f32; 2],
         }
 
-        let preserve_aspect_ratio = true;
-    
         implement_vertex!(Vertex, position, tex_coords);
 
         let mut vertex1 = Vertex { position: [-1.0, -1.0 ], tex_coords: [0.0, 0.0] };
         let mut vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
         let mut vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
         let mut vertex4 = Vertex { position: [-1.0,  1.0 ], tex_coords: [0.0, 1.0] };
-    
-
         
         let indices: [u16; 6] = [0,1,2,2,3,0];
         let indices = glium::IndexBuffer::new(
