@@ -326,9 +326,11 @@ impl UI {
                     glutin::event::WindowEvent::Resized(phys_size) => {
                         size = phys_size.to_logical(1.0);
                     },
+                    glutin::event::WindowEvent::CursorMoved { device_id, position, .. } => {
+                        apply_cursor_movement_input(&device_id, &position, &mut ui_events);
+                    },
                     _ => return,
                 },
-                Event::DeviceEvent { event, .. } => {},
                 _ => {}
             }
 
@@ -336,6 +338,25 @@ impl UI {
 
     }
 }
+
+
+fn apply_cursor_movement_input(
+    device_id: &glutin::event::DeviceId,
+    position:  &glutin::dpi::PhysicalPosition<f64>,
+    ui_events: &mut Vec<UIEvent>,
+) {
+    let mut hasher = DefaultHasher::new();
+    device_id.hash(&mut hasher);
+    let device_id = hasher.finish();
+
+    let position = position.to_logical::<f64>(1.0);
+    let x = position.x as u32;
+    let y = position.y as u32;
+
+    let event = CursorMovementEvent { device_id, x, y };
+    ui_events.push(UIEvent::CursorMovement(event));
+}
+
 
 fn apply_keyboard_input(
     device_id: &glutin::event::DeviceId,
@@ -761,8 +782,16 @@ pub enum MouseButtonAction {
     Release,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct CursorMovementEvent {
+    pub device_id: u64,
+    pub x: u32,
+    pub y: u32,
+}
+
 #[derive(Debug, Copy, Clone)]
 pub enum UIEvent {
     Keyboard(KeyboardEvent),
     MouseButton(MouseButtonEvent),
+    CursorMovement(CursorMovementEvent)
 }

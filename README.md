@@ -9,3 +9,4 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Reduce vertex buffer redefinition work if resizeable is false
 * Minimize dimension type casting
 * Maybe rename UIBlueprint -> UIConstraints or UIProperties
+* Share DeviceId hasher
