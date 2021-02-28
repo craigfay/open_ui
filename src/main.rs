@@ -274,7 +274,8 @@ impl UIController for SnakeGame {
     }
 
     // A function that will use application data to decide which image to
-    // render on the next frame
+    // render on the next frame. If no image is returned, the application
+    // will terminate.
     fn next_frame(&mut self) -> Option<&RgbaImage> {
 
         // Not rendering the next frame if the player has canceled the game
