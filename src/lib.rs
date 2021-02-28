@@ -237,10 +237,8 @@ impl UI {
                     (pixels.width, pixels.height),
                 );
 
-
-                // As the UI is resized, we'll impose letterboxing to leave
-                // the aspect ratio of `image` unchanged. This means that the
-                // position of our vertices need to be recalculated.
+                // If the aspect ratio of the UI doesn't match that of `image`
+                // imposing letterboxing to leave the aspect ratio of `image` unchanged.
                 if preserve_aspect_ratio {
                     // Defining "actual UI width / height"
                     let ui_size = size.to_logical::<f32>(1.0);
