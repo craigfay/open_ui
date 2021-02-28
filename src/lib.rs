@@ -36,26 +36,26 @@ pub trait UIController {
 const VERTEX_SHADER_SRC: &str = r#"
     #version 150
 
-    in vec2 position;
-    in vec2 tex_coords;
-    out vec2 v_tex_coords;
+    in vec2 dest;
+    in vec2 src;
+    out vec2 v_src;
 
     void main() {
-        v_tex_coords = tex_coords;
-        gl_Position = vec4(position, 0.0, 1.0);
+        v_src = src;
+        gl_Position = vec4(dest, 0.0, 1.0);
     }
 "#;
 
 const FRAGMENT_SHADER_SRC: &str = r#"
     #version 150
 
-    in vec2 v_tex_coords;
+    in vec2 v_src;
     out vec4 color;
 
     uniform sampler2D sampler;
 
     void main() {
-        color = texture(sampler, v_tex_coords);
+        color = texture(sampler, v_src);
     }
 "#;
 
@@ -193,16 +193,16 @@ impl UI {
 
         #[derive(Copy, Clone)]
         struct Vertex {
-            position: [f32; 2],
-            tex_coords: [f32; 2],
+            dest: [f32; 2],
+            src: [f32; 2],
         }
 
-        implement_vertex!(Vertex, position, tex_coords);
+        implement_vertex!(Vertex, dest, src);
 
-        let mut vertex1 = Vertex { position: [-1.0, -1.0 ], tex_coords: [0.0, 0.0] };
-        let mut vertex2 = Vertex { position: [ 1.0, -1.0 ], tex_coords: [1.0, 0.0] };
-        let mut vertex3 = Vertex { position: [ 1.0,  1.0 ], tex_coords: [1.0, 1.0] };
-        let mut vertex4 = Vertex { position: [-1.0,  1.0 ], tex_coords: [0.0, 1.0] };
+        let mut vertex1 = Vertex { dest: [-1.0, -1.0 ], src: [0.0, 0.0] };
+        let mut vertex2 = Vertex { dest: [ 1.0, -1.0 ], src: [1.0, 0.0] };
+        let mut vertex3 = Vertex { dest: [ 1.0,  1.0 ], src: [1.0, 1.0] };
+        let mut vertex4 = Vertex { dest: [-1.0,  1.0 ], src: [0.0, 1.0] };
         
         let indices: [u16; 6] = [0,1,2,2,3,0];
         let indices = glium::IndexBuffer::new(
@@ -261,10 +261,10 @@ impl UI {
                     let mag_x = img_w / ui_w;
                     let mag_y = img_h / ui_h;
 
-                    vertex1 = Vertex { position: [-mag_x, -mag_y ], tex_coords: [0.0, 0.0] };
-                    vertex2 = Vertex { position: [ mag_x, -mag_y ], tex_coords: [1.0, 0.0] };
-                    vertex3 = Vertex { position: [ mag_x,  mag_y ], tex_coords: [1.0, 1.0] };
-                    vertex4 = Vertex { position: [-mag_x,  mag_y ], tex_coords: [0.0, 1.0] };
+                    vertex1 = Vertex { dest: [-mag_x, -mag_y ], src: [0.0, 0.0] };
+                    vertex2 = Vertex { dest: [ mag_x, -mag_y ], src: [1.0, 0.0] };
+                    vertex3 = Vertex { dest: [ mag_x,  mag_y ], src: [1.0, 1.0] };
+                    vertex4 = Vertex { dest: [-mag_x,  mag_y ], src: [0.0, 1.0] };
                 }
 
                 let shape = vec![vertex1, vertex2, vertex3, vertex4];
