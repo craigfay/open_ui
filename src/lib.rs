@@ -179,7 +179,7 @@ impl UI {
         let event_loop = glutin::event_loop::EventLoop::new();
 
         let (width, height) = blueprint.dimensions;
-        let mut size = Logical(LogicalSize::new(width as f64, height as f64));
+        let mut size = LogicalSize::new(width as f32, height as f32);
         let preserve_aspect_ratio = blueprint.preserve_aspect_ratio;
 
         let wb = glutin::window::WindowBuilder::new()
@@ -252,10 +252,8 @@ impl UI {
                 // If the aspect ratio of the UI doesn't match that of `image`
                 // imposing letterboxing to leave the aspect ratio of `image` unchanged.
                 if preserve_aspect_ratio {
-                    // Defining "actual UI width / height"
-                    let ui_size = size.to_logical::<f32>(1.0);
-                    let ui_h = ui_size.height;
-                    let ui_w = ui_size.width;
+                    let ui_h = size.height;
+                    let ui_w = size.width;
 
                     // Defining the number that the image will be scaled by
                     // to fit nicely on the UI
@@ -324,7 +322,7 @@ impl UI {
                         apply_mouse_button_input(&device_id, &state, &button, &mut ui_events);
                     },
                     glutin::event::WindowEvent::Resized(phys_size) => {
-                        size = Logical(phys_size.to_logical::<f64>(1.0));
+                        size = phys_size.to_logical(1.0);
                     },
                     _ => return,
                 },
