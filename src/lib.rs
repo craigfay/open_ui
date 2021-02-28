@@ -215,6 +215,8 @@ pub struct UI;
 
 impl UI {
     pub fn launch<T: 'static + UIController>(mut controller: T) {
+        implement_vertex!(Vertex, dest, src);
+
         let blueprint = controller.blueprint();
         let event_loop = glutin::event_loop::EventLoop::new();
 
@@ -226,18 +228,10 @@ impl UI {
             .with_title(blueprint.title)
             .with_inner_size(size)
             .with_resizable(blueprint.resizeable);
-    
+
         let cb = glutin::ContextBuilder::new();
         let display = glium::Display::new(wb, cb, &event_loop).unwrap();
-    
 
-        implement_vertex!(Vertex, dest, src);
-
-        let mut vertex1 = Vertex { dest: [-1.0, -1.0 ], src: [0.0, 0.0] };
-        let mut vertex2 = Vertex { dest: [ 1.0, -1.0 ], src: [1.0, 0.0] };
-        let mut vertex3 = Vertex { dest: [ 1.0,  1.0 ], src: [1.0, 1.0] };
-        let mut vertex4 = Vertex { dest: [-1.0,  1.0 ], src: [0.0, 1.0] };
-        
         let indices: [u16; 6] = [0,1,2,2,3,0];
         let indices = glium::IndexBuffer::new(
             &display,
@@ -252,6 +246,15 @@ impl UI {
             FRAGMENT_SHADER_SRC,
             None
         ).unwrap();
+
+        let mut shape = vec![
+            Vertex { dest: [-1.0, -1.0 ], src: [0.0, 0.0] },
+            Vertex { dest: [ 1.0, -1.0 ], src: [1.0, 0.0] },
+            Vertex { dest: [ 1.0,  1.0 ], src: [1.0, 1.0] },
+            Vertex { dest: [-1.0,  1.0 ], src: [0.0, 1.0] },
+        ];
+
+        let mut vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
 
         // Setting up timekeeping
         let mut last_render = Instant::now();
@@ -278,25 +281,21 @@ impl UI {
                     (pixels.width, pixels.height),
                 );
 
-                let mut shape = vec![vertex1, vertex2, vertex3, vertex4];
-
                 // If the aspect ratio of the UI doesn't match that of `image`
                 // imposing letterboxing to leave the aspect ratio of `image` unchanged.
                 if preserve_aspect_ratio {
                     shape = calculate_vertices(&size, &pixels);
+                    vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
                 }
 
-                let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-
-                let texture = glium::texture::Texture2d::new(&display, image)
-                    .unwrap();
+                let texture = glium::texture::Texture2d::new(&display, image).unwrap();
 
                 let uniforms = uniform! {
-                        // Applying filters to prevent unwanted image smoothing
-                        sampler: texture.sampled()
-                            .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
-                            .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
-                    };
+                    // Applying filters to prevent unwanted image smoothing
+                    sampler: texture.sampled()
+                        .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
+                        .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
+                };
             
                 let mut frame = display.draw();
 
