@@ -29,7 +29,7 @@ pub struct UIBlueprint {
 
 pub trait UIController {
     fn blueprint(&self) -> UIBlueprint;
-    fn next_frame(&mut self) -> &RgbaImage;
+    fn next_frame(&mut self) -> Option<&RgbaImage>;
     fn process_events(&mut self, events: &Vec<UIEvent>);
 }
 
@@ -235,7 +235,14 @@ impl UI {
 
             // Maybe draw the next frame
             if last_render + refresh_interval < Instant::now() {
-                let pixels = &controller.next_frame();
+                let maybe_pixels = &controller.next_frame();
+
+                if maybe_pixels.is_none() {
+                    return *control_flow = glutin::event_loop::ControlFlow::Exit;
+                }
+
+                let pixels = maybe_pixels.unwrap();
+
 
                 let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
                     &pixels.bytes,

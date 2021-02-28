@@ -88,6 +88,7 @@ pub struct SnakeGame {
     frame_count: u64,
     rng: PseudoRandomness,
     paused: bool,
+    finished: bool,
 }
 
 impl SnakeGame {
@@ -118,6 +119,7 @@ impl SnakeGame {
         SnakeGame {
             frame_count: 0,
             paused: false,
+            finished: false,
             canvas,
             snake,
             food,
@@ -237,6 +239,9 @@ impl UIController for SnakeGame {
         for &event in events {
             match event {
                 UIEvent::Keyboard(event) => {
+                    if event.key == Escape && event.action == Press {
+                        self.finished = true;
+                    }
                     if event.key == Space && event.action == Press {
                         self.toggle_pause();
                     }
@@ -263,7 +268,11 @@ impl UIController for SnakeGame {
 
     // A function that will use application data to decide which image to
     // render on the next frame
-    fn next_frame(&mut self) -> &RgbaImage {
+    fn next_frame(&mut self) -> Option<&RgbaImage> {
+
+        if self.finished {
+            return None
+        }
 
         // Erasing the canvas
         self.canvas.fill((0,0,255,255));
@@ -289,7 +298,8 @@ impl UIController for SnakeGame {
                 segment.y,
             );
         }
-        &self.canvas
+
+        Some(&self.canvas)
     }
 }
 
