@@ -226,7 +226,7 @@ impl UIController for SnakeGame {
             title: "Snake Game".to_string(),
             dimensions: (self.canvas.width * 30, self.canvas.height * 20),
             resizeable: true,
-            preserve_aspect_ratio: false,
+            preserve_aspect_ratio: true,
             frames_per_second: 60,
         }
     }
