@@ -270,6 +270,7 @@ impl UIController for SnakeGame {
     // render on the next frame
     fn next_frame(&mut self) -> Option<&RgbaImage> {
 
+        // Not rendering the next frame if the player has canceled the game
         if self.finished {
             return None
         }
