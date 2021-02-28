@@ -9,6 +9,13 @@ use open_ui::{
     KeyboardAction::*,
 };
 
+
+fn main() {
+    let application = SnakeGame::new();
+    UI::launch(application);
+}
+
+
 // The character that the player controls
 pub struct Snake {
     segments: Vec<Segment>,
@@ -304,7 +311,3 @@ impl UIController for SnakeGame {
     }
 }
 
-fn main() {
-    let application = SnakeGame::new();
-    UI::launch(application);
-}
