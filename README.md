@@ -11,4 +11,4 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Allow UIController to terminate the window
 * Reduce vertex buffer redefinition work if resizeable is false
 * Minimize dimension type casting
-* Maybe rename UIBlueprint -> UIConstraints
+* Maybe rename UIBlueprint -> UIConstraints or UIProperties
