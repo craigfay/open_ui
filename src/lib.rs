@@ -193,8 +193,13 @@ impl UI {
 
         #[derive(Copy, Clone)]
         struct Vertex {
-            dest: [f32; 2],
+            // The vector denoting the area of incoming textures that will be
+            // used for drawing. This could be used to crop incoming textures.
             src: [f32; 2],
+            // The vector denoting the area of the window that incoming textures
+            // will be drawn onto. This could be used to only draw textures on
+            // a partial area of the output.
+            dest: [f32; 2],
         }
 
         implement_vertex!(Vertex, dest, src);
