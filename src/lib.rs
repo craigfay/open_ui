@@ -3,15 +3,10 @@ extern crate glium;
 
 #[allow(unused_imports)]
 use glium::{glutin, Surface};
-
-use glium::glutin::dpi::Size::Logical;
 use glium::glutin::dpi::LogicalSize;
-
 use glium::glutin::event::Event;
 use glium::glutin::event::DeviceEvent;
-use glium::glutin::event::KeyboardInput;
 use glium::glutin::event::VirtualKeyCode;
-use glium::glutin::event::ElementState::Pressed;
 
 use std::time::Duration;
 use std::time::Instant;
