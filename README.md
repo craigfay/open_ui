@@ -10,3 +10,4 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Minimize dimension type casting
 * Maybe rename UIBlueprint -> UIConstraints or UIProperties
 * Share DeviceId hasher
+* Expose Resize Events
