@@ -171,6 +171,46 @@ impl RgbaImage {
     }
 }
 
+#[derive(Copy, Clone)]
+struct Vertex {
+    // The vector denoting the area of incoming textures that will be
+    // used for drawing. This could be used to crop incoming textures.
+    src: [f32; 2],
+    // The vector denoting the area of the window that incoming textures
+    // will be drawn onto. This could be used to only draw textures on
+    // a partial area of the output.
+    dest: [f32; 2],
+}
+
+fn calculate_vertices(size: &LogicalSize<f32>, pixels: &RgbaImage) -> Vec<Vertex> {
+    let ui_h = size.height;
+    let ui_w = size.width;
+
+    // Defining the number that the image will be scaled by
+    // to fit nicely on the UI
+    let scalar = {
+        if ui_w > ui_h { ui_h / pixels.height as f32 }
+        else { ui_w / pixels.width as f32 }
+    };
+
+    // Defining "actual image width / height"
+    let img_w = pixels.width as f32 * scalar;
+    let img_h = pixels.height as f32 * scalar;
+
+    // Defining vector magnitudes that will correctly
+    // position the 4 vertices.
+    let mag_x = img_w / ui_w;
+    let mag_y = img_h / ui_h;
+
+    vec![
+        Vertex { dest: [-mag_x, -mag_y ], src: [0.0, 0.0] },
+        Vertex { dest: [ mag_x, -mag_y ], src: [1.0, 0.0] },
+        Vertex { dest: [ mag_x,  mag_y ], src: [1.0, 1.0] },
+        Vertex { dest: [-mag_x,  mag_y ], src: [0.0, 1.0] },
+    ]
+}
+
+
 pub struct UI;
 
 impl UI {
@@ -190,17 +230,6 @@ impl UI {
         let cb = glutin::ContextBuilder::new();
         let display = glium::Display::new(wb, cb, &event_loop).unwrap();
     
-
-        #[derive(Copy, Clone)]
-        struct Vertex {
-            // The vector denoting the area of incoming textures that will be
-            // used for drawing. This could be used to crop incoming textures.
-            src: [f32; 2],
-            // The vector denoting the area of the window that incoming textures
-            // will be drawn onto. This could be used to only draw textures on
-            // a partial area of the output.
-            dest: [f32; 2],
-        }
 
         implement_vertex!(Vertex, dest, src);
 
@@ -249,35 +278,14 @@ impl UI {
                     (pixels.width, pixels.height),
                 );
 
+                let mut shape = vec![vertex1, vertex2, vertex3, vertex4];
+
                 // If the aspect ratio of the UI doesn't match that of `image`
                 // imposing letterboxing to leave the aspect ratio of `image` unchanged.
                 if preserve_aspect_ratio {
-                    let ui_h = size.height;
-                    let ui_w = size.width;
-
-                    // Defining the number that the image will be scaled by
-                    // to fit nicely on the UI
-                    let scalar = {
-                        if ui_w > ui_h { ui_h / pixels.height as f32 }
-                        else { ui_w / pixels.width as f32 }
-                    };
-
-                    // Defining "actual image width / height"
-                    let img_w = pixels.width as f32 * scalar;
-                    let img_h = pixels.height as f32 * scalar;
-
-                    // Defining vector magnitudes that will correctly
-                    // position the 4 vertices.
-                    let mag_x = img_w / ui_w;
-                    let mag_y = img_h / ui_h;
-
-                    vertex1 = Vertex { dest: [-mag_x, -mag_y ], src: [0.0, 0.0] };
-                    vertex2 = Vertex { dest: [ mag_x, -mag_y ], src: [1.0, 0.0] };
-                    vertex3 = Vertex { dest: [ mag_x,  mag_y ], src: [1.0, 1.0] };
-                    vertex4 = Vertex { dest: [-mag_x,  mag_y ], src: [0.0, 1.0] };
+                    shape = calculate_vertices(&size, &pixels);
                 }
 
-                let shape = vec![vertex1, vertex2, vertex3, vertex4];
                 let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
 
                 let texture = glium::texture::Texture2d::new(&display, image)
