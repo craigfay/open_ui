@@ -296,6 +296,9 @@ impl UI {
             
                 let mut frame = display.draw();
 
+                // Erasing the previous frame. This only seems to be necessary
+                // to prevent a flickering on the edges of the drawn frame when
+                // the window is maximized.
                 frame.clear_color(0.0,0.0,0.0,255.0);
 
                 // Drawing on the next frame
