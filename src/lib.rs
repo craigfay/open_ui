@@ -166,7 +166,7 @@ impl RgbaImage {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 struct Vertex {
     // The vector denoting the area of incoming textures that will be
     // used for drawing. This could be used to crop incoming textures.
@@ -280,6 +280,7 @@ impl UI {
                 // imposing letterboxing to leave the aspect ratio of `image` unchanged.
                 if preserve_aspect_ratio {
                     shape = calculate_vertices(&size, &pixels);
+                    // println!("{:?}\n", shape);
                     vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
                 }
 
@@ -291,8 +292,11 @@ impl UI {
                         .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
                         .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
                 };
+
             
                 let mut frame = display.draw();
+
+                frame.clear_color(0.0,0.0,0.0,255.0);
 
                 // Drawing on the next frame
                 frame.draw(&vertex_buffer, &indices, &program, &uniforms,
