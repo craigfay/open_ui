@@ -18,6 +18,7 @@ pub struct UIBlueprint {
     pub title: String,
     pub dimensions: (u32, u32),
     pub resizeable: bool,
+    pub maximized: bool,
     pub preserve_aspect_ratio: bool,
     pub frames_per_second: u32,
 }
@@ -222,6 +223,7 @@ impl UI {
         let wb = glutin::window::WindowBuilder::new()
             .with_title(blueprint.title)
             .with_inner_size(size)
+            .with_maximized(blueprint.maximized)
             .with_resizable(blueprint.resizeable);
 
         let cb = glutin::ContextBuilder::new();
