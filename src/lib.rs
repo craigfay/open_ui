@@ -334,6 +334,7 @@ impl UI {
                     },
                     glutin::event::WindowEvent::Resized(phys_size) => {
                         size = phys_size.to_logical(1.0);
+                        apply_resize_event(&size, &mut ui_events);
                     },
                     glutin::event::WindowEvent::CursorMoved { device_id, position, .. } => {
                         apply_cursor_movement_input(&device_id, &position, &mut ui_events);
@@ -346,6 +347,16 @@ impl UI {
         });
 
     }
+}
+
+fn apply_resize_event(
+    size: &glutin::dpi::LogicalSize<f32>,
+    ui_events: &mut Vec<UIEvent>,
+) {
+    ui_events.push(UIEvent::Resize(ResizeEvent {
+        width: size.width as u32,
+        height: size.height as u32,
+    }));
 }
 
 
@@ -798,9 +809,16 @@ pub struct CursorMovementEvent {
     pub y: u32,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct ResizeEvent {
+    pub width: u32,
+    pub height: u32,
+}
+
 #[derive(Debug, Copy, Clone)]
 pub enum UIEvent {
     Keyboard(KeyboardEvent),
     MouseButton(MouseButtonEvent),
-    CursorMovement(CursorMovementEvent)
+    CursorMovement(CursorMovementEvent),
+    Resize(ResizeEvent)
 }
