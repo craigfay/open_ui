@@ -23,6 +23,43 @@ pub struct UIBlueprint {
     pub frames_per_second: u32,
 }
 
+impl UIBlueprint {
+    pub fn default() -> UIBlueprint {
+        UIBlueprint {
+            title: "".to_string(),
+            dimensions: (800, 800),
+            resizeable: true,
+            maximized: false,
+            preserve_aspect_ratio: true,
+            frames_per_second: 60,
+        }
+    }
+
+    pub fn title(self, title: &str) -> UIBlueprint {
+        UIBlueprint { title: title.to_string(), ..self }
+    }
+
+    pub fn dimensions(self, dimensions: (u32, u32)) -> UIBlueprint {
+        UIBlueprint { dimensions, ..self }
+    }
+
+    pub fn resizeable(self, resizeable: bool) -> UIBlueprint {
+        UIBlueprint { resizeable, ..self }
+    }
+
+    pub fn maximized(self, maximized: bool) -> UIBlueprint {
+        UIBlueprint { maximized, ..self }
+    }
+
+    pub fn preserve_aspect_ratio(self, preserve_aspect_ratio: bool) -> UIBlueprint {
+        UIBlueprint { preserve_aspect_ratio, ..self }
+    }
+
+    pub fn frames_per_second(self, frames_per_second: u32) -> UIBlueprint {
+        UIBlueprint { frames_per_second, ..self }
+    }
+}
+
 pub trait UIController {
     fn blueprint(&self) -> UIBlueprint;
     fn next_frame(&mut self) -> Option<&RgbaImage>;
