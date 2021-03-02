@@ -327,17 +327,17 @@ impl UI {
                         return;
                     },
                     glutin::event::WindowEvent::KeyboardInput { device_id, input, .. } => {
-                        apply_keyboard_input(&device_id, &input, &mut ui_events);
+                        apply_keyboard_event(&device_id, &input, &mut ui_events);
                     },
                     glutin::event::WindowEvent::MouseInput { device_id, state, button, .. } => {
-                        apply_mouse_button_input(&device_id, &state, &button, &mut ui_events);
+                        apply_mouse_button_event(&device_id, &state, &button, &mut ui_events);
                     },
                     glutin::event::WindowEvent::Resized(phys_size) => {
                         size = phys_size.to_logical(1.0);
                         apply_resize_event(&size, &mut ui_events);
                     },
                     glutin::event::WindowEvent::CursorMoved { device_id, position, .. } => {
-                        apply_cursor_movement_input(&device_id, &position, &mut ui_events);
+                        apply_cursor_movement_event(&device_id, &position, &mut ui_events);
                     },
                     _ => return,
                 },
@@ -360,7 +360,7 @@ fn apply_resize_event(
 }
 
 
-fn apply_cursor_movement_input(
+fn apply_cursor_movement_event(
     device_id: &glutin::event::DeviceId,
     position:  &glutin::dpi::PhysicalPosition<f64>,
     ui_events: &mut Vec<UIEvent>,
@@ -378,7 +378,7 @@ fn apply_cursor_movement_input(
 }
 
 
-fn apply_keyboard_input(
+fn apply_keyboard_event(
     device_id: &glutin::event::DeviceId,
     input: &glutin::event::KeyboardInput,
     ui_events: &mut Vec<UIEvent>
@@ -568,7 +568,7 @@ fn apply_keyboard_input(
 }
 
 // Converting glutin mouse events to native mouse button events
-fn apply_mouse_button_input(
+fn apply_mouse_button_event(
     device_id: &glutin::event::DeviceId,
     state: &glutin::event::ElementState,
     button: &glutin::event::MouseButton,
