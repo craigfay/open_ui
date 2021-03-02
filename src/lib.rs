@@ -371,7 +371,7 @@ fn apply_cursor_movement_event(
     position:  &glutin::dpi::PhysicalPosition<f64>,
     ui_events: &mut Vec<UIEvent>,
 ) {
-    let position = position.to_logical::<f64>(1.0);
+    let position = position.to_logical::<f32>(1.0);
 
     ui_events.push(UIEvent::CursorMovement(CursorMovementEvent {
         device_id: hash(device_id),
@@ -386,9 +386,7 @@ fn apply_keyboard_event(
     input: &glutin::event::KeyboardInput,
     ui_events: &mut Vec<UIEvent>
 ) {
-    let mut hasher = DefaultHasher::new();
-    device_id.hash(&mut hasher);
-    let device_id = hasher.finish();
+    let device_id = hash(device_id);
 
     let action = match input.state {
         glutin::event::ElementState::Pressed => KeyboardAction::Press,
@@ -577,10 +575,7 @@ fn apply_mouse_button_event(
     button: &glutin::event::MouseButton,
     ui_events: &mut Vec<UIEvent>,
 ) {
-    // Hashing device id
-    let mut hasher = DefaultHasher::new();
-    device_id.hash(&mut hasher);
-    let device_id = hasher.finish();
+    let device_id = hash(device_id);
 
     // Determining button pressed/released
     let button = match button {
