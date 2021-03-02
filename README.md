@@ -7,4 +7,3 @@ A user friendly Rust library for creating cross-platform GUI apps easily. Built 
 * Introduce partial builder pattern
 * Test scaling with different x and y factors
 * Maybe rename UIBlueprint -> UIConstraints or UIProperties
-* Share DeviceId hasher

@@ -231,14 +231,13 @@ impl SnakeGame {
 impl UIController for SnakeGame {
     // A function that will determine the initial properties of the UI
     fn blueprint(&self) -> UIBlueprint {
-        UIBlueprint {
-            title: "Snake Game".to_string(),
-            dimensions: (self.canvas.width * 30, self.canvas.height * 20),
-            resizeable: true,
-            maximized: true,
-            preserve_aspect_ratio: true,
-            frames_per_second: 60,
-        }
+        UIBlueprint::default()
+            .title("Snake Game")
+            .dimensions((self.canvas.width * 30, self.canvas.height * 20))
+            .resizeable(true)
+            .maximized(false)
+            .preserve_aspect_ratio(true)
+            .frames_per_second(60)
     }
 
     // A function that will use a player's inputs to affect application data.
