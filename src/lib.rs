@@ -349,6 +349,12 @@ impl UI {
     }
 }
 
+fn hash<T: Hash>(value: T) -> u64 {
+    let mut hasher = DefaultHasher::new();
+    value.hash(&mut hasher);
+    hasher.finish()
+}
+
 fn apply_resize_event(
     size: &glutin::dpi::LogicalSize<f32>,
     ui_events: &mut Vec<UIEvent>,
@@ -365,16 +371,13 @@ fn apply_cursor_movement_event(
     position:  &glutin::dpi::PhysicalPosition<f64>,
     ui_events: &mut Vec<UIEvent>,
 ) {
-    let mut hasher = DefaultHasher::new();
-    device_id.hash(&mut hasher);
-    let device_id = hasher.finish();
-
     let position = position.to_logical::<f64>(1.0);
-    let x = position.x as u32;
-    let y = position.y as u32;
 
-    let event = CursorMovementEvent { device_id, x, y };
-    ui_events.push(UIEvent::CursorMovement(event));
+    ui_events.push(UIEvent::CursorMovement(CursorMovementEvent {
+        device_id: hash(device_id),
+        x: position.x as u32,
+        y: position.y as u32,
+    }));
 }
 
 

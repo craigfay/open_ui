@@ -2,11 +2,9 @@
 A user friendly Rust library for creating cross-platform GUI apps easily. Built on OpenGL.
 
 # Todo List
-* Handle keyboard / mouse input
+* Handle mousewheel input
 * Write tests for image manipulation
 * Introduce partial builder pattern
 * Test scaling with different x and y factors
-* Reduce vertex buffer redefinition work if resizeable is false
 * Maybe rename UIBlueprint -> UIConstraints or UIProperties
 * Share DeviceId hasher
-* Expose Resize Events
