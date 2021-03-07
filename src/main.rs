@@ -234,10 +234,10 @@ impl UIController for SnakeGame {
         UIBlueprint::default()
             .title("Snake Game")
             .dimensions((self.canvas.width * 30, self.canvas.height * 20))
-            .resizeable(true)
-            .maximized(false)
             .preserve_aspect_ratio(true)
             .frames_per_second(60)
+            .resizeable(true)
+            .maximized(false)
     }
 
     // A function that will use a player's inputs to affect application data.

@@ -146,7 +146,7 @@ impl RgbaImage {
                     bytes.push(0);
                     bytes.push(0);
                     bytes.push(0);
-                    bytes.push(255);
+                    bytes.push(0);
                 }
                 bytes
             }
