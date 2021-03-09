@@ -143,6 +143,30 @@ fn de_alpha(pixel: &RgbaPixel) -> RgbaPixel {
     (r,g,b,255)
 }
 
+fn blend(p1: &RgbaPixel, p2: &RgbaPixel) -> RgbaPixel {
+    let p1b = de_alpha(&p1);
+    let p2b = de_alpha(&p2);
+
+    let r = ((p1b.0 as f32 + p2b.0 as f32) / 2.0) as u8;
+    let g = ((p1b.1 as f32 + p2b.1 as f32) / 2.0) as u8;
+    let b = ((p1b.2 as f32 + p2b.2 as f32) / 2.0) as u8;
+    (r,g,b,255)
+}
+
+// Determine the pixel that would be created by layering a  pixel onto another
+fn superimpose(top: &RgbaPixel, bottom: &RgbaPixel) -> RgbaPixel {
+    let bottom = de_alpha(&bottom);
+
+    let alpha = top.3 as f32;
+    let anti_alpha = (255 - top.3) as f32;
+
+    let r = ((top.0 as f32  * alpha) + (bottom.0 as f32 * anti_alpha) / 255.0) as u8;
+    let g = ((top.1 as f32  * alpha) + (bottom.1 as f32 * anti_alpha) / 255.0) as u8;
+    let b = ((top.2 as f32  * alpha) + (bottom.2 as f32 * anti_alpha) / 255.0) as u8;
+    (r,g,b,255)
+}
+
+
 impl RgbaImage {
     pub fn new(width: u32, height: u32) -> RgbaImage {
         RgbaImage {
@@ -195,10 +219,14 @@ impl RgbaImage {
                 let canvas_y = y + img_y as i32;
 
                 if canvas_x >= 0 && canvas_y >= 0 {
+                    let target_pixel = self.get_pixel(
+                        canvas_x as u32,
+                        canvas_y as u32
+                    );
                     self.set_pixel(
                         canvas_x as u32,
                         canvas_y as u32,
-                        de_alpha(&pixel),
+                        superimpose(&pixel, &target_pixel),
                     );
                 }
             }
