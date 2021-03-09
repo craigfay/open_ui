@@ -135,6 +135,14 @@ impl RgbaImage {
     }
 }
 
+fn de_alpha(pixel: &RgbaPixel) -> RgbaPixel {
+    let alpha_ratio = (pixel.3 as f32 / 255.0);
+    let r = (pixel.0 as f32 * alpha_ratio) as u8;
+    let g = (pixel.1 as f32 * alpha_ratio) as u8;
+    let b = (pixel.2 as f32 * alpha_ratio) as u8;
+    (r,g,b,255)
+}
+
 impl RgbaImage {
     pub fn new(width: u32, height: u32) -> RgbaImage {
         RgbaImage {
@@ -190,7 +198,7 @@ impl RgbaImage {
                     self.set_pixel(
                         canvas_x as u32,
                         canvas_y as u32,
-                        pixel
+                        de_alpha(&pixel),
                     );
                 }
             }
