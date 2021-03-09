@@ -7,6 +7,7 @@ use glium::glutin::dpi::LogicalSize;
 use glium::glutin::event::Event;
 use glium::glutin::event::DeviceEvent;
 use glium::glutin::event::VirtualKeyCode;
+use glium::draw_parameters::Blend;
 
 use std::time::Duration;
 use std::time::Instant;
@@ -72,6 +73,7 @@ const VERTEX_SHADER_SRC: &str = r#"
     in vec2 dest;
     in vec2 src;
     out vec2 v_src;
+
 
     void main() {
         v_src = src;
@@ -274,6 +276,7 @@ impl UI {
         ).unwrap();
     
 
+
         let program = glium::Program::from_source(
             &display,
             VERTEX_SHADER_SRC,
@@ -289,6 +292,14 @@ impl UI {
         ];
 
         let mut vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
+
+        // The extra parameters that will be used when drawing frames.
+        // Blend is important because it allows the alpha channel of
+        // RGBA to work.
+        let draw_params = glium::DrawParameters {
+            blend: Blend::alpha_blending(),
+            .. Default::default()
+        };
 
         // Setting up timekeeping
         let mut last_render = Instant::now();
@@ -340,9 +351,10 @@ impl UI {
                 // the window is maximized.
                 frame.clear_color(0.0,0.0,0.0,255.0);
 
+
                 // Drawing on the next frame
                 frame.draw(&vertex_buffer, &indices, &program, &uniforms,
-                    &Default::default()).unwrap();
+                    &draw_params).unwrap();
 
                 // Committing the drawn frame
                 frame.finish().unwrap();
