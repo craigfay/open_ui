@@ -1,9 +1,26 @@
 # OpenUI
 A user friendly Rust library for creating cross-platform GUI apps easily. Built on OpenGL.
 
-# Todo List
-* Handle mousewheel input
-* Write tests for image manipulation
-* Introduce partial builder pattern
-* Test scaling with different x and y factors
-* Maybe rename UIBlueprint -> UIConstraints or UIProperties
+# Usage
+To create a Rust program that renders a UI, simply define a struct that implements the `UIController` interface.
+
+```rust
+use open_ui::UIController;
+
+struct SnakeGame {};
+
+impl UIController for SnakeGame {
+  // Implement the functions associated with UIController here
+}
+```
+
+Then pass an instance of that struct into `UI::launch()`.
+
+```rust
+use open_ui::UI;
+
+fn main() {
+    let application = SnakeGame::new();
+    UI::launch(application);
+}
+```
