@@ -1,6 +1,16 @@
 # OpenUI
 A user friendly Rust library for creating cross-platform GUI apps easily. Built on OpenGL.
 
+# Installation
+
+Add OpenUI as a dependency in any Cargo project:
+
+```
+# Cargo.toml
+[dependencies]
+open_ui = { git="https://github.com/craigfay/open_ui", branch="main", ref="500c812" }
+```
+
 # Usage
 To create a Rust program that renders a UI, simply define a struct that implements the `UIController` interface.
 
