@@ -3,8 +3,8 @@ name = "open_ui"
 version = "0.1.0"
 authors = ["craig <craigfay1@gmail.com>"]
 edition = "2018"
+license-file = "LICENSE"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
 name = "open_ui"
