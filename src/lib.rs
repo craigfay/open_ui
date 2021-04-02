@@ -200,6 +200,7 @@ impl RgbaImage {
         true
     }
 
+    // TODO BUGFIX return Option<RgbaPixel>
     pub fn get_pixel(&self, x: u32, y: u32) -> RgbaPixel {
         let index = (((self.width * y) + x) * 4) as usize;
         (
