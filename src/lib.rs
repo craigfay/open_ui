@@ -126,7 +126,7 @@ impl RgbaImage {
                 let src_y = progress_y * img.height as f32;
 
                 // Applying the sampled pixel to the output image
-                let pixel = img.get_pixel(src_x as u32, src_y as u32);
+                let pixel = img.get_pixel(src_x as u32, src_y as u32).unwrap();
                 new_img.set_pixel(x, y, pixel);
             }
         }
@@ -201,20 +201,25 @@ impl RgbaImage {
     }
 
     // TODO BUGFIX return Option<RgbaPixel>
-    pub fn get_pixel(&self, x: u32, y: u32) -> RgbaPixel {
+    pub fn get_pixel(&self, x: u32, y: u32) -> Option<RgbaPixel> {
         let index = (((self.width * y) + x) * 4) as usize;
-        (
+
+        if index < 0 || index >= self.bytes.len() {
+            return None;
+        }
+
+        Some((
             self.bytes[index + 0],
             self.bytes[index + 1],
             self.bytes[index + 2],
             self.bytes[index + 3],
-        )
+        ))
     }
 
     pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
         for img_y in 0..img.height {
             for img_x in 0..img.width {
-                let pixel = img.get_pixel(img_x, img_y);
+                let pixel = img.get_pixel(img_x, img_y).unwrap();
 
                 let canvas_x = x + img_x as i32;
                 let canvas_y = y + img_y as i32;
@@ -223,7 +228,8 @@ impl RgbaImage {
                     let target_pixel = self.get_pixel(
                         canvas_x as u32,
                         canvas_y as u32
-                    );
+                    ).unwrap();
+
                     self.set_pixel(
                         canvas_x as u32,
                         canvas_y as u32,
