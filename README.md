@@ -34,3 +34,6 @@ fn main() {
     UI::launch(application);
 }
 ```
+
+# Examples
+For an example of how to use OpenUI, see `src/main.rs`.
