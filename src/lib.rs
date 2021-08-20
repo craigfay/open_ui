@@ -696,7 +696,7 @@ pub enum KeyboardAction {
     Release,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum KeyboardKey {
     Num0,
     Num1,
