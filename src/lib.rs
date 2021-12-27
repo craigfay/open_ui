@@ -161,36 +161,6 @@ fn _de_alpha() {
     assert_eq!(after_de_alpha, (134, 136, 228, 255));
 }
 
-// Determine the pixel that would be created by layering a  pixel onto another
-fn superimpose(top: &RgbaPixel, bottom: &RgbaPixel) -> RgbaPixel {
-    let bottom = de_alpha(&bottom, &WHITE);
-
-    let alpha = top.3 as f32;
-    let anti_alpha = (255 - top.3) as f32;
-
-    let r = ((top.0 as f32  * alpha) + (bottom.0 as f32 * anti_alpha) / 255.0) as u8;
-    let g = ((top.1 as f32  * alpha) + (bottom.1 as f32 * anti_alpha) / 255.0) as u8;
-    let b = ((top.2 as f32  * alpha) + (bottom.2 as f32 * anti_alpha) / 255.0) as u8;
-    (r,g,b,255)
-}
-
-#[test]
-fn _superimpose_with_transparent_top() {
-    let top = (0, 0, 0, 0);
-    let bottom = (50, 50, 50, 255);
-    let superimposed = superimpose(&top, &bottom);
-    assert_eq!(superimposed, (50, 50, 50, 255));
-}
-
-#[test]
-fn _superimpose_with_semi_transparent_top() {
-    let top = (34, 94, 203, 129);
-    let bottom = (194, 51, 51, 255);
-    let superimposed = superimpose(&top, &bottom);
-    assert_eq!(superimposed, (112, 73, 129, 255));
-}
-
-
 impl RgbaImage {
     pub fn new(width: u32, height: u32) -> RgbaImage {
         RgbaImage {
