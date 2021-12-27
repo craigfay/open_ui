@@ -103,7 +103,8 @@ pub struct RgbaImage {
 
 pub type RgbaPixel = (u8,u8,u8,u8);
 
-// #[cfg(feature = "image_manipulation")]
+const WHITE: RgbaPixel = (255, 255, 255, 255);
+
 impl RgbaImage {
     pub fn nearest_neighbor_scale(img: &RgbaImage, factor: f32) -> RgbaImage {
         let mut new_img = RgbaImage::new(
@@ -135,17 +136,34 @@ impl RgbaImage {
     }
 }
 
-fn de_alpha(pixel: &RgbaPixel) -> RgbaPixel {
-    let alpha_ratio = (pixel.3 as f32 / 255.0);
-    let r = (pixel.0 as f32 * alpha_ratio) as u8;
-    let g = (pixel.1 as f32 * alpha_ratio) as u8;
-    let b = (pixel.2 as f32 * alpha_ratio) as u8;
+
+// Assumes that the color beneath is pure white
+fn de_alpha(pixel: &RgbaPixel, background: &RgbaPixel) -> RgbaPixel {
+    let a = pixel.3 as f32 / 255.0;
+    let r = pixel.0 as f32;
+    let g = pixel.1 as f32;
+    let b = pixel.2 as f32;
+
+    let bg_r = background.0 as f32;
+    let bg_g = background.1 as f32;
+    let bg_b = background.2 as f32;
+
+    let r = ((1.0 - a) * bg_r + a * r).round() as u8;
+    let g = ((1.0 - a) * bg_g + a * g).round() as u8;
+    let b = ((1.0 - a) * bg_b + a * b).round() as u8;
     (r,g,b,255)
 }
 
+#[test]
+fn _de_alpha() {
+    let rgba = (14, 18, 201, 128);
+    let after_de_alpha = de_alpha(&rgba, &WHITE);
+    assert_eq!(after_de_alpha, (134, 136, 228, 255));
+}
+
 fn blend(p1: &RgbaPixel, p2: &RgbaPixel) -> RgbaPixel {
-    let p1b = de_alpha(&p1);
-    let p2b = de_alpha(&p2);
+    let p1b = de_alpha(&p1, &WHITE);
+    let p2b = de_alpha(&p2, &WHITE);
 
     let r = ((p1b.0 as f32 + p2b.0 as f32) / 2.0) as u8;
     let g = ((p1b.1 as f32 + p2b.1 as f32) / 2.0) as u8;
@@ -155,7 +173,7 @@ fn blend(p1: &RgbaPixel, p2: &RgbaPixel) -> RgbaPixel {
 
 // Determine the pixel that would be created by layering a  pixel onto another
 fn superimpose(top: &RgbaPixel, bottom: &RgbaPixel) -> RgbaPixel {
-    let bottom = de_alpha(&bottom);
+    let bottom = de_alpha(&bottom, &WHITE);
 
     let alpha = top.3 as f32;
     let anti_alpha = (255 - top.3) as f32;
@@ -165,6 +183,24 @@ fn superimpose(top: &RgbaPixel, bottom: &RgbaPixel) -> RgbaPixel {
     let b = ((top.2 as f32  * alpha) + (bottom.2 as f32 * anti_alpha) / 255.0) as u8;
     (r,g,b,255)
 }
+
+// #[test]
+// fn _superimpose_with_transparent_top() {
+//     let top = (0, 0, 0, 0);
+//     let bottom = (50, 50, 50, 255);
+//     let superimposed = superimpose(&top, &bottom);
+//     assert_eq!(superimposed, (50, 50, 50, 255));
+//     // assert!(false);
+// }
+
+// #[test]
+// fn _superimpose_with_semi_transparent_top() {
+//     let top = (34, 94, 203, 129);
+//     let bottom = (194, 51, 51, 255);
+//     let superimposed = superimpose(&top, &bottom);
+//     assert_eq!(superimposed, (112, 73, 129, 255));
+//     // assert!(false);
+// }
 
 
 impl RgbaImage {
@@ -232,6 +268,7 @@ impl RgbaImage {
                     self.set_pixel(
                         canvas_x as u32,
                         canvas_y as u32,
+                        // pixel,
                         superimpose(&pixel, &target_pixel),
                     );
                 }
@@ -349,7 +386,7 @@ impl UI {
         let refresh_interval = Duration::from_millis(1000 / fps as u64);
 
         let mut ui_events = vec![];
-
+        
         event_loop.run(move |event, _, control_flow| {
 
             // Maybe draw the next frame
@@ -362,7 +399,6 @@ impl UI {
 
                 let pixels = maybe_pixels.unwrap();
 
-
                 let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
                     &pixels.bytes,
                     (pixels.width, pixels.height),
@@ -372,7 +408,6 @@ impl UI {
                 // imposing letterboxing to leave the aspect ratio of `image` unchanged.
                 if preserve_aspect_ratio {
                     shape = calculate_vertices(&size, &pixels);
-                    // println!("{:?}\n", shape);
                     vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
                 }
 
