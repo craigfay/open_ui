@@ -161,16 +161,6 @@ fn _de_alpha() {
     assert_eq!(after_de_alpha, (134, 136, 228, 255));
 }
 
-fn blend(p1: &RgbaPixel, p2: &RgbaPixel) -> RgbaPixel {
-    let p1b = de_alpha(&p1, &WHITE);
-    let p2b = de_alpha(&p2, &WHITE);
-
-    let r = ((p1b.0 as f32 + p2b.0 as f32) / 2.0) as u8;
-    let g = ((p1b.1 as f32 + p2b.1 as f32) / 2.0) as u8;
-    let b = ((p1b.2 as f32 + p2b.2 as f32) / 2.0) as u8;
-    (r,g,b,255)
-}
-
 // Determine the pixel that would be created by layering a  pixel onto another
 fn superimpose(top: &RgbaPixel, bottom: &RgbaPixel) -> RgbaPixel {
     let bottom = de_alpha(&bottom, &WHITE);
@@ -184,23 +174,21 @@ fn superimpose(top: &RgbaPixel, bottom: &RgbaPixel) -> RgbaPixel {
     (r,g,b,255)
 }
 
-// #[test]
-// fn _superimpose_with_transparent_top() {
-//     let top = (0, 0, 0, 0);
-//     let bottom = (50, 50, 50, 255);
-//     let superimposed = superimpose(&top, &bottom);
-//     assert_eq!(superimposed, (50, 50, 50, 255));
-//     // assert!(false);
-// }
+#[test]
+fn _superimpose_with_transparent_top() {
+    let top = (0, 0, 0, 0);
+    let bottom = (50, 50, 50, 255);
+    let superimposed = superimpose(&top, &bottom);
+    assert_eq!(superimposed, (50, 50, 50, 255));
+}
 
-// #[test]
-// fn _superimpose_with_semi_transparent_top() {
-//     let top = (34, 94, 203, 129);
-//     let bottom = (194, 51, 51, 255);
-//     let superimposed = superimpose(&top, &bottom);
-//     assert_eq!(superimposed, (112, 73, 129, 255));
-//     // assert!(false);
-// }
+#[test]
+fn _superimpose_with_semi_transparent_top() {
+    let top = (34, 94, 203, 129);
+    let bottom = (194, 51, 51, 255);
+    let superimposed = superimpose(&top, &bottom);
+    assert_eq!(superimposed, (112, 73, 129, 255));
+}
 
 
 impl RgbaImage {
@@ -265,12 +253,10 @@ impl RgbaImage {
                         canvas_y as u32
                     ).unwrap();
 
-                    self.set_pixel(
-                        canvas_x as u32,
-                        canvas_y as u32,
-                        // pixel,
-                        superimpose(&pixel, &target_pixel),
-                    );
+                    // Converting both pixels to RGB before overwriting
+                    let target_pixel = de_alpha(&target_pixel, &WHITE);
+                    let pixel = de_alpha(&pixel, &target_pixel);
+                    self.set_pixel(canvas_x as u32, canvas_y as u32, pixel);
                 }
             }
         }
