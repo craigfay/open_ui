@@ -8,7 +8,7 @@ Add OpenUI as a dependency in any Cargo project:
 ```
 # Cargo.toml
 [dependencies]
-open_ui = { git="https://github.com/craigfay/open_ui", branch="main", ref="fb638f9" }
+open_ui = { git = "https://github.com/craigfay/open_ui", ref = "1.1.0" }
 ```
 
 # Usage
