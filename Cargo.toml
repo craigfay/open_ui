@@ -14,4 +14,4 @@ path = "src/lib.rs"
 image_manipulation = []
 
 [dependencies]
-glium = "*"
+glium = "0.31.0"
