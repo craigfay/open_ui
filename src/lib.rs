@@ -4,8 +4,6 @@ extern crate glium;
 #[allow(unused_imports)]
 use glium::{glutin, Surface};
 use glium::glutin::dpi::LogicalSize;
-use glium::glutin::event::Event;
-use glium::glutin::event::DeviceEvent;
 use glium::glutin::event::VirtualKeyCode;
 use glium::draw_parameters::Blend;
 
@@ -197,7 +195,7 @@ impl RgbaImage {
     pub fn get_pixel(&self, x: u32, y: u32) -> Option<RgbaPixel> {
         let index = (((self.width * y) + x) * 4) as usize;
 
-        if index < 0 || index >= self.bytes.len() {
+        if index >= self.bytes.len() {
             return None;
         }
 
@@ -310,8 +308,6 @@ impl UI {
             &indices
         ).unwrap();
     
-
-
         let program = glium::Program::from_source(
             &display,
             VERTEX_SHADER_SRC,
@@ -319,7 +315,7 @@ impl UI {
             None
         ).unwrap();
 
-        let mut shape = vec![
+        let shape = vec![
             Vertex { dest: [-1.0, -1.0 ], src: [0.0, 0.0] },
             Vertex { dest: [ 1.0, -1.0 ], src: [1.0, 0.0] },
             Vertex { dest: [ 1.0,  1.0 ], src: [1.0, 1.0] },
@@ -363,7 +359,7 @@ impl UI {
                 // If the aspect ratio of the UI doesn't match that of `image`
                 // imposing letterboxing to leave the aspect ratio of `image` unchanged.
                 if preserve_aspect_ratio {
-                    shape = calculate_vertices(&size, &pixels);
+                    let shape = calculate_vertices(&size, &pixels);
                     vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
                 }
 
