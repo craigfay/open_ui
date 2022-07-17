@@ -1,7 +1,7 @@
-![](./images/logo_810x320.png)
+![](./images/logo_1352x324.png)
 
-# Welcome to OpenUI 👋
-It's a developer friendly Rust library for creating high-performance cross-platform GUI apps. This is a great choice for anyone who doesn't want to work directly with [OpenGL](https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language) or [Glutin](https://crates.io/crates/glutin), but also doesn't want to use an entire desktop web framework like [Electron](https://github.com/electron/electron) or [Tauri](https://github.com/tauri-apps/tauri). It's also a great tool for building games in Rust!
+# Welcome! 👋
+**OpenUI** is a developer friendly Rust library for creating high-performance cross-platform GUI apps. This is a great choice for anyone who doesn't want to work directly with [OpenGL](https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language) or [Glutin](https://crates.io/crates/glutin), but also doesn't want to use an entire desktop web framework like [Electron](https://github.com/electron/electron) or [Tauri](https://github.com/tauri-apps/tauri). It's also a great tool for building games in Rust!
 
 # Try It Yourself! 🕹
 It's extremely easy to try out the OpenUI example project, a 1980's-style [Snake Game](https://en.wikipedia.org/wiki/Snake_(video_game_genre)#History). Use the arrow keys and spacebar to play.
