@@ -1,7 +1,10 @@
 ![](./images/logo_1352x324.png)
 
+
 # Welcome! 👋
-**OpenUI** is a developer friendly Rust library for creating high-performance cross-platform GUI apps. This is a great choice for anyone who doesn't want to work directly with [OpenGL](https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language) or [Glutin](https://crates.io/crates/glutin), but also doesn't want to use an entire desktop web framework like [Electron](https://github.com/electron/electron) or [Tauri](https://github.com/tauri-apps/tauri). It's also a great tool for building games in Rust!
+**OpenUI** is a developer friendly Rust library for creating high-performance cross-platform GUI apps. This is a great choice for anyone who doesn't want to work directly with [OpenGL](https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language), or wrappers like [Glutin](https://crates.io/crates/glutin) or [Glium](https://crates.io/crates/glium), and for anyone who doesn't need an entire desktop web framework like [Electron](https://github.com/electron/electron) or [Tauri](https://github.com/tauri-apps/tauri). 
+
+
 
 # Try It Yourself! 🕹
 It's extremely easy to try out the OpenUI example project, a 1980's-style [Snake Game](https://en.wikipedia.org/wiki/Snake_(video_game_genre)#History). Use the arrow keys and spacebar to play.
@@ -68,4 +71,7 @@ fn main() {
 - [crates.io page](https://crates.io/crates/open_ui)
 
 # Leaving so Soon? 😭
-If you're interested in OpenUI, please consider starring the project ⭐️ or following the [author](https://github.com/craigfay) on GitHub! 🙏
+
+If you're interested in OpenUI, please consider [starring the project](https://github.com/craigfay/open_ui), ⭐️ or following [the author](https://github.com/craigfay) on GitHub! 🙏 
+
+_OpenUI was made in Texas with love (and [Rust!](https://www.rust-lang.org/))_ ❤️ 🦀
