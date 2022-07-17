@@ -13,6 +13,8 @@ use std::hash::Hasher;
 use std::hash::Hash;
 use std::collections::hash_map::DefaultHasher;
 
+/// The initial settings that a windowed application
+/// will need to initialize and display itself.
 pub struct UIBlueprint {
     pub title: String,
     pub dimensions: (u32, u32),
@@ -60,8 +62,17 @@ impl UIBlueprint {
 }
 
 pub trait UIController {
+    /// Called once before the application opens:
+    /// Determine the initial settings of the rendering window.
     fn blueprint(&self) -> UIBlueprint;
+
+    /// Called every frame:
+    /// Produce the content of the next render-able frame,
+    /// or `None` if the application should terminate.
     fn next_frame(&mut self) -> Option<&RgbaImage>;
+
+    /// Called every frame:
+    /// Respond to input events, usually by modifying state
     fn process_events(&mut self, events: &Vec<UIEvent>);
 }
 
@@ -93,6 +104,7 @@ const FRAGMENT_SHADER_SRC: &str = r#"
 "#;
 
 
+/// A rectangular image made up of RGBA pixels
 pub struct RgbaImage {
     pub width: u32,
     pub height: u32,
@@ -104,6 +116,7 @@ pub type RgbaPixel = (u8,u8,u8,u8);
 const WHITE: RgbaPixel = (255, 255, 255, 255);
 
 impl RgbaImage {
+    /// Expand or shrink the entire image by a given scaling factor.
     pub fn nearest_neighbor_scale(img: &RgbaImage, factor: f32) -> RgbaImage {
         let mut new_img = RgbaImage::new(
             (img.width as f32 * factor) as u32,
@@ -160,6 +173,7 @@ fn _de_alpha() {
 }
 
 impl RgbaImage {
+    /// Create a new `RgbaImage` with the given dimensions.
     pub fn new(width: u32, height: u32) -> RgbaImage {
         RgbaImage {
             width,
@@ -179,6 +193,7 @@ impl RgbaImage {
         }
     }
 
+    /// Draw a single pixel at a given point.
     pub fn set_pixel(&mut self, x: u32, y: u32, pixel: RgbaPixel) -> bool {
         if x >= self.width { return false; }
         if y >= self.height { return false; }
@@ -192,6 +207,7 @@ impl RgbaImage {
         true
     }
 
+    /// Retrieve a single pixel at a given point.
     pub fn get_pixel(&self, x: u32, y: u32) -> Option<RgbaPixel> {
         let index = (((self.width * y) + x) * 4) as usize;
 
@@ -207,6 +223,8 @@ impl RgbaImage {
         ))
     }
 
+    /// Superimpose another `RgbaImage` on top of this one,
+    /// with its top-left corner at the given point.
     pub fn draw(&mut self, img: &RgbaImage, x: i32, y: i32) {
         for img_y in 0..img.height {
             for img_x in 0..img.width {
@@ -230,6 +248,7 @@ impl RgbaImage {
         }
     }
 
+    /// Fill the entire image with a single color.
     pub fn fill(&mut self, color: RgbaPixel) {
         for y in 0..self.height {
             for x in 0..self.width {
@@ -279,9 +298,13 @@ fn calculate_vertices(size: &LogicalSize<f32>, pixels: &RgbaImage) -> Vec<Vertex
 }
 
 
+/// A data-less struct that manages the application.
+/// Users of this library define the application's behavior
+/// by creating a type that implements the `UIController` trait.
 pub struct UI;
 
 impl UI {
+    /// Start the application using the given `UIController` 
     pub fn launch<T: 'static + UIController>(mut controller: T) {
         implement_vertex!(Vertex, dest, src);
 
@@ -851,6 +874,7 @@ pub enum KeyboardKey {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+/// An interaction that was created using a keyboard.
 pub struct KeyboardEvent {
     pub device_id: u64,
     pub key: KeyboardKey,
@@ -858,6 +882,7 @@ pub struct KeyboardEvent {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+/// An interaction that was created using a mouse.
 pub struct MouseButtonEvent {
     pub device_id: u64,
     pub button: MouseButton,
@@ -892,6 +917,8 @@ pub struct ResizeEvent {
 }
 
 #[derive(Debug, Copy, Clone)]
+/// An action that an end-user takes
+/// to interact with the application.
 pub enum UIEvent {
     Keyboard(KeyboardEvent),
     MouseButton(MouseButtonEvent),
