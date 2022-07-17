@@ -72,6 +72,6 @@ fn main() {
 
 # Leaving so Soon? 😭
 
-If you're interested in OpenUI, please consider [starring the project](https://github.com/craigfay/open_ui), ⭐️ or following [the author](https://github.com/craigfay) on GitHub! 🙏 
+If you're interested in the project, please consider [starring](https://github.com/craigfay/open_ui) ⭐,️ or following [the author](https://github.com/craigfay) on GitHub! 🙏 
 
-_OpenUI was made in Texas with love (and [Rust!](https://www.rust-lang.org/))_ ❤️ 🦀
+_**OpenUI** was made in Texas with love (and [Rust!](https://www.rust-lang.org/))_ ❤️ 🦀
