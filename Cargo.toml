@@ -1,17 +1,25 @@
 [package]
 name = "open_ui"
-version = "0.1.0"
+description = "🕹 Build cross-platform GUI apps with Rust"
 authors = ["craig <craigfay1@gmail.com>"]
-edition = "2018"
+version = "1.1.1"
+edition = "2021"
 license-file = "LICENSE"
-
-
-[lib]
-name = "open_ui"
-path = "src/lib.rs"
-
-[features]
-image_manipulation = []
+homepage = "https://github.com/craigfay/open_ui"
+repository = "https://github.com/craigfay/open_ui"
+readme = "README.md"
+keywords = ["ui", "window", "game", "graphics", "gui"]
+categories = [
+    "graphics",
+    "gui",
+    "game-development",
+    "game-engines",
+    "rendering",
+]
+include = [
+    "src/lib.rs",
+    "Cargo.toml",
+]
 
 [dependencies]
 glium = "0.31.0"
