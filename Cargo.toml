@@ -2,7 +2,7 @@
 name = "open_ui"
 description = "🕹 Build cross-platform GUI apps with Rust"
 authors = ["craig <craigfay1@gmail.com>"]
-version = "1.2.0"
+version = "1.3.0"
 edition = "2021"
 license-file = "LICENSE"
 homepage = "https://github.com/craigfay/open_ui"
