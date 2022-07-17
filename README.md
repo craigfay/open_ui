@@ -15,7 +15,7 @@ Add OpenUI as a dependency in any Cargo project:
 ```toml
 # Cargo.toml
 [dependencies]
-open_ui = { git = "https://github.com/craigfay/open_ui", ref = "1.1.0" }
+open_ui = "*"
 ```
 
 # Build Your Own App with OpenUI 🧱
@@ -61,4 +61,9 @@ fn main() {
 ```
 
 # Resources 📖
-Refer to the [example project](/src/main.rs) or [documentation]() for help!
+- [example project](/src/main.rs)
+- [documentation](https://docs.rs/open_ui/latest/open_ui/index.html)
+- [crates.io page](https://crates.io/crates/open_ui)
+
+# Leaving so Soon? 😭
+If you're interested in OpenUI, please consider starring the project ⭐️ or following the [author](https://github.com/craigfay) on GitHub! 🙏

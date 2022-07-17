@@ -701,12 +701,14 @@ fn apply_mouse_button_event(
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+/// Whether a keyboard key was pressed or released.
 pub enum KeyboardAction {
     Press,
     Release,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+/// A physical key on a keyboard device.
 pub enum KeyboardKey {
     Num0,
     Num1,
@@ -890,6 +892,7 @@ pub struct MouseButtonEvent {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+/// A physical button on a mouse device.
 pub enum MouseButton {
     Left,
     Right,
@@ -898,12 +901,14 @@ pub enum MouseButton {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+/// Whether a mouse button was pressed or released.
 pub enum MouseButtonAction {
     Press,
     Release,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+/// The identity and new location of a recently moved mouse device.
 pub struct CursorMovementEvent {
     pub device_id: u64,
     pub x: u32,
@@ -911,6 +916,7 @@ pub struct CursorMovementEvent {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
+/// The new size of the window after being resized.
 pub struct ResizeEvent {
     pub width: u32,
     pub height: u32,
