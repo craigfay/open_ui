@@ -1,3 +1,5 @@
+![](./images/logo_810x320.png)
+
 # Welcome to OpenUI 👋
 It's a developer friendly Rust library for creating high-performance cross-platform GUI apps. This is a great choice for anyone who doesn't want to work directly with [OpenGL](https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language) or [Glutin](https://crates.io/crates/glutin), but also doesn't want to use an entire desktop web framework like [Electron](https://github.com/electron/electron) or [Tauri](https://github.com/tauri-apps/tauri). It's also a great tool for building games in Rust!
 
