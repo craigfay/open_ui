@@ -62,17 +62,17 @@ impl UIBlueprint {
 }
 
 pub trait UIController {
-    /// Called once before the application opens:
-    /// Determine the initial settings of the rendering window.
+    /// This function wil be called once before the application opens,
+    /// and determines the initial settings of the rendering window.
     fn blueprint(&self) -> UIBlueprint;
 
-    /// Called every frame:
-    /// Produce the content of the next render-able frame,
+    /// This function will be called called every frame,
+    /// and returns the contents of the next render-able frame,
     /// or `None` if the application should terminate.
     fn next_frame(&mut self) -> Option<&RgbaImage>;
 
-    /// Called every frame:
-    /// Respond to input events, usually by modifying state
+    /// This function will be called every frame, receiving
+    /// input events, and usually responding by modifying state.
     fn process_events(&mut self, events: &Vec<UIEvent>);
 }
 
