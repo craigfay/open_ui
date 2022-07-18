@@ -69,9 +69,3 @@ fn main() {
 - [example project](/src/main.rs)
 - [documentation](https://docs.rs/open_ui/latest/open_ui/index.html)
 - [crates.io page](https://crates.io/crates/open_ui)
-
-# Leaving so Soon? 😭
-
-If you're interested in the project, please consider [starring](https://github.com/craigfay/open_ui) ⭐,️ or following [the author](https://github.com/craigfay) on GitHub! 🙏 
-
-_**OpenUI** was made in Texas with love (and [Rust!](https://www.rust-lang.org/))_ ❤️ 🦀
