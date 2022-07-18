@@ -2,9 +2,7 @@
 
 
 # Welcome! 👋
-**OpenUI** is a developer friendly Rust library for creating high-performance cross-platform GUI apps. This is a great choice for anyone who doesn't want to work directly with [OpenGL](https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language), or wrappers like [Glutin](https://crates.io/crates/glutin) or [Glium](https://crates.io/crates/glium), and for anyone who doesn't need an entire desktop web framework like [Electron](https://github.com/electron/electron) or [Tauri](https://github.com/tauri-apps/tauri). 
-
-
+**OpenUI** is a developer friendly Rust library for creating cross-platform GUI apps. This is a great choice for anyone who doesn't want to work directly with [OpenGL](https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language), or wrappers like [Glutin](https://crates.io/crates/glutin) or [Glium](https://crates.io/crates/glium), and for anyone who doesn't need an entire desktop web framework like [Electron](https://github.com/electron/electron) or [Tauri](https://github.com/tauri-apps/tauri). 
 
 # Try It Yourself! 🕹
 It's extremely easy to try out the OpenUI example project, a 1980's-style [Snake Game](https://en.wikipedia.org/wiki/Snake_(video_game_genre)#History). Use the arrow keys and spacebar to play.
@@ -64,6 +62,10 @@ fn main() {
     UI::launch(application);
 }
 ```
+
+## Caveats
+
+OpenUI does all its work on the CPU, and does not attempt (at this time) to leverage GPU acceleration. This means that its probably not suitable for workloads involving realistic 3D rendering. That said, OpenUI is more than capable of handling almost any 2D graphics workload on modern machines.
 
 # Resources 📖
 - [example project](/src/main.rs)
