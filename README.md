@@ -63,7 +63,7 @@ fn main() {
 }
 ```
 
-## Caveats
+# Caveats
 
 OpenUI does all its work on the CPU, and does not attempt (at this time) to leverage GPU acceleration. This means that its probably not suitable for workloads involving realistic 3D rendering. That said, OpenUI is more than capable of handling almost any 2D graphics workload on modern machines.
 
