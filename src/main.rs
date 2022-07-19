@@ -5,6 +5,7 @@ use open_ui::{
     UIBlueprint,
     UIEvent,
     RgbaImage,
+    RgbaImageRegion,
     KeyboardKey::*,
     KeyboardAction::*,
 };
@@ -119,8 +120,8 @@ impl SnakeGame {
         let rng = PseudoRandomness::new();
 
         let food = Food {
-            x: rng.integer_between(0, (canvas.width - 1) as i32),
-            y: rng.integer_between(0, (canvas.height - 1) as i32),
+            x: rng.integer_between(0, (canvas.width() - 1) as i32),
+            y: rng.integer_between(0, (canvas.height() - 1) as i32),
         };
     
         SnakeGame {
@@ -154,8 +155,8 @@ impl SnakeGame {
     // Check to see if the snake head has gone beyond the walls of the game
     pub fn snake_head_is_offscreen(&self) -> bool {
         let head = self.snake.segments.first().unwrap();
-        head.x > self.canvas.width as i32 - 1 || 
-        head.y > self.canvas.height as i32 - 1 || 
+        head.x > self.canvas.width() as i32 - 1 || 
+        head.y > self.canvas.height() as i32 - 1 || 
         head.x < 0 ||
         head.y < 0
     }
@@ -163,8 +164,8 @@ impl SnakeGame {
     // Place food in a new random spot
     pub fn replace_food(&mut self) {
         self.food = Food {
-            x: self.rng.integer_between(0, (self.canvas.width - 1) as i32),
-            y: self.rng.integer_between(0, (self.canvas.height - 1) as i32),
+            x: self.rng.integer_between(0, (self.canvas.width() - 1) as i32),
+            y: self.rng.integer_between(0, (self.canvas.height() - 1) as i32),
         };
     }
 
@@ -233,7 +234,7 @@ impl UIController for SnakeGame {
     fn blueprint(&self) -> UIBlueprint {
         UIBlueprint::default()
             .title("Snake Game")
-            .dimensions((self.canvas.width * 30, self.canvas.height * 20))
+            .dimensions((self.canvas.width() * 30, self.canvas.height() * 20))
             .preserve_aspect_ratio(true)
             .frames_per_second(60)
             .resizeable(true)
@@ -276,7 +277,7 @@ impl UIController for SnakeGame {
     // A function that will use application data to decide which image to
     // render on the next frame. If no image is returned, the application
     // will terminate.
-    fn next_frame(&mut self) -> Option<&RgbaImage> {
+    fn next_frame(&mut self) -> Option<RgbaImageRegion> {
 
         // Not rendering the next frame if the player has canceled the game
         if self.finished {
@@ -308,7 +309,7 @@ impl UIController for SnakeGame {
             );
         }
 
-        Some(&self.canvas)
+        Some(self.canvas.as_region())
     }
 }
 

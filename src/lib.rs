@@ -69,7 +69,7 @@ pub trait UIController {
     /// This function will be called called every frame,
     /// and returns the contents of the next render-able frame,
     /// or `None` if the application should terminate.
-    fn next_frame(&mut self) -> Option<&RgbaImage>;
+    fn next_frame(&mut self) -> Option<RgbaImageRegion>;
 
     /// This function will be called every frame, receiving
     /// input events, and usually responding by modifying state.
@@ -106,47 +106,48 @@ const FRAGMENT_SHADER_SRC: &str = r#"
 
 /// A rectangular image made up of RGBA pixels
 pub struct RgbaImage {
-    pub width: u32,
-    pub height: u32,
-    pub bytes: Vec<u8>,
+    width: u32,
+    height: u32,
+    bytes: Vec<u8>,
+}
+
+/// A read-only region of an `RgbaImage`
+pub struct RgbaImageRegion<'a> {
+    width: u32,
+    height: u32,
+    bytes: &'a[u8],
+}
+
+impl<'a> RgbaImageRegion<'a> {
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn height(&self) -> u32 {
+        self.height
+    }
+
+    /// Retrieve a single pixel at a given point.
+    pub fn get_pixel(&self, x: u32, y: u32) -> Option<RgbaPixel> {
+        let index = (((self.width * y) + x) * 4) as usize;
+    
+        if index >= self.bytes.len() {
+            return None;
+        }
+    
+        Some((
+            self.bytes[index + 0],
+            self.bytes[index + 1],
+            self.bytes[index + 2],
+            self.bytes[index + 3],
+        ))
+    }
+
 }
 
 pub type RgbaPixel = (u8,u8,u8,u8);
 
 const WHITE: RgbaPixel = (255, 255, 255, 255);
-
-impl RgbaImage {
-    /// Expand or shrink the entire image by a given scaling factor.
-    pub fn nearest_neighbor_scale(img: &RgbaImage, factor: f32) -> RgbaImage {
-        let mut new_img = RgbaImage::new(
-            (img.width as f32 * factor) as u32,
-            (img.height as f32 * factor) as u32,
-        );
-
-        // Calculating a ratio of a single pixel's size to the whole image
-        let ratio_x = 1.0 / new_img.width as f32;
-        let ratio_y = 1.0 / new_img.height as f32;
-
-        for y in 0..new_img.height {
-            for x in 0..new_img.width {
-
-                // Determining which x and y values to sample from
-                let progress_x = ratio_x * x as f32;
-                let progress_y = ratio_y * y as f32;
-
-                let src_x = progress_x * img.width as f32;
-                let src_y = progress_y * img.height as f32;
-
-                // Applying the sampled pixel to the output image
-                let pixel = img.get_pixel(src_x as u32, src_y as u32).unwrap();
-                new_img.set_pixel(x, y, pixel);
-            }
-        }
-
-        new_img
-    }
-}
-
 
 // Assumes that the color beneath is pure white
 fn de_alpha(pixel: &RgbaPixel, background: &RgbaPixel) -> RgbaPixel {
@@ -193,12 +194,21 @@ impl RgbaImage {
         }
     }
 
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn height(&self) -> u32 {
+        self.height
+    }
+
     /// Draw a single pixel at a given point.
     pub fn set_pixel(&mut self, x: u32, y: u32, pixel: RgbaPixel) -> bool {
         if x >= self.width { return false; }
         if y >= self.height { return false; }
 
         let index = (((self.width * y) + x) * 4) as usize;
+
         self.bytes[index + 0] = pixel.0;
         self.bytes[index + 1] = pixel.1;
         self.bytes[index + 2] = pixel.2;
@@ -256,6 +266,68 @@ impl RgbaImage {
             }
         }
     }
+
+    /// Expand or shrink the entire image by a given scaling factor.
+    pub fn nearest_neighbor_scale(img: &RgbaImage, factor: f32) -> RgbaImage {
+        let mut new_img = RgbaImage::new(
+            (img.width as f32 * factor) as u32,
+            (img.height as f32 * factor) as u32,
+        );
+
+        // Calculating a ratio of a single pixel's size to the whole image
+        let ratio_x = 1.0 / new_img.width as f32;
+        let ratio_y = 1.0 / new_img.height as f32;
+
+        for y in 0..new_img.height {
+            for x in 0..new_img.width {
+
+                // Determining which x and y values to sample from
+                let progress_x = ratio_x * x as f32;
+                let progress_y = ratio_y * y as f32;
+
+                let src_x = progress_x * img.width as f32;
+                let src_y = progress_y * img.height as f32;
+
+                // Applying the sampled pixel to the output image
+                let pixel = img.get_pixel(src_x as u32, src_y as u32).unwrap();
+                new_img.set_pixel(x, y, pixel);
+            }
+        }
+
+        new_img
+    }
+
+
+    pub fn as_region(&self) -> RgbaImageRegion {
+        self.get_region(
+            (0, 0),
+            (self.width() - 1, self.height() - 1),
+        ).unwrap()
+    }
+
+    pub fn get_region(&self, top_left: (u32, u32), bottom_right: (u32, u32)) -> Option<RgbaImageRegion> {
+        let (start_x, start_y) = top_left;
+        let start_index = (((self.width * start_y) + start_x) * 4) as usize;
+
+        let (end_x, end_y) = bottom_right;
+        let end_index = (((self.width * end_y) + end_x) * 4) as usize + 3;
+
+        if end_x < start_x { return None; }
+        if end_y < start_y { return None; }
+
+        if start_index >= self.bytes.len() { return None; }
+        if end_index > self.bytes.len() { return None; }
+
+        let width = 1 + end_x - start_x;
+        let height = 1 + end_y - start_y;
+        let bytes =  &self.bytes[start_index..end_index+1];
+
+        Some(RgbaImageRegion {
+            width,
+            height,
+            bytes,
+        })
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -269,7 +341,7 @@ struct Vertex {
     dest: [f32; 2],
 }
 
-fn calculate_vertices(size: &LogicalSize<f32>, pixels: &RgbaImage) -> Vec<Vertex> {
+fn calculate_vertices(size: &LogicalSize<f32>, pixels: &RgbaImageRegion) -> Vec<Vertex> {
     let ui_h = size.height;
     let ui_w = size.width;
 
@@ -366,16 +438,14 @@ impl UI {
 
             // Maybe draw the next frame
             if last_render + refresh_interval < Instant::now() {
-                let maybe_pixels = &controller.next_frame();
 
-                if maybe_pixels.is_none() {
-                    return *control_flow = glutin::event_loop::ControlFlow::Exit;
-                }
-
-                let pixels = maybe_pixels.unwrap();
+                let pixels = match controller.next_frame() {
+                    None => return *control_flow = glutin::event_loop::ControlFlow::Exit,
+                    Some(pixels) => pixels,
+                };
 
                 let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-                    &pixels.bytes,
+                    pixels.bytes,
                     (pixels.width, pixels.height),
                 );
 
