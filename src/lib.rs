@@ -175,22 +175,11 @@ fn _de_alpha() {
 
 impl RgbaImage {
     /// Create a new `RgbaImage` with the given dimensions.
-    pub fn new(width: u32, height: u32) -> RgbaImage {
+    pub fn new(w: u32, h: u32) -> RgbaImage {
         RgbaImage {
-            width,
-            height,
-            bytes: {
-                let byte_count = (width * height) * 4;
-                let mut bytes = vec![];
-                
-                for _ in (0..byte_count).step_by(4) {
-                    bytes.push(0);
-                    bytes.push(0);
-                    bytes.push(0);
-                    bytes.push(0);
-                }
-                bytes
-            }
+            width: w,
+            height: h,
+            bytes: vec![0; (w as usize * h as usize) * 4],
         }
     }
 
@@ -244,10 +233,10 @@ impl RgbaImage {
                 let canvas_y = y + img_y as i32;
 
                 if canvas_x >= 0 && canvas_y >= 0 {
-                    let target_pixel = self.get_pixel(
-                        canvas_x as u32,
-                        canvas_y as u32
-                    ).unwrap();
+                    let target_pixel = match self.get_pixel(canvas_x as u32, canvas_y as u32) {
+                        Some(pixel) => pixel,
+                        None => { continue }
+                    };
 
                     // Converting both pixels to RGB before overwriting
                     let target_pixel = de_alpha(&target_pixel, &WHITE);
