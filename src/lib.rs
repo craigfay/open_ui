@@ -6,6 +6,8 @@ use glium::{glutin, Surface};
 use glium::glutin::dpi::LogicalSize;
 use glium::glutin::event::VirtualKeyCode;
 use glium::draw_parameters::Blend;
+use glium::glutin::event::Event::RedrawEventsCleared;
+use glium::glutin::event_loop::ControlFlow;
 
 use std::time::Duration;
 use std::time::Instant;
@@ -358,7 +360,6 @@ fn calculate_vertices(size: &LogicalSize<f32>, pixels: &RgbaImageRegion) -> Vec<
     ]
 }
 
-
 /// A data-less struct that manages the application.
 /// Users of this library define the application's behavior
 /// by creating a type that implements the `UIController` trait.
@@ -417,17 +418,15 @@ impl UI {
         };
 
         // Setting up timekeeping
-        let mut last_render = Instant::now();
         let fps = blueprint.frames_per_second;
-        let refresh_interval = Duration::from_millis(1000 / fps as u64);
+        let refresh_interval = Duration::from_nanos(1_000_000_000 / fps as u64);
 
         let mut ui_events = vec![];
-        
+
         event_loop.run(move |event, _, control_flow| {
+            let ready_for_redraw = event == RedrawEventsCleared;
 
-            // Maybe draw the next frame
-            if last_render + refresh_interval < Instant::now() {
-
+            if ready_for_redraw {
                 let pixels = match controller.next_frame() {
                     None => return *control_flow = glutin::event_loop::ControlFlow::Exit,
                     Some(pixels) => pixels,
@@ -454,14 +453,10 @@ impl UI {
                         .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
                 };
 
-            
                 let mut frame = display.draw();
 
-                // Erasing the previous frame. This only seems to be necessary
-                // to prevent a flickering on the edges of the drawn frame when
-                // the window is maximized.
+                // Erasing the previous frame
                 frame.clear_color(0.0,0.0,0.0,255.0);
-
 
                 // Drawing on the next frame
                 frame.draw(&vertex_buffer, &indices, &program, &uniforms,
@@ -470,8 +465,9 @@ impl UI {
                 // Committing the drawn frame
                 frame.finish().unwrap();
 
-                // Updating the frame clock
-                last_render = Instant::now();
+                // Waiting until the next frame
+                let next_frame_time = Instant::now() + refresh_interval;
+                *control_flow = ControlFlow::WaitUntil(next_frame_time);
 
                 // Processing and flushing events
                 // Should this happen at the beginning or end of each frame?
@@ -503,6 +499,8 @@ impl UI {
                 },
                 _ => {}
             }
+
+
 
         });
 
