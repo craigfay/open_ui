@@ -76,6 +76,8 @@ pub trait UIController {
     /// This function will be called every frame, receiving
     /// input events, and usually responding by modifying state.
     fn process_events(&mut self, events: &Vec<UIEvent>);
+
+    fn should_terminate(&self) -> bool;
 }
 
 const VERTEX_SHADER_SRC: &str = r#"
@@ -424,55 +426,57 @@ impl UI {
         let mut ui_events = vec![];
 
         event_loop.run(move |event, _, control_flow| {
-            let ready_for_redraw = event == RedrawEventsCleared;
 
-            if ready_for_redraw {
-                let pixels = match controller.next_frame() {
-                    None => return *control_flow = glutin::event_loop::ControlFlow::Exit,
-                    Some(pixels) => pixels,
-                };
+            if controller.should_terminate() {
+                return *control_flow = ControlFlow::Exit;
+            }
 
-                let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
-                    pixels.bytes,
-                    (pixels.width, pixels.height),
-                );
+            if event == RedrawEventsCleared {
 
-                // If the aspect ratio of the UI doesn't match that of `image`
-                // imposing letterboxing to leave the aspect ratio of `image` unchanged.
-                if preserve_aspect_ratio {
-                    let shape = calculate_vertices(&size, &pixels);
-                    vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
+                // Handling events that have been collected
+                // during the previous frame
+                controller.process_events(&ui_events);
+                ui_events.clear();
+
+                // Drawing the next frame, if applicable
+                if let Some(pixels) = controller.next_frame() {
+                    let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
+                        pixels.bytes,
+                        (pixels.width, pixels.height),
+                    );
+                    
+                    // If the aspect ratio of the UI doesn't match that of `image`
+                    // imposing letterboxing to leave the aspect ratio of `image` unchanged.
+                    if preserve_aspect_ratio {
+                        let shape = calculate_vertices(&size, &pixels);
+                        vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
+                    }
+                    
+                    let texture = glium::texture::Texture2d::new(&display, image).unwrap();
+                    
+                    let uniforms = uniform! {
+                        // Applying filters to prevent unwanted image smoothing
+                        sampler: texture.sampled()
+                            .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
+                            .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
+                    };
+                    
+                    let mut frame = display.draw();
+                    
+                    // Erasing the previous frame
+                    frame.clear_color(0.0,0.0,0.0,255.0);
+                    
+                    // Drawing on the next frame
+                    frame.draw(&vertex_buffer, &indices, &program, &uniforms,
+                        &draw_params).unwrap();
+                        
+                    // Committing the drawn frame
+                    frame.finish().unwrap();
                 }
-
-                let texture = glium::texture::Texture2d::new(&display, image).unwrap();
-
-                let uniforms = uniform! {
-                    // Applying filters to prevent unwanted image smoothing
-                    sampler: texture.sampled()
-                        .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
-                        .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest)
-                };
-
-                let mut frame = display.draw();
-
-                // Erasing the previous frame
-                frame.clear_color(0.0,0.0,0.0,255.0);
-
-                // Drawing on the next frame
-                frame.draw(&vertex_buffer, &indices, &program, &uniforms,
-                    &draw_params).unwrap();
-
-                // Committing the drawn frame
-                frame.finish().unwrap();
 
                 // Waiting until the next frame
                 let next_frame_time = Instant::now() + refresh_interval;
                 *control_flow = ControlFlow::WaitUntil(next_frame_time);
-
-                // Processing and flushing events
-                // Should this happen at the beginning or end of each frame?
-                controller.process_events(&ui_events);
-                ui_events = vec![];
             }
 
             // Responding to UI events

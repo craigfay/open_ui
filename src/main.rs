@@ -280,7 +280,7 @@ impl UIController for SnakeGame {
     fn next_frame(&mut self) -> Option<RgbaImageRegion> {
 
         // Not rendering the next frame if the player has canceled the game
-        if self.finished {
+        if self.paused {
             return None
         }
 
@@ -310,6 +310,10 @@ impl UIController for SnakeGame {
         }
 
         Some(self.canvas.as_region())
+    }
+
+    fn should_terminate(&self) -> bool {
+        self.finished
     }
 }
 
